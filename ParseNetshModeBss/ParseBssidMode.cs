@@ -9,18 +9,6 @@ namespace ParseNetshModeBss
 
     internal class ParseBssidMode
     {
-        public static IList<SsidInfo> Parse(string value)
-        {
-            var parser = new ParseBssidMode();
-
-            var lines = value.Split('\n');
-            foreach (var rawline in lines)
-            {
-                parser.ParseLine(rawline);
-            }
-
-            return parser.ParsedData;
-        }
 
         public ParseBssidMode()
         {
@@ -68,6 +56,16 @@ namespace ParseNetshModeBss
         BssidInfo CurrBssid = new BssidInfo(); // useless blank version
         public IList<SsidInfo> ParsedData = new List<SsidInfo>();
         public enum ParseStatus {  Ok, OtherError};
+
+        public IList<SsidInfo> Parse(string value)  // is multiple lines
+        {
+            var lines = value.Split('\n');
+            foreach (var rawline in lines)
+            {
+                ParseLine(rawline);
+            }
+            return ParsedData;
+        }
         public ParseStatus ParseLine(string rawline)
         {
             var line = rawline.TrimEnd();
