@@ -221,14 +221,14 @@ SSID 1 : MyOfficeWifi
     Network type            : Infrastructure
     Authentication          : WPA2-Personal
     Encryption              : CCMP
-    BSSID 1                 : 5c:62:8b:42:b7:1f
+    BSSID 1                 : 2c:12:8b:49:b3:1e
          Signal             : 91%
          Radio type         : 802.11be
          Band               : 5 GHz
          Channel            : 40
          Basic rates (Mbps) : 6 12 24
          Other rates (Mbps) : 9 18 36 48 54
-    BSSID 2                 : 5c:62:8b:42:b7:1e
+    BSSID 2                 : 2c:12:8b:49:b3:1d
          Signal             : 96%
          Radio type         : 802.11be
          Band               : 2.4 GHz
@@ -240,7 +240,7 @@ SSID 2 :
     Network type            : Infrastructure
     Authentication          : WPA2-Personal
     Encryption              : CCMP
-    BSSID 1                 : 50:0f:f5:ca:18:90
+    BSSID 1                 : 10:12:8b:49:b3:30
          Signal             : 20%
          Radio type         : 802.11ax
          Band               : 2.4 GHz
@@ -251,7 +251,7 @@ SSID 2 :
              Medium Available Capacity:  0 (0 us/s)
          Basic rates (Mbps) : 1 2 5.5 11
          Other rates (Mbps) : 6 9 12 18 24 36 48 54
-    BSSID 2                 : 62:62:8b:42:b7:1e
+    BSSID 2                 : 10:12:8b:49:b3:31
          Signal             : 94%
          Radio type         : 802.11be
          Band               : 2.4 GHz
@@ -263,42 +263,42 @@ SSID 3 : HouseWiFi
     Network type            : Infrastructure
     Authentication          : WPA2-Personal
     Encryption              : CCMP
-    BSSID 1                 : 1c:f2:9a:e0:99:b0
+    BSSID 1                 : 22:12:8b:49:b3:92
          Signal             : 85%
          Radio type         : 802.11ac
          Band               : 5 GHz
          Channel            : 149
          Basic rates (Mbps) : 6 12 24
          Other rates (Mbps) : 9 18 36 48 54
-    BSSID 2                 : 1c:f2:9a:e0:86:02
+    BSSID 2                 : 22:12:8b:49:b3:93
          Signal             : 53%
          Radio type         : 802.11ac
          Band               : 5 GHz
          Channel            : 149
          Basic rates (Mbps) : 6 12 24
          Other rates (Mbps) : 9 18 36 48 54
-    BSSID 3                 : 1c:f2:9a:e0:86:06
+    BSSID 3                 : 22:12:8b:49:b3:94
          Signal             : 72%
          Radio type         : 802.11n
          Band               : 2.4 GHz
          Channel            : 6
          Basic rates (Mbps) : 1 2 5.5 11
          Other rates (Mbps) : 6 9 12 18 24 36 48 54
-    BSSID 4                 : 70:3a:cb:19:26:6c
+    BSSID 4                 : 22:12:8b:49:b3:95
          Signal             : 82%
          Radio type         : 802.11n
          Band               : 2.4 GHz
          Channel            : 6
          Basic rates (Mbps) : 1 2 5.5 11
          Other rates (Mbps) : 6 9 12 18 24 36 48 54
-    BSSID 5                 : 1c:f2:9a:e0:99:b4
+    BSSID 5                 : 22:12:8b:49:b3:97
          Signal             : 88%
          Radio type         : 802.11n
          Band               : 2.4 GHz
          Channel            : 1
          Basic rates (Mbps) : 1 2 5.5 11
          Other rates (Mbps) : 6 9 12 18 24 36 48 54
-    BSSID 6                 : 70:3a:cb:19:26:68
+    BSSID 6                 : 22:12:8b:49:b3:98
          Signal             : 78%
          Radio type         : 802.11ac
          Band               : 5 GHz
