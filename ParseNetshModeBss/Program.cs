@@ -8,10 +8,11 @@ using System.Security.Cryptography;
 
 namespace ParseNetshModeBss
 {
-    public enum Mode { BadArgs, Help, ReadStdin, Generate, ReadExample, PrintExample };
+    public enum Mode { BadArgs, Help, Version, ReadStdin, Generate, ReadExample, PrintExample };
     enum ReturnErrors { Ok, FailedSystemTest, BadArgs };
     class Program
     {
+        const string Version = "1.1";
         static int Main(string[] args)
         {
             ReturnErrors retval = ReturnErrors.Ok;
@@ -39,13 +40,13 @@ namespace ParseNetshModeBss
                     {
                         parser.ParseLine(line);
                     }
-                    Console.WriteLine(SsidInfo.ToCsv(parser.ParsedData));
+                    Console.WriteLine(SsidInfo.ToCsv(parser.ParsedData, options.PrintCsvHeader));
                     break;
 
                 case Mode.Generate:
                     var lines = RunNetsh();
                     parser.Parse(lines);
-                    Console.WriteLine(SsidInfo.ToCsv(parser.ParsedData));
+                    Console.WriteLine(SsidInfo.ToCsv(parser.ParsedData, options.PrintCsvHeader));
                     break;
 
                 case Mode.PrintExample:
@@ -54,9 +55,13 @@ namespace ParseNetshModeBss
 
                 case Mode.ReadExample:
                     var result = parser.Parse(ParseBssidMode.Examples[options.ExampleToShow]);
-                    Console.WriteLine(SsidInfo.ToCsv(result));
+                    Console.WriteLine(SsidInfo.ToCsv(result, options.PrintCsvHeader));
+                    break;
+                case Mode.Version:
+                    Console.WriteLine($"ParseNetshModeBss version={Version}");
                     break;
                 default: // Huh? I added a mode and didn't handle it?
+                    Console.WriteLine($"Error: unknown argument {options.CurrMode.ToString()} (version {Version})");
                     retval = ReturnErrors.BadArgs;
                     break;
             }
@@ -77,7 +82,7 @@ namespace ParseNetshModeBss
             };
             using (Process? proc = Process.Start(start))
             {
-                retval = proc.StandardOutput.ReadToEnd();
+                retval = proc?.StandardOutput.ReadToEnd() ?? "";
                 proc!.WaitForExit();
             }
             return retval;
@@ -98,8 +103,8 @@ namespace ParseNetshModeBss
 
         private static void PrintHelp()
         {
-            var help = @"
-ParseNetshBssMode: parses the output of netsh wlan show networks mode=bssid
+            var help = $@"
+ParseNetshBssMode {Version}: parses the output of netsh wlan show networks mode=bssid
 That command often spits out pages of data; this command converts much of that data
 into CSV-format (RFC 4180) compatible output that can be read in by Excel.
 
@@ -107,9 +112,11 @@ By default this acts like a filter, readin in from stdin and writing CSV to stdo
 
 Switches:
 /? -? /help -help: print out help
--generate: automatically runs the netsh command and then produces the CSV output
--example:  prints out a CSV based on a baked-in example with no PII
+-generate   : automatically runs the netsh command and then produces the CSV output
+-noheader   : prints CSV without a header
+-example    :  prints out a CSV based on a baked-in example with no PII
 -printexample:  prints out the baked-in example with no PII
+-version    : prints version
 ";
             Console.WriteLine(help);
         }
@@ -123,6 +130,10 @@ Switches:
 
     class UserOptions
     {
+        public Mode CurrMode = Mode.ReadStdin;
+        public int ExampleToShow = 0;
+        public bool PrintCsvHeader = true;
+
         public UserOptions(string[] args)
         {
             int nskip = 0;
@@ -144,11 +155,20 @@ Switches:
                     case "--help":
                         CurrMode = Mode.Help;
                         break;
+                    case "-version":
+                        CurrMode = Mode.Version; 
+                        break;
                     case "-example":
                         CurrMode = Mode.ReadExample;
                         break;
                     case "-generate":
                         CurrMode = Mode.Generate;
+                        break;
+                    case "-header":
+                        PrintCsvHeader = true;
+                        break;
+                    case "-noheader":
+                        PrintCsvHeader = false;
                         break;
                     case "-printexample":
                         CurrMode = Mode.PrintExample;
@@ -160,8 +180,6 @@ Switches:
                 }
             }
         }
-        public int ExampleToShow = 0;
-        public Mode CurrMode = Mode.ReadStdin;
     }
 }
 

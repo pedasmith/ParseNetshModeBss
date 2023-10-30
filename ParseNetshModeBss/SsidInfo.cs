@@ -71,11 +71,11 @@ namespace ParseNetshModeBss
         public Encryption Encryption = Encryption.Other;
         public IList<BssidInfo> Bssids { get; } = new List<BssidInfo>();
 
-        public static string ToCsv(IList<SsidInfo> list)
+        public static string ToCsv(IList<SsidInfo> list, bool printHeader)
         {
             var stable = "SsidIndex,Ssid,Authentication,Encryption,BssidIndex,Mac,Radio,Band,Channel";
             var perf = "SignalStrengthPercent,ConnectedStations,LoadUtilization,LoadUtilitizationPercent";
-            var retval = stable + "," + perf + "\n";
+            var retval = printHeader ? stable + "," + perf + "\n" : "";
             foreach (var ssid in list)
             {
                 retval += ssid.ToCsv();
