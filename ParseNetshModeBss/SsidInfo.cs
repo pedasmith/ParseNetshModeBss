@@ -71,23 +71,23 @@ namespace ParseNetshModeBss
         public Encryption Encryption = Encryption.Other;
         public IList<BssidInfo> Bssids { get; } = new List<BssidInfo>();
 
-        public static string ToCsv(IList<SsidInfo> list, bool printHeader)
+        public static string ToCsv(IList<SsidInfo> list, bool printHeader, string headerExtra, string dataExtra)
         {
             var stable = "SsidIndex,Ssid,Authentication,Encryption,BssidIndex,Mac,Radio,Band,Channel";
             var perf = "SignalStrengthPercent,ConnectedStations,LoadUtilization,LoadUtilitizationPercent";
-            var retval = printHeader ? stable + "," + perf + "\n" : "";
+            var retval = printHeader ? headerExtra + stable + "," + perf + "\n" : "";
             foreach (var ssid in list)
             {
-                retval += ssid.ToCsv();
+                retval += ssid.ToCsv(dataExtra);
             }
             return retval;
         }
-        private string ToCsv()
+        private string ToCsv(string dataExtra)
         {
             var retval = "";
             foreach (var bssid in Bssids)
             {
-                retval += bssid.ToCsv(this);
+                retval += bssid.ToCsv(this, dataExtra);
             }
             return retval;
         }
@@ -123,14 +123,14 @@ namespace ParseNetshModeBss
         public string Rates = "";
         public string OtherRates = "";
 
-        public string ToCsv(SsidInfo ssid)
+        public string ToCsv(SsidInfo ssid, string dataExtra)
         {
             //"SsidIndex,Ssid,Authentication,Encryption,BssidIndex,Mac,Radio,Band,Channel";
             //"SignalStrengthPercent,ConnectedStations,LoadUtilization,LoadUtilitizationPercent";
 
             var stable = $"{ssid.Index},{ssid.Name},{Convert.AuthenticationStrings[ssid.Authentication]},{Convert.EncryptionStrings[ssid.Encryption]},{Index},{Mac},{Convert.RadioTypeStrings[RadioType]},{BandInGHz},{Channel}";
             var perf = $"{SignalStrengthPercent},{BssLoadConnectedStationsCsv},{BssLoadUtilizationCsv},{BssLoadUtilizationPercentCsv}";
-            return stable+","+perf+"\n";
+            return dataExtra + stable+","+perf+"\n";
         }
         public override string ToString()
         {

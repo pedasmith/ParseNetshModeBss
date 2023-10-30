@@ -22,6 +22,8 @@ namespace ParseNetshModeBss
             UserOptions options = new UserOptions(args);
 
             var parser = new ParseBssidMode();
+            var currDate = GetDate();
+            var dateHeader = "Date,Time,";
             switch (options.CurrMode)
             {
                 case Mode.BadArgs:
@@ -40,13 +42,13 @@ namespace ParseNetshModeBss
                     {
                         parser.ParseLine(line);
                     }
-                    Console.WriteLine(SsidInfo.ToCsv(parser.ParsedData, options.PrintCsvHeader));
+                    Console.Write(SsidInfo.ToCsv(parser.ParsedData, options.PrintCsvHeader, dateHeader, currDate + ","));
                     break;
 
                 case Mode.Generate:
                     var lines = RunNetsh();
                     parser.Parse(lines);
-                    Console.WriteLine(SsidInfo.ToCsv(parser.ParsedData, options.PrintCsvHeader));
+                    Console.Write(SsidInfo.ToCsv(parser.ParsedData, options.PrintCsvHeader, dateHeader, currDate + ","));
                     break;
 
                 case Mode.PrintExample:
@@ -55,7 +57,7 @@ namespace ParseNetshModeBss
 
                 case Mode.ReadExample:
                     var result = parser.Parse(ParseBssidMode.Examples[options.ExampleToShow]);
-                    Console.WriteLine(SsidInfo.ToCsv(result, options.PrintCsvHeader));
+                    Console.Write(SsidInfo.ToCsv(result, options.PrintCsvHeader, dateHeader, currDate + ","));
                     break;
                 case Mode.Version:
                     Console.WriteLine($"ParseNetshModeBss version={Version}");
@@ -68,6 +70,12 @@ namespace ParseNetshModeBss
 
             return (int)retval;
 
+        }
+
+        private static string GetDate()
+        {
+            var date = DateTime.Now.ToString("yyyy-MM-dd,HH:mm:ss");
+            return date;
         }
 
         private static string RunNetsh(string program = "netsh", string args = "wlan show networks mode=bssid")
