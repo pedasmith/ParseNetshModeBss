@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ParseNetshModeBss
 {
     public enum NetworkType { Other, Infrastructure };
-    public enum Authentication { Other, Open, Owe, WPA_Personal, WPA2_Personal, WPA2_Enterprise, WPA3_Personal, WPA3_Enterprise_192 };
+    public enum Authentication { Other, Open, Owe, WPA_Personal, WPA2_Personal, WPA2_Enterprise, WPA3_Personal, WPA3_Enterprise, WPA3_Enterprise_192 };
     public enum Encryption { Other, None, WEP, CCMP, GCMP_256 };
     /// <summary>
     /// Wi-Fi type like 802.11be for Wi-Fi 7
@@ -26,6 +26,7 @@ namespace ParseNetshModeBss
             { Authentication.WPA2_Personal, "WPA2-Personal" },
             { Authentication.WPA2_Enterprise, "WPA2-Enterprise" },
             { Authentication.WPA3_Personal, "WPA3-Personal" },
+            { Authentication.WPA3_Enterprise, "WPA3-Enterprise" },
             { Authentication.WPA3_Enterprise_192, "WPA3-Enterprise 192 Bits" },
         };
 

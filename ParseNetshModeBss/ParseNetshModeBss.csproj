@@ -12,4 +12,6 @@
     <PublishSingleFile>true</PublishSingleFile>    
   </PropertyGroup>
 
+  <Import Project="..\Utilities\Utilities.projitems" Label="Shared" />
+
 </Project>

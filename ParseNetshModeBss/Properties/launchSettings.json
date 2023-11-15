@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "ParseNetshModeBss": {
+      "commandName": "Project",
+      "commandLineArgs": "-generate",
+      "workingDirectory": "c:\\temp\\2023"
+    }
+  }
+}

@@ -22,6 +22,7 @@ namespace ParseNetshModeBss
             { "WPA2-Personal", Authentication.WPA2_Personal },
             { "WPA2-Enterprise", Authentication.WPA2_Enterprise },
             { "WPA3-Personal", Authentication.WPA3_Personal },
+            { "WPA3-Enterprise", Authentication.WPA3_Enterprise },
             { "WPA3-Enterprise 192 Bits", Authentication.WPA3_Enterprise_192 },
         };
 
