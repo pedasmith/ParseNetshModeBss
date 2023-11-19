@@ -46,7 +46,7 @@ namespace ParseNetshModeBss
                     break;
 
                 case Mode.Generate:
-                    var lines = RunNetsh();
+                    var lines = RunCommandLine.RunNetsh();
                     parser.Parse(lines);
                     Console.Write(SsidInfo.ToCsv(parser.ParsedData, options.PrintCsvHeader, dateHeader, currDate + ","));
                     break;
@@ -78,23 +78,7 @@ namespace ParseNetshModeBss
             return date;
         }
 
-        private static string RunNetsh(string program = "netsh", string args = "wlan show networks mode=bssid")
-        {
-            string retval = "";
-            var start = new ProcessStartInfo()
-            {
-                FileName = program,
-                Arguments = args,
-                RedirectStandardOutput = true,
-                WindowStyle = ProcessWindowStyle.Hidden,
-            };
-            using (Process? proc = Process.Start(start))
-            {
-                retval = proc?.StandardOutput.ReadToEnd() ?? "";
-                proc!.WaitForExit();
-            }
-            return retval;
-        }
+
 
         private static ReturnErrors RunSystemTests()
         {

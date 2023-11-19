@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ParseBssidMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rfc4180_CSV.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RunCommandLine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SsidInfo.cs" />
   </ItemGroup>
 </Project>
