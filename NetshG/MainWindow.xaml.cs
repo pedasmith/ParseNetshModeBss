@@ -50,41 +50,93 @@ namespace NetshG
 
         private void OnSelectCommand(object sender, SelectionChangedEventArgs e)
         {
-            var program = "netsh";
             if (e.AddedItems.Count != 1) return; // only one item selected
             var fe = e.AddedItems[0] as ContentControl;
             if (fe == null) return; // seriously, it's always a framework element.
-            var args = fe.Tag as string;
-            if (string.IsNullOrEmpty(args)) 
-            {
-                args = fe.Content as string;
-            }
-            var nsc = fe as NetshCommandControl; // not all command are the command control
+
+            var program = "netsh";
+            var nsc = fe as NetshCommandControl; // not all command are the command control??
+            CommandInfo ci;
             if (nsc != null)
             {
-                program = nsc.Cmd;
-                args = nsc.Args;
+                ci = nsc.CommandInfo;
             }
-            if (string.IsNullOrEmpty(args)) return; // never happens
+            else
+            {
+                ci = new CommandInfo()
+                {
+                    Cmd = program,
+                    Args = "wlan show"
+                };
+            }
+
+            DoCommand(ci);
+        }
+
+        private void DoCommand(CommandInfo ci)
+        { 
+            var program = ci.Cmd;
+            var args = ci.Args;
 
             uiOutput.Text = "....getting command...";
-            if (nsc != null)
+            args = CurrArgumentSettings.Replace(args, ci.Requires);
+            if (ci.Requires.Count >= 1)
             {
-                args = CurrArgumentSettings.Replace(args, nsc.CommandInfo.Requires);
+                var name = ci.Requires[0].Name;
+                uiReplace.Visibility = Visibility.Visible;
+                uiReplaceName.Text = name;
+                uiReplaceValue.Text = CurrArgumentSettings.GetCurrent(name, "(not set)");
             }
+            else
+            {
+                uiReplace.Visibility = Visibility.Collapsed;
+            }
+            uiCommand.Text = $"{program} {args}";
             var result = RunCommandLine.RunNetshG(program, args);
             uiOutput.Text = result;
 
             // Handle the parsing...
-            if (nsc != null)
+            if (!string.IsNullOrEmpty(ci.Sets))
             {
-                if (!string.IsNullOrEmpty(nsc.CommandInfo.Sets))
-                {
-                    var parser = GetParser.Get(nsc.CommandInfo.SetParser);
-                    var setList = parser.ParseForValues(result);
-                    CurrArgumentSettings.SetValueList(nsc.CommandInfo.Sets, setList);
-                }
+                var parser = GetParser.Get(ci.SetParser);
+                var setList = parser.ParseForValues(result);
+                CurrArgumentSettings.SetValueList(ci.Sets, setList);
             }
+        }
+
+
+
+        private void Move(int delta)
+        {
+            var name = uiReplaceName.Text;
+            var currValue = uiReplaceValue.Text;
+            var list = CurrArgumentSettings.GetValueList(name);
+            var index = CurrArgumentSettings.Find(name, currValue);
+            if (index < 0) return;
+            index += delta;
+            if (index < 0 || index >= list.Count) return;
+            var newValue = list[index];
+            CurrArgumentSettings.SetCurrent(name, newValue);
+
+            uiReplaceValue.Text = newValue;
+
+            // And now re-do the command!
+            var ncc = uiCommandList.SelectedItem as NetshCommandControl;
+            var ci = ncc?.CommandInfo;
+            if (ci != null)
+            {
+                DoCommand(ci);
+            }
+        }
+
+        private void OnNext(object sender, RoutedEventArgs e)
+        {
+            Move(1);
+        }
+
+        private void OnPrev(object sender, RoutedEventArgs e)
+        {
+            Move(-1);
         }
     }
 }

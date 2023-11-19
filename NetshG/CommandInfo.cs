@@ -62,6 +62,7 @@ namespace NetshG
             }
             return retval;
         }
+
         public string GetCurrent(string name, string defaultValue)
         {
             string retval = defaultValue;
@@ -70,6 +71,24 @@ namespace NetshG
                 retval = Current[name];
             }
             return retval;
+        }
+
+        public int Find(string valueName, string value)
+        {
+            if (!Values.ContainsKey(valueName)) return -1;
+            var list = Values[valueName];
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i] == value) return i;
+            }
+            return -1;
+        }
+
+        public List<string> GetValueList(string valueName)
+        {
+            if (!Values.ContainsKey(valueName)) return new List<string>();
+            var list = Values[valueName];
+            return list;
         }
 
         public void SetCurrent(string name, string value)

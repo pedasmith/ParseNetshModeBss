@@ -11,8 +11,8 @@ namespace NetshG
     {
         public static List<CommandInfo> GetCommands()
         {
-            //var retval = JsonConvert.DeserializeObject<List<CommandInfo>>(AllCommands);
-            var retval = JsonConvert.DeserializeObject<List<CommandInfo>>(MicroList);
+            var retval = JsonConvert.DeserializeObject<List<CommandInfo>>(AllCommands);
+            //var retval = JsonConvert.DeserializeObject<List<CommandInfo>>(MicroList);
             if (retval == null)
             {
                 return new List<CommandInfo>() { };
@@ -23,7 +23,6 @@ namespace NetshG
 		public static string MicroList = """
 [
 	{
-		"ID": "netsh wlan show profiles",
 		"Cmd":"netsh",
 		"Args":"wlan show profiles",
 		"Sets": "Profile",
@@ -35,7 +34,6 @@ namespace NetshG
 		"Requires": [
 			{ 
 				"Name": "Profile",
-				"From": "netsh wlan show profiles"
 			}
 		]
 	}
@@ -776,19 +774,18 @@ namespace NetshG
 		"Cmd":"netsh",
 		"Args":"wlan show onlyUseGPProfilesforAllowedNetworks"
 	},
-    {
-		"ID": "netsh wlan show profiles",
+	{
 		"Cmd":"netsh",
 		"Args":"wlan show profiles",
-		"Sets": "Profile"
+		"Sets": "Profile",
+		"SetParser": "Profile",
 	},
-    {
+	{
 		"Cmd":"netsh",
-		"Args":"wlan show profiles name="stellerjay" key=clear",
+		"Args":"wlan show profiles name=\"Profile\" key=clear",
 		"Requires": [
 			{ 
 				"Name": "Profile",
-				"From": "netsh wlan show profiles"
 			}
 		]
 	},
