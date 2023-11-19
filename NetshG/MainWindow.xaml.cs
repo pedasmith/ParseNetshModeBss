@@ -40,8 +40,8 @@ namespace NetshG
             DoSetMenuWithTag(CurrUserPrefs.Tags);
 
             uiMenu_Parameters_Common.Items.Clear();
-            DoSetupCommonMenu("level");
-            DoSetupCommonMenu("store");
+            DoSetupCommonMenu("Level");
+            DoSetupCommonMenu("Store");
         }
 
         private void DoSetMenuWithTag(string tags)
@@ -94,9 +94,12 @@ namespace NetshG
         { 
             var program = ci.Cmd;
             var args = ci.Args;
+            var moreArgs = ci.MoreArgs;
 
             uiOutput.Text = "....getting command...";
+
             args = CurrArgumentSettings.Replace(args, ci.Requires);
+            var argsWithMore = CurrArgumentSettings.Replace(args + " " + moreArgs, ci.Requires);
             if (ci.Requires.Count >= 1)
             {
                 var name = ci.Requires[0].Name;
@@ -110,9 +113,9 @@ namespace NetshG
                 uiReplace.Visibility = Visibility.Collapsed;
             }
             uiOutputScroll.ScrollToHome();
-            uiCommand.Text = $"{program} {args}";
+            uiCommand.Text = $"{program} {argsWithMore}";
             var qresult = RunCommandLine.RunNetshG(program, args + " ?");
-            var result = RunCommandLine.RunNetshG(program, args);
+            var result = RunCommandLine.RunNetshG(program, argsWithMore);
             if (CurrUserPrefs.ReplaceTabs)
             {
                 if (result.Contains('\t'))
@@ -162,13 +165,13 @@ namespace NetshG
 
         private void DoInitializeCommonArguments()
         {
-            CurrArgumentSettings.SetValueList("level", new List<ArgumentSettingValue>() { new ArgumentSettingValue("normal"), new ArgumentSettingValue("verbose") });
-            CurrArgumentSettings.SetValueList("store", new List<ArgumentSettingValue>() { new ArgumentSettingValue("active"), new ArgumentSettingValue("persistent") });
+            CurrArgumentSettings.SetValueList("Level", new List<ArgumentSettingValue>() { new ArgumentSettingValue("normal"), new ArgumentSettingValue("verbose") });
+            CurrArgumentSettings.SetValueList("Store", new List<ArgumentSettingValue>() { new ArgumentSettingValue("active"), new ArgumentSettingValue("persistent") });
 
-            CurrArgumentSettings.SetCurrent("level", CurrArgumentSettings.GetValue("level", "verbose"));
+            CurrArgumentSettings.SetCurrent("Level", CurrArgumentSettings.GetValue("Level", "verbose"));
         }
 
-        private void DoSetupCommonMenu(string name="level")
+        private void DoSetupCommonMenu(string name)
         {
             var list = CurrArgumentSettings.GetValueList(name);
             var mi = new MenuItem() { Header = name, Tag=name };

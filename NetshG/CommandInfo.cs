@@ -15,8 +15,10 @@ namespace NetshG
         public string ID { get; set; } = "";
         public string Cmd { get; set; } = "";
         public string Args { get; set; } = "";
+        public string MoreArgs { get; set; } = "";
         public string Help { get; set; } = "";
         public List<CommandRequire> Requires { get; set; } = new List<CommandRequire>();
+        public string RequireList { get; set; } = "";
         public string Sets { get; set; } = "";
         public string SetParser { get; set; } = "";
 
@@ -46,6 +48,16 @@ namespace NetshG
                 if (item == tag) return true;
             }
             return false;
+        }
+
+        public void UpdateRequiresFromList()
+        {
+            if (string.IsNullOrEmpty(RequireList)) return;
+            var list = RequireList.Split(",");
+            foreach (var item in list)
+            {
+                Requires.Add(new CommandRequire() { Name = item });
+            }
         }
     }
 

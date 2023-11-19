@@ -16,6 +16,10 @@ namespace NetshG
             {
                 return new List<CommandInfo>() { };
             }
+			foreach (var item in retval)
+			{
+				item.UpdateRequiresFromList(); // As appropriate
+			}
             return retval;
         }
 
@@ -23,7 +27,8 @@ namespace NetshG
 [
    {
 		"Cmd":"netsh",
-		"Args":"advfirewall show allprofiles"
+		"Args":"advfirewall show allprofiles",
+		"note":"missing parameters"
 	},
     {
 		"Cmd":"netsh",
@@ -79,7 +84,8 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"http show servicestate"
+		"Args":"http show servicestate",
+		"notes":"has verbose=yes|no instead of level"
 	},
     {
 		"Cmd":"netsh",
@@ -119,7 +125,9 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface httpstunnel show statistics"
+		"Args":"interface httpstunnel show statistics",
+		"MoreArgs":"store=Store",
+		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
@@ -127,7 +135,9 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show compartments"
+		"Args":"interface ipv4 show compartments",
+		"MoreArgs":"level=Level store=Store",
+		"RequireList":"Level,Store"
 	},
     {
 		"Cmd":"netsh",
@@ -144,7 +154,9 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show destinationcache"
+		"Args":"interface ipv4 show destinationcache",
+		"MoreArgs":"level=Level",
+		"RequireList":"Level"
 	},
     {
 		"Cmd":"netsh",
@@ -152,39 +164,33 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show dynamicportrange tcp store=active"
+		"Args":"interface ipv4 show dynamicportrange tcp",
+		"MoreArgs":"store=Store",
+		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show dynamicportrange udp store=active"
+		"Args":"interface ipv4 show dynamicportrange udp",
+		"MoreArgs":"store=Store",
+		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show dynamicportrange tcp store=persistent"
+		"Args":"interface ipv4 show excludedportrange tcp",
+		"MoreArgs":"store=Store",
+		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show dynamicportrange udp store=persistent"
+		"Args":"interface ipv4 show excludedportrange udp",
+		"MoreArgs":"store=Store",
+		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show excludedportrange tcp store=active"
-	},
-    {
-		"Cmd":"netsh",
-		"Args":"interface ipv4 show excludedportrange udp store=active"
-	},
-    {
-		"Cmd":"netsh",
-		"Args":"interface ipv4 show excludedportrange tcp store=persistent"
-	},
-    {
-		"Cmd":"netsh",
-		"Args":"interface ipv4 show excludedportrange udp store=persistent"
-	},
-    {
-		"Cmd":"netsh",
-		"Args":"interface ipv4 show global"
+		"Args":"interface ipv4 show global",
+		"MoreArgs":"store=Store",
+		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
@@ -194,12 +200,16 @@ namespace NetshG
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show interfaces",
 		"Sets": "InterfaceIndex",
-		"SetParser": "Interfaces"
+		"SetParser": "Interfaces",
+		"MoreArgs":"level=Level store=Store",
+		"RequireList":"Level,Store"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show ipaddresses",
-		"Tags":"#common"
+		"Tags":"#common",
+		"MoreArgs":"level=Level store=Store",
+		"RequireList":"Level,Store"
 	},
     {
 		"Cmd":"netsh",
@@ -212,11 +222,15 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show joins"
+		"Args":"interface ipv4 show joins",
+		"MoreArgs":"level=Level",
+		"RequireList":"Level"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show neighbors"
+		"Args":"interface ipv4 show neighbors",
+		"MoreArgs":"level=Level store=Store",
+		"RequireList":"Level,Store"
 	},
     {
 		"Cmd":"netsh",
@@ -224,11 +238,15 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show route"
+		"Args":"interface ipv4 show route",
+		"MoreArgs":"level=Level store=Store",
+		"RequireList":"Level,Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show subinterfaces"
+		"Args":"interface ipv4 show subinterfaces",
+		"MoreArgs":"level=Level store=Store",
+		"RequireList":"Level,Store"
 	},
     {
 		"Cmd":"netsh",
@@ -279,15 +297,21 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv6 show addresses",
-		"Tags":"#common"
+		"Tags":"#common",
+		"MoreArgs":"level=Level store=Store",
+		"RequireList":"Level,Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show compartments"
+		"Args":"interface ipv6 show compartments",
+		"MoreArgs":"level=Level store=Store",
+		"RequireList":"Level,Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show destinationcache"
+		"Args":"interface ipv6 show destinationcache",
+		"MoreArgs":"level=Level",
+		"RequireList":"Level"
 	},
     {
 		"Cmd":"netsh",
@@ -295,43 +319,39 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show dynamicportrange tcp store=active"
+		"Args":"interface ipv6 show dynamicportrange tcp",
+		"MoreArgs":"store=Store",
+		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show dynamicportrange udp store=active"
+		"Args":"interface ipv6 show dynamicportrange udp",
+		"MoreArgs":"store=Store",
+		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show dynamicportrange tcp store=persistent"
+		"Args":"interface ipv6 show excludedportrange tcp",
+		"MoreArgs":"store=Store",
+		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show dynamicportrange udp store=persistent"
+		"Args":"interface ipv6 show excludedportrange udp",
+		"MoreArgs":"store=Store",
+		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show excludedportrange tcp store=active"
+		"Args":"interface ipv6 show global",
+		"MoreArgs":"store=Store",
+		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show excludedportrange udp store=active"
-	},
-    {
-		"Cmd":"netsh",
-		"Args":"interface ipv6 show excludedportrange tcp store=persistent"
-	},
-    {
-		"Cmd":"netsh",
-		"Args":"interface ipv6 show excludedportrange udp store=persistent"
-	},
-    {
-		"Cmd":"netsh",
-		"Args":"interface ipv6 show global"
-	},
-    {
-		"Cmd":"netsh",
-		"Args":"interface ipv6 show interfaces"
+		"Args":"interface ipv6 show interfaces",
+		"MoreArgs":"level=Level store=Store",
+		"RequireList":"Level,Store"
 	},
     {
 		"Cmd":"netsh",
@@ -339,11 +359,15 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show joins"
+		"Args":"interface ipv6 show joins",
+		"MoreArgs":"level=Level",
+		"RequireList":"Level"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show neighbors"
+		"Args":"interface ipv6 show neighbors",
+		"MoreArgs":"level=Level store=Store",
+		"RequireList":"Level,Store"
 	},
     {
 		"Cmd":"netsh",
@@ -355,23 +379,21 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show prefixpolicies store=active"
+		"Args":"interface ipv6 show prefixpolicies",
+		"MoreArgs":"store=Store",
+		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show prefixpolicies store=persistent"
+		"Args":"interface ipv6 show privacy",
+		"MoreArgs":"store=Store",
+		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show privacy store=active"
-	},
-    {
-		"Cmd":"netsh",
-		"Args":"interface ipv6 show privacy store=persistent"
-	},
-    {
-		"Cmd":"netsh",
-		"Args":"interface ipv6 show route"
+		"Args":"interface ipv6 show route",
+		"MoreArgs":"level=Level store=Store",
+		"RequireList":"Level,Store"
 	},
     {
 		"Cmd":"netsh",
@@ -379,7 +401,9 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show subinterfaces"
+		"Args":"interface ipv6 show subinterfaces",
+		"MoreArgs":"level=Level store=Store",
+		"RequireList":"Level,Store"
 	},
     {
 		"Cmd":"netsh",
@@ -431,7 +455,9 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface tcp show global"
+		"Args":"interface tcp show global",
+		"MoreArgs":"store=Store",
+		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
@@ -443,19 +469,26 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface tcp show security"
+		"Args":"interface tcp show security",
+		"MoreArgs":"store=Store",
+		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface tcp show supplemental"
+		"Args":"interface tcp show supplemental",
+		"note":"missing template"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface tcp show supplementalports"
+		"Args":"interface tcp show supplementalports",
+		"MoreArgs":"level=Level",
+		"RequireList":"Level"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface tcp show supplementalsubnets"
+		"Args":"interface tcp show supplementalsubnets",
+		"MoreArgs":"level=Level",
+		"RequireList":"Level"
 	},
     {
 		"Cmd":"netsh",
@@ -463,11 +496,9 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface udp show global store=active"
-	},
-    {
-		"Cmd":"netsh",
-		"Args":"interface udp show global store=persistent"
+		"Args":"interface udp show global",
+		"MoreArgs":"store=Store",
+		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
@@ -604,11 +635,9 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"netio show bindingfilters store=active"
-	},
-    {
-		"Cmd":"netsh",
-		"Args":"netio show bindingfilters store=persistent"
+		"Args":"netio show bindingfilters",
+		"MoreArgs":"store=Store",
+		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
@@ -686,15 +715,19 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"trace show providers"
+		"Args":"trace show providers",
+		"note":"takes up to 5 seconds while the UX is frozen"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"trace show scenario"
+		"Args":"trace show scenario name=Scenario",
+		"RequireList":"Scenario"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"trace show scenarios"
+		"Args":"trace show scenarios",
+		"Sets":"Scenario",
+		"SetParser":"Scenario"
 	},
     {
 		"Cmd":"netsh",
