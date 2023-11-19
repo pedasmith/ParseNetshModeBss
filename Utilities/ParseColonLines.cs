@@ -15,9 +15,9 @@ namespace Utilities
             Logger = this;
         }
 
-        public List<string> ParseForValues(string value)
+        public List<ArgumentSettingValue> ParseForValues(string value)
         {
-            var retval = new List<string>();
+            var retval = new List<ArgumentSettingValue>();
             var lines = value.Split('\n');
             foreach (var line in lines)
             {
@@ -31,7 +31,7 @@ namespace Utilities
                     }
                     var n = nv[0].Trim();
                     var v = nv[1].Trim();
-                    retval.Add(v);
+                    retval.Add(new ArgumentSettingValue(v));
                 }
             }
 

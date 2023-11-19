@@ -6,12 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Markup;
 using Newtonsoft.Json;
+using Utilities;
 
 namespace NetshG
 {
     public class CommandInfo
     {
-		public string ID { get; set; } = "";
+        public string ID { get; set; } = "";
         public string Cmd { get; set; } = "";
         public string Args { get; set; } = "";
         public string Help { get; set; } = "";
@@ -21,7 +22,9 @@ namespace NetshG
 
         public string Tags { get; set; } = "";
         private List<string>? _taglist = null;
-        public List<string> TagList { get
+        public List<string> TagList
+        {
+            get
             {
                 if (_taglist == null)
                 {
@@ -46,9 +49,9 @@ namespace NetshG
         }
     }
 
-	public class CommandRequire
-	{
-		public string Name { get; set; } = "";
+    public class CommandRequire
+    {
+        public string Name { get; set; } = "";
         public string From { get; set; } = "";
         private string _replace = "";
         public string Replace
@@ -63,62 +66,87 @@ namespace NetshG
         }
     }
 
+    
     public class ArgumentSettings
     {
         // Example: a command might have a "Sets" of "Profile". When the command is run, the output
         // is parsed and a list of strings is created and added to Values under "Profiles".
         // At the same time, the first element is added to Current as the value for "Profile".
-        private Dictionary<string,List<string>> Values = new Dictionary<string,List<string>>();
-        private Dictionary<string,string> Current = new Dictionary<string,string>();
-
+        private Dictionary<string, List<ArgumentSettingValue>> Values = new Dictionary<string, List<ArgumentSettingValue>>();
+        private Dictionary<string, ArgumentSettingValue> Current = new Dictionary<string, ArgumentSettingValue>();
+        /// <summary>
+        /// Smart routine that given a string with e.g. "netsh ... .level=Level" with a requires of "Level", replaces
+        /// the Level with the right value (e.g., "normal" or "verbose")
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="requires"></param>
+        /// <returns></returns>
         public string Replace(string value, List<CommandRequire> requires)
         {
             string retval = value;
             foreach (var item in requires)
             {
                 var itemvalue = GetCurrent(item.Name, "");
-                if (itemvalue == "") 
+                if (itemvalue.Value == "")
                 {
                     retval = $"ERROR: unable to expand {item.Name}";
                 }
                 else
                 {
-                    retval = retval.Replace(item.Replace, itemvalue);
+                    retval = retval.Replace(item.Replace, itemvalue.Value);
                 }
             }
             return retval;
         }
-
-        public string GetCurrent(string name, string defaultValue)
+        /// <summary>
+        /// Get 'Current' value for e.g. level (return "normal") or defaultValue for error.
+        /// </summary>
+        public ArgumentSettingValue GetCurrent(string name, string defaultValue)
         {
-            string retval = defaultValue;
-            if (Current.ContainsKey(name))
-            {
-                retval = Current[name];
-            }
+            ArgumentSettingValue retval = Current.ContainsKey(name) 
+                ? Current[name] 
+                : new ArgumentSettingValue(defaultValue);
+            return retval;
+        }
+        /// <summary>
+        /// Exampele: find the level=normal value, or return null;
+        /// </summary>
+        public ArgumentSettingValue? GetValue(string valueName, string value)
+        {
+            var idx = Find(valueName, value);
+            ArgumentSettingValue? retval = idx>=0 ? Values[valueName][idx] : null;
             return retval;
         }
 
+        /// <summary>
+        /// Return list index for valueName=value (e.g., level=normal) or -1 for any error (can find level or normal)
+        /// </summary>
         public int Find(string valueName, string value)
         {
             if (!Values.ContainsKey(valueName)) return -1;
             var list = Values[valueName];
             for (int i = 0; i < list.Count; i++)
             {
-                if (list[i] == value) return i;
+                if (list[i].Value == value) return i;
             }
             return -1;
         }
 
-        public List<string> GetValueList(string valueName)
+        /// <summary>
+        /// Returns the list of values associated with a parameters (e.g., "store" returns a list of two values, "active" and "persistent"
+        /// </summary>
+        /// <param name="valueName"></param>
+        /// <returns></returns>
+        public List<ArgumentSettingValue> GetValueList(string valueName)
         {
-            if (!Values.ContainsKey(valueName)) return new List<string>();
+            if (!Values.ContainsKey(valueName)) return new List<ArgumentSettingValue>();
             var list = Values[valueName];
             return list;
         }
 
-        public void SetCurrent(string name, string value)
+        public void SetCurrent(string name, ArgumentSettingValue? value)
         {
+            if (value == null) return;
             if (Current.ContainsKey(name))
             {
                 Current[name] = value;
@@ -129,7 +157,7 @@ namespace NetshG
             }
         }
 
-        public void SetValueList(string name, List<string> values)
+        public void SetValueList(string name, List<ArgumentSettingValue> values)
         {
             if (Values.ContainsKey(name))
             {
@@ -140,16 +168,16 @@ namespace NetshG
                 Values.Add(name, values);
             }
             var curr = GetCurrent(name, "");
-            if (curr == "" || !values.Contains(curr))
+            if (curr.Value == "" || !values.Contains(curr))
             {
                 if (values.Count > 1)
                 {
                     curr = values[0];
                 }
             }
-            if (curr != "")
+            if (curr.Value != "")
             {
-                    SetCurrent(name, curr);
+                SetCurrent(name, curr);
             }
         }
     }

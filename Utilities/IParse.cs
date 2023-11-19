@@ -6,6 +6,6 @@ namespace Utilities
 {
     internal interface IParse
     {
-        public List<string> ParseForValues(string value);
+        public List<ArgumentSettingValue> ParseForValues(string value);
     }
 }

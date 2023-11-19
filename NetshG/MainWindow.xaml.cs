@@ -36,7 +36,12 @@ namespace NetshG
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            DoInitializeCommonArguments();
             DoSetMenuWithTag(CurrUserPrefs.Tags);
+
+            uiMenu_Parameters_Common.Items.Clear();
+            DoSetupCommonMenu("level");
+            DoSetupCommonMenu("store");
         }
 
         private void DoSetMenuWithTag(string tags)
@@ -96,7 +101,7 @@ namespace NetshG
             {
                 var name = ci.Requires[0].Name;
                 uiReplaceName.Text = name;
-                uiReplaceValue.Text = CurrArgumentSettings.GetCurrent(name, "(not set)");
+                uiReplaceValue.Text = CurrArgumentSettings.GetCurrent(name, "(not set)").Value;
 
                 uiReplace.Visibility = Visibility.Visible;
             }
@@ -144,7 +149,7 @@ namespace NetshG
             var newValue = list[index];
             CurrArgumentSettings.SetCurrent(name, newValue);
 
-            uiReplaceValue.Text = newValue;
+            uiReplaceValue.Text = newValue.Value;
 
             // And now re-do the command!
             var ncc = uiCommandList.SelectedItem as NetshCommandControl;
@@ -154,6 +159,32 @@ namespace NetshG
                 DoCommand(ci);
             }
         }
+
+        private void DoInitializeCommonArguments()
+        {
+            CurrArgumentSettings.SetValueList("level", new List<ArgumentSettingValue>() { new ArgumentSettingValue("normal"), new ArgumentSettingValue("verbose") });
+            CurrArgumentSettings.SetValueList("store", new List<ArgumentSettingValue>() { new ArgumentSettingValue("active"), new ArgumentSettingValue("persistent") });
+
+            CurrArgumentSettings.SetCurrent("level", CurrArgumentSettings.GetValue("level", "verbose"));
+        }
+
+        private void DoSetupCommonMenu(string name="level")
+        {
+            var list = CurrArgumentSettings.GetValueList(name);
+            var mi = new MenuItem() { Header = name, Tag=name };
+            mi.Click += Mi_Click;
+            uiMenu_Parameters_Common.Items.Add(mi);
+        }
+
+        private void Mi_Click(object sender, RoutedEventArgs e)
+        {
+            var name = ((sender as MenuItem)?.Tag as string) ?? "";
+            var dlg = new ArgumentSettingDialog(CurrArgumentSettings, name);
+            if (!dlg.InitOk) return; // NOTE: show something to user?
+            var result = dlg.ShowDialog();
+        }
+
+
 
         private void OnNextMacro(object sender, RoutedEventArgs e)
         {

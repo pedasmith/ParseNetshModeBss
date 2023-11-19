@@ -48,6 +48,10 @@
                 <MenuItem Header="_Wi-Fi" Tag="#wifi" Click="OnMenu_Show_Tag" />
                 <MenuItem Header="Show _Help" IsCheckable="True" IsChecked="True" Checked="OnMenu_Show_Help_Check" Unchecked="OnMenu_Show_Help_Uncheck" />
             </MenuItem>
+            <MenuItem Header="_Parameters">
+                <MenuItem Header="_Common" x:Name="uiMenu_Parameters_Common">
+                </MenuItem>
+            </MenuItem>
         </Menu>
         <TextBlock Grid.Row="1" Style="{StaticResource ResourceKey=rTitle}">Netsh Gui Interface</TextBlock>
 

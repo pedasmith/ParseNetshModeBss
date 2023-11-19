@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="NetshG.ArgumentSettingControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NetshG"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <StackPanel>
+        <TextBlock>Set Argument Value</TextBlock>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock x:Name="uiName" />
+            <TextBlock Text=" = " />
+            <ComboBox x:Name="uiValues" SelectionChanged="OnSelectionChanged" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

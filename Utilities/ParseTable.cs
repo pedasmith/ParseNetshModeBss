@@ -6,7 +6,7 @@ namespace Utilities
 {
     internal class ParseTable : IParse
     {
-
+#if NEVER_EVER_DEFINED
         private string ExampleTable = """
 Idx     Met         MTU          State                Name
 ---  ----------  ----------  ------------  ---------------------------
@@ -17,6 +17,7 @@ Idx     Met         MTU          State                Name
   5          25        1500  connected     Ethernet 2
 
 """;
+#endif
         public List<string> ColumnNames = new List<string>();
         public List<List<string>> Rows = new List<List<string>>();
 
@@ -64,20 +65,20 @@ Idx     Met         MTU          State                Name
             }
         }
 
-        public List<string> GetColumn(string name)
+        public List<ArgumentSettingValue> GetColumn(string name)
         {
-            var retval = new List<string>();
+            var retval = new List<ArgumentSettingValue>();
             var index = ColumnNames.IndexOf(name);
             foreach (var row in Rows)
             {
                 bool hasCol = (index >= 0) && (index < row.Count);
-                retval.Add (hasCol ? row[index] : "");
+                retval.Add (new ArgumentSettingValue(hasCol ? row[index] : ""));
             }
             return retval;
         }
 
         public string ColumnToReturn = "";
-        public List<string> ParseForValues(string value)
+        public List<ArgumentSettingValue> ParseForValues(string value)
         {
             DoParse(value);
             var retval = GetColumn(ColumnToReturn);
