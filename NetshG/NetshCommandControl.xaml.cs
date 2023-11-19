@@ -41,7 +41,7 @@ namespace NetshG
             InitializeComponent();
             CommandInfo = info;
             Cmd = info.Cmd;
-            Args = info.Args;
+            Args = info.Args + " " + info.ArgsExtra;
         }
     }
 }

@@ -13,9 +13,22 @@ namespace NetshG
     public class CommandInfo
     {
         public string ID { get; set; } = "";
+        /// <summary>
+        /// e.g. netsh
+        /// </summary>
         public string Cmd { get; set; } = "";
-        public string Args { get; set; } = "";
-        public string MoreArgs { get; set; } = "";
+        /// <summary>
+        /// e.g. show interfaces. shown to user and part of ? to get help; 
+        /// </summary>
+        public string Args { get; set; } = ""; 
+        /// <summary>
+        /// shown to user but not part of the ? to get help
+        /// </summary>
+        public string ArgsExtra { get; set; } = "";
+        /// <summary>
+        /// not shown to user and not part of the ? to get help
+        /// </summary>
+        public string MoreArgs { get; set; } = ""; 
         public string Help { get; set; } = "";
         public List<CommandRequire> Requires { get; set; } = new List<CommandRequire>();
         public string RequireList { get; set; } = "";

@@ -164,25 +164,29 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show dynamicportrange tcp",
+		"Args":"interface ipv4 show dynamicportrange",
+		"ArgsExtra": "tcp",
 		"MoreArgs":"store=Store",
 		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show dynamicportrange udp",
+		"Args":"interface ipv4 show dynamicportrange",
+		"ArgsExtra": "udp",
 		"MoreArgs":"store=Store",
 		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show excludedportrange tcp",
+		"Args":"interface ipv4 show excludedportrange",
+		"ArgsExtra": "tcp",
 		"MoreArgs":"store=Store",
 		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show excludedportrange udp",
+		"Args":"interface ipv4 show excludedportrange",
+		"ArgsExtra": "udp",
 		"MoreArgs":"store=Store",
 		"RequireList":"Store"
 	},
@@ -651,11 +655,13 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"p2p idmgr show groups ALL"
+		"Args":"p2p idmgr show groups ALL",
+		"ArgsExtra":"ALL"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"p2p idmgr show groups ALL EXPIRED"
+		"Args":"p2p idmgr show groups",
+		"ArgsExtra":"ALL EXPIRED"
 	},
     {
 		"Cmd":"netsh",
@@ -827,7 +833,8 @@ namespace NetshG
 	},
 	{
 		"Cmd":"netsh",
-		"Args":"wlan show profiles name=\"Profile\" key=clear",
+		"Args":"wlan show profiles",
+		"ArgsExtra": "name=\"Profile\" key=clear",
 		"Tags":"#common #wifi",
 		"Requires": [
 			{ 
