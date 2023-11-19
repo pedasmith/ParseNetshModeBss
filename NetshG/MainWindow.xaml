@@ -11,9 +11,16 @@
             <Setter Property="FontSize" Value="28" />
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
-        <Style TargetType="TextBlock" x:Key="rOutput">
+        <Style TargetType="TextBox" x:Key="rOutput">
             <Setter Property="FontFamily" Value="Cascadia Mono" />
             <Setter Property="FontSize" Value="12" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="IsReadOnly" Value="True" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style TargetType="TextBlock" x:Key="rLog">
+            <Setter Property="FontSize" Value="9" />
         </Style>
     </Window.Resources>
     <Grid>
@@ -24,237 +31,19 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <TextBlock Style="{StaticResource ResourceKey=rTitle}">Netsh Gui Interface</TextBlock>
+        <TextBlock x:Name="uiLog" Style="{StaticResource ResourceKey=rLog}"></TextBlock>
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" MinWidth="400" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <ListView Grid.Column="0" SelectionChanged="OnSelectCommand">
-                <local:NetshCommandControl Cmd="netsh" Args="advfirewall show allprofiles" Help="netsh advfirewall show ?" />
-                <local:NetshCommandControl Cmd="netsh" Args="advfirewall show currentprofile" Help="netsh advfirewall show ?" />
-                <local:NetshCommandControl Cmd="netsh" Args="advfirewall show domainprofile" Help="netsh advfirewall show ?" />
-                <local:NetshCommandControl Cmd="netsh" Args="advfirewall show global" Help="netsh advfirewall show ?" />
-                <local:NetshCommandControl Cmd="netsh" Args="advfirewall show privateprofile" Help="netsh advfirewall show ?" />
-                <local:NetshCommandControl Cmd="netsh" Args="advfirewall show publicprofile" Help="netsh advfirewall show ?" />
-                <local:NetshCommandControl Cmd="netsh" Args="advfirewall show store" Help="netsh advfirewall show ?" />
-
-                <local:NetshCommandControl Cmd="netsh" Args="bridge show adapter" Help="" />
-
-                <local:NetshCommandControl Cmd="netsh" Args="dnsclient show encryption" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="dnsclient show global" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="dnsclient show state" Help="" />
-
-                <local:NetshCommandControl Cmd="netsh" Args="http show cacheparam" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="http show cachestate" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="http show iplisten" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="http show servicestate" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="http show setting" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="http show sslcert" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="http show timeout" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="http show urlacl" Help="" />
-
-                <local:NetshCommandControl Cmd="netsh" Args="interface 6to4 show interface" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface 6to4 show relay" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface 6to4 show routing" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface 6to4 show state" Help="" />
-
-                <local:NetshCommandControl Cmd="netsh" Args="interface httpstunnel show interfaces" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface httpstunnel show statistics" Help="" />
-
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show addresses" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show compartments" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show config" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show destinationcache" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show dnsservers" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show dynamicportrange tcp store=active" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show dynamicportrange udp store=active" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show dynamicportrange tcp store=persistent" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show dynamicportrange udp store=persistent" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show excludedportrange tcp store=active" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show excludedportrange udp store=active" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show excludedportrange tcp store=persistent" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show excludedportrange udp store=persistent" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show global" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show icmpstats" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show interfaces" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show ipaddresses" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show ipnettomedia" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show ipstats" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show joins" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show neighbors" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show offload" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show route" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show subinterfaces" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show tcpconnections" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show tcpstats" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show udpconnections" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show udpstats" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv4 show winsservers" Help="" />
-
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 6to4 show interface" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 6to4 show relay" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 6to4 show routing" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 6to4 show state" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 isatap show router" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 isatap show state" Help="" />
-
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show addresses" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show compartments" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show destinationcache" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show dnsservers" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show dynamicportrange tcp store=active" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show dynamicportrange udp store=active" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show dynamicportrange tcp store=persistent" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show dynamicportrange udp store=persistent" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show excludedportrange tcp store=active" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show excludedportrange udp store=active" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show excludedportrange tcp store=persistent" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show excludedportrange udp store=persistent" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show global" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show interfaces" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show ipstats" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show joins" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show neighbors" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show offload" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show potentialrouters" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show prefixpolicies store=active" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show prefixpolicies store=persistent" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show privacy store=active" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show privacy store=persistent" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show route" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show siteprefixes" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show subinterfaces" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show tcpstats" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show teredo" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show tfofallback" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface ipv6 show udpstats" Help="" />
-
-                <local:NetshCommandControl Cmd="netsh" Args="interface isatap show router" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface isatap show state" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface portproxy show all" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface portproxy show v4tov4" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface portproxy show v4tov6" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface portproxy show v6tov4" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface portproxy show v6tov6" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface show interface" Help="" />
-
-                <local:NetshCommandControl Cmd="netsh" Args="interface tcp show global" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface tcp show heuristics" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface tcp show rscstats" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface tcp show security" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface tcp show supplemental" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface tcp show supplementalports" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface tcp show supplementalsubnets" Help="" />
-                
-                <local:NetshCommandControl Cmd="netsh" Args="interface teredo show state" Help="" />
-
-                <local:NetshCommandControl Cmd="netsh" Args="interface udp show global store=active" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="interface udp show global store=persistent" Help="" />
-
-                <local:NetshCommandControl Cmd="netsh" Args="lan show interfaces" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="lan show profiles" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="lan show settings" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="lan show tracing" Help="" />
-
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show acstate" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show capability" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show connection" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show d3cold" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show dataenablement" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show dataroamcontrol" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show dmprofiles" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show enterpriseapnparams" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show highestconncategory" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show homeprovider" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show interfaces" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show netlteattachinfo" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show pin" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show pinlist" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show preferredproviders" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show profiles" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show profilestate" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show provisionedcontexts" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show purpose" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show radio" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show readyinfo" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show signal" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show slotmapping" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show slotstatus" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show smsconfig" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show tracing" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="mbn show visibleproviders" Help="" />
-
-                <local:NetshCommandControl Cmd="netsh" Args="namespace show effectivepolicy" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="namespace show policy" Help="" />
-
-                <local:NetshCommandControl Cmd="netsh" Args="netio show bindingfilters store=active" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="netio show bindingfilters store=persistent" Help="" />
-
-                <local:NetshCommandControl Cmd="netsh" Args="nlm show connectivity" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="nlm show cost" Help="" />
-
-                <!-- NOTE: Skipping almost all of the P2P stuff -->
-                <local:NetshCommandControl Cmd="netsh" Args="p2p idmgr show groups ALL" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="p2p idmgr show groups ALL EXPIRED" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="p2p pnrp cloud show list" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="p2p pnrp cloud show names" Help="" />
-
-                <local:NetshCommandControl Cmd="netsh" Args="p2p pnrp cloud show statistics" Help="" />
-
-                <!-- NOTE: Skipping almost all of the ras stuff -->
-                <local:NetshCommandControl Cmd="netsh" Args="ras show wanports" Help="" />
-                
-                <local:NetshCommandControl Cmd="netsh" Args="rpc filter show filter" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="rpc show" Help="" />
-                
-                <local:NetshCommandControl Cmd="netsh" Args="show alias" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="show helper" Help="" />
-
-                <local:NetshCommandControl Cmd="netsh" Args="trace show CaptureFilterHelp" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="trace show globalKeywordsAndLevels" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="trace show helperclass" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="trace show interfaces" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="trace show provider" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="trace show ProviderFilterHelp" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="trace show providers" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="trace show scenario" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="trace show scenarios" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="trace show status" Help="" />
-
-
-                <local:NetshCommandControl Cmd="netsh" Args="winhttp show advproxy" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="winhttp show proxy" Help="" />
-
-                <local:NetshCommandControl Cmd="netsh" Args="winsock audit trail" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="winsock show autotuning" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="winsock show catalog" Help="" />
-
-                <local:NetshCommandControl Cmd="netsh" Args="wlan show all" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="wlan show allowexplicitcreds" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="wlan show autoconfig" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="wlan show blockednetworks" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="wlan show createalluserprofiles" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="wlan show drivers" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="wlan show filters" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="wlan show hostednetwork" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="wlan show hostednetwork setting=security" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="wlan show interfaces" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="wlan show networks mode=ssid" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="wlan show networks mode=bssid" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="wlan show onlyUseGPProfilesforAllowedNetworks" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="wlan show profiles" Help="" />
-                <!-- TODO: use the results from show profiles to plug into here -->
-                <local:NetshCommandControl Cmd="netsh" Args="wlan show profiles name=&quot;stellerjay&quot; key=clear" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="wlan show randomization" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="wlan show settings" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="wlan show tracing" Help="" />
-                <local:NetshCommandControl Cmd="netsh" Args="wlan show wirelesscapabilities" Help="" />
+            <ListView x:Name="uiCommandList" Grid.Column="0" SelectionChanged="OnSelectCommand">
+                <!--- Values are set by MainWindow_Loaded from AllNetshCommands.GetCommands() -->
             </ListView>
             <ScrollViewer Grid.Column="1">
-                <TextBlock x:Name="uiOutput" Style="{StaticResource rOutput}" />
+                <TextBox x:Name="uiOutput" Style="{StaticResource rOutput}" />
             </ScrollViewer>
         </Grid>
-             
     </Grid>
 </Window>

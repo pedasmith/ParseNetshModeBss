@@ -9,7 +9,11 @@
     <Import_RootNamespace>Utilities</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)GetParser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ILog.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IParse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ParseBssidMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ParseColonLines.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rfc4180_CSV.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RunCommandLine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SsidInfo.cs" />

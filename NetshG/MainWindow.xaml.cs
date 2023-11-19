@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 
 
 using ParseNetshModeBss; // to get the utilities classes!
+using Utilities;
 
 namespace NetshG
 {
@@ -26,6 +27,25 @@ namespace NetshG
         public MainWindow()
         {
             InitializeComponent();
+            this.Loaded += MainWindow_Loaded;
+        }
+
+        ArgumentSettings CurrArgumentSettings = new ArgumentSettings();
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            var cmdlist = AllNetshCommands.GetCommands();
+
+            if (cmdlist.Count == 0)
+            {
+                uiLog.Text = "ERROR: unable to load commands";
+                return;
+            }
+            foreach (var cmd in cmdlist)
+            {
+                var ctrl = new NetshCommandControl(cmd);
+                uiCommandList.Items.Add(ctrl);
+            }
         }
 
         private void OnSelectCommand(object sender, SelectionChangedEventArgs e)
@@ -48,8 +68,23 @@ namespace NetshG
             if (string.IsNullOrEmpty(args)) return; // never happens
 
             uiOutput.Text = "....getting command...";
+            if (nsc != null)
+            {
+                args = CurrArgumentSettings.Replace(args, nsc.CommandInfo.Requires);
+            }
             var result = RunCommandLine.RunNetshG(program, args);
             uiOutput.Text = result;
+
+            // Handle the parsing...
+            if (nsc != null)
+            {
+                if (!string.IsNullOrEmpty(nsc.CommandInfo.Sets))
+                {
+                    var parser = GetParser.Get(nsc.CommandInfo.SetParser);
+                    var setList = parser.ParseForValues(result);
+                    CurrArgumentSettings.SetValueList(nsc.CommandInfo.Sets, setList);
+                }
+            }
         }
     }
 }
