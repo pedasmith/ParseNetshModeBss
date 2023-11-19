@@ -12,39 +12,12 @@ namespace NetshG
         public static List<CommandInfo> GetCommands()
         {
             var retval = JsonConvert.DeserializeObject<List<CommandInfo>>(AllCommands);
-            // retval = JsonConvert.DeserializeObject<List<CommandInfo>>(MicroList);
             if (retval == null)
             {
                 return new List<CommandInfo>() { };
             }
             return retval;
         }
-
-		public static string MicroList = """
-[
-    {
-		"Cmd":"netsh",
-		"Args":"interface ipv4 show interfaces",
-		"Sets": "InterfaceIndex",
-		"SetParser": "Interfaces"
-	},
-	{
-		"Cmd":"netsh",
-		"Args":"wlan show profiles",
-		"Sets": "Profile",
-		"SetParser": "Profile",
-	},
-	{
-		"Cmd":"netsh",
-		"Args":"wlan show profiles name=\"Profile\" key=clear",
-		"Requires": [
-			{ 
-				"Name": "Profile",
-			}
-		]
-	}
-	]
-""";
 
         public static string AllCommands = """
 [
@@ -225,7 +198,8 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show ipaddresses"
+		"Args":"interface ipv4 show ipaddresses",
+		"Tags":"#common"
 	},
     {
 		"Cmd":"netsh",
@@ -233,7 +207,8 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show ipstats"
+		"Args":"interface ipv4 show ipstats",
+		"Tags":"#common"
 	},
     {
 		"Cmd":"netsh",
@@ -261,7 +236,8 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show tcpstats"
+		"Args":"interface ipv4 show tcpstats",
+		"Tags":"#common"
 	},
     {
 		"Cmd":"netsh",
@@ -269,7 +245,8 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show udpstats"
+		"Args":"interface ipv4 show udpstats",
+		"Tags":"#common"
 	},
     {
 		"Cmd":"netsh",
@@ -301,7 +278,8 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show addresses"
+		"Args":"interface ipv6 show addresses",
+		"Tags":"#common"
 	},
     {
 		"Cmd":"netsh",
@@ -493,7 +471,8 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"lan show interfaces"
+		"Args":"lan show interfaces",
+		"Tags":"#common"
 	},
     {
 		"Cmd":"netsh",
@@ -633,11 +612,13 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"nlm show connectivity"
+		"Args":"nlm show connectivity",
+		"Tags":"#common"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"nlm show cost"
+		"Args":"nlm show cost",
+		"Tags":"#common"
 	},
     {
 		"Cmd":"netsh",
@@ -741,65 +722,80 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show all"
+		"Args":"wlan show all",
+		"Tags":"#wifi"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show allowexplicitcreds"
+		"Args":"wlan show allowexplicitcreds",
+		"Tags":"#wifi"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show autoconfig"
+		"Args":"wlan show autoconfig",
+		"Tags":"#wifi"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show blockednetworks"
+		"Args":"wlan show blockednetworks",
+		"Tags":"#wifi"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show createalluserprofile"
+		"Args":"wlan show createalluserprofile",
+		"Tags":"#wifi"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show drivers"
+		"Args":"wlan show drivers",
+		"Tags":"#common #wifi"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show filters"
+		"Args":"wlan show filters",
+		"Tags":"#wifi"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show hostednetwork"
+		"Args":"wlan show hostednetwork",
+		"Tags":"#wifi"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show hostednetwork setting=security"
+		"Args":"wlan show hostednetwork setting=security",
+		"Tags":"#wifi"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show interfaces"
+		"Args":"wlan show interfaces",
+		"Tags":"#common #wifi"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show networks mode=ssid"
+		"Args":"wlan show networks mode=ssid",
+		"Tags":"#wifi"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show networks mode=bssid"
+		"Args":"wlan show networks mode=bssid",
+		"Tags":"#common #wifi"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show onlyUseGPProfilesforAllowedNetworks"
+		"Args":"wlan show onlyUseGPProfilesforAllowedNetworks",
+		"Tags":"#wifi"
 	},
 	{
 		"Cmd":"netsh",
 		"Args":"wlan show profiles",
+		"Tags":"#common #wifi",
 		"Sets": "Profile",
-		"SetParser": "Profile",
+		"SetParser": "Profile"
 	},
 	{
 		"Cmd":"netsh",
 		"Args":"wlan show profiles name=\"Profile\" key=clear",
+		"Tags":"#common #wifi",
 		"Requires": [
 			{ 
 				"Name": "Profile",
@@ -808,19 +804,23 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show randomization"
+		"Args":"wlan show randomization",
+		"Tags":"#wifi"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show settings"
+		"Args":"wlan show settings",
+		"Tags":"#wifi"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show tracing"
+		"Args":"wlan show tracing",
+		"Tags":"#wifi"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show wirelesscapabilities"
+		"Args":"wlan show wirelesscapabilities",
+		"Tags":"#wifi"
 	}
 
 ]

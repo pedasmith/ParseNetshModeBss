@@ -18,6 +18,32 @@ namespace NetshG
         public List<CommandRequire> Requires { get; set; } = new List<CommandRequire>();
         public string Sets { get; set; } = "";
         public string SetParser { get; set; } = "";
+
+        public string Tags { get; set; } = "";
+        private List<string>? _taglist = null;
+        public List<string> TagList { get
+            {
+                if (_taglist == null)
+                {
+                    var list = Tags.Split(' ').ToList();
+                    _taglist = list;
+                }
+                return _taglist;
+            }
+        }
+        public bool HasTag(string tag)
+        {
+            if (string.IsNullOrEmpty(tag))
+            {
+                return true; // no tag == no filter requested == return everything!
+            }
+            var list = TagList;
+            foreach (var item in list)
+            {
+                if (item == tag) return true;
+            }
+            return false;
+        }
     }
 
 	public class CommandRequire

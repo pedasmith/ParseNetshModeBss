@@ -37,8 +37,19 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <TextBlock Style="{StaticResource ResourceKey=rTitle}">Netsh Gui Interface</TextBlock>
-        <TextBlock x:Name="uiLog" Style="{StaticResource ResourceKey=rLog}"></TextBlock>
+        
+        <Menu Grid.Row="0">
+            <MenuItem Header="_File" >
+                <MenuItem Header="E_xit" Click="OnMenu_File_Exit" />
+            </MenuItem>
+            <MenuItem Header="_Show" >
+                <MenuItem Header="_Common" Tag="#common" Click="OnMenu_Show_Tag" />
+                <MenuItem Header="_All" Tag="" Click="OnMenu_Show_Tag" />
+                <MenuItem Header="_Wi-Fi" Tag="#wifi" Click="OnMenu_Show_Tag" />
+                <MenuItem Header="Show _Help" IsCheckable="True" IsChecked="True" Checked="OnMenu_Show_Help_Check" Unchecked="OnMenu_Show_Help_Uncheck" />
+            </MenuItem>
+        </Menu>
+        <TextBlock Grid.Row="1" Style="{StaticResource ResourceKey=rTitle}">Netsh Gui Interface</TextBlock>
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
@@ -64,14 +75,14 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock x:Name="uiReplaceName" Grid.Column="0"/>
                     <TextBlock x:Name="uiReplaceValue" Grid.Column="1" />
-                    <Button Content="&lt;" Grid.Column="2" Click="OnPrev" />
-                    <Button Content=">" Grid.Column="3" Click="OnNext" />
+                    <Button Content="&lt;" Grid.Column="2" Click="OnPrevMacro" />
+                    <Button Content=">" Grid.Column="3" Click="OnNextMacro" />
                 </Grid>
                 <ScrollViewer x:Name="uiOutputScroll" Grid.Row="2">
                     <TextBox x:Name="uiOutput" Style="{StaticResource rOutput}" />
                 </ScrollViewer>
-
             </Grid>
         </Grid>
+        <TextBlock Grid.Row="3"  x:Name="uiLog" Style="{StaticResource ResourceKey=rLog}"></TextBlock>
     </Grid>
 </Window>

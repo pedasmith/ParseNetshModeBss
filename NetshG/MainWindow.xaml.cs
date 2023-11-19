@@ -32,8 +32,14 @@ namespace NetshG
         }
 
         ArgumentSettings CurrArgumentSettings = new ArgumentSettings();
+        UserPreferences CurrUserPrefs = new UserPreferences();
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            DoSetMenuWithTag(CurrUserPrefs.Tags);
+        }
+
+        private void DoSetMenuWithTag(string tags)
         {
             var cmdlist = AllNetshCommands.GetCommands();
 
@@ -42,11 +48,16 @@ namespace NetshG
                 uiLog.Text = "ERROR: unable to load commands";
                 return;
             }
+            uiCommandList.Items.Clear();
             foreach (var cmd in cmdlist)
             {
-                var ctrl = new NetshCommandControl(cmd);
-                uiCommandList.Items.Add(ctrl);
+                if (cmd.HasTag(tags))
+                {
+                    var ctrl = new NetshCommandControl(cmd);
+                    uiCommandList.Items.Add(ctrl);
+                }
             }
+
         }
 
         private void OnSelectCommand(object sender, SelectionChangedEventArgs e)
@@ -97,8 +108,18 @@ namespace NetshG
             uiCommand.Text = $"{program} {args}";
             var qresult = RunCommandLine.RunNetshG(program, args + " ?");
             var result = RunCommandLine.RunNetshG(program, args);
-            if (result.Contains('\t')) result = "HAS TABS!!\n" + result;
-            uiOutput.Text = qresult + "\n\n\n" + result.Replace("\t", "\\t");
+            if (CurrUserPrefs.ReplaceTabs)
+            {
+                if (result.Contains('\t'))
+                {
+                    result = "HAS TABS!!\n" + result.Replace("\t", "\\t");
+                }
+            }
+            if (CurrUserPrefs.ShowHelp)
+            {
+                result = qresult + "\n\n\n" + result;
+            }
+            uiOutput.Text = result;
 
             // Handle the parsing...
             if (!string.IsNullOrEmpty(ci.Sets))
@@ -111,7 +132,7 @@ namespace NetshG
 
 
 
-        private void Move(int delta)
+        private void MoveToNextMacroValue(int delta)
         {
             var name = uiReplaceName.Text;
             var currValue = uiReplaceValue.Text;
@@ -134,14 +155,37 @@ namespace NetshG
             }
         }
 
-        private void OnNext(object sender, RoutedEventArgs e)
+        private void OnNextMacro(object sender, RoutedEventArgs e)
         {
-            Move(1);
+            MoveToNextMacroValue(1);
         }
 
-        private void OnPrev(object sender, RoutedEventArgs e)
+        private void OnPrevMacro(object sender, RoutedEventArgs e)
         {
-            Move(-1);
+            MoveToNextMacroValue(-1);
+        }
+
+        private void OnMenu_File_Exit(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Application.Current.Shutdown();
+        }
+
+        private void OnMenu_Show_Tag(object sender, RoutedEventArgs e)
+        {
+            var tag = (sender as MenuItem)?.Tag as string;
+            if (tag == null) tag = "";
+            CurrUserPrefs.Tags = tag;
+            DoSetMenuWithTag(CurrUserPrefs.Tags);
+        }
+
+        private void OnMenu_Show_Help_Check(object sender, RoutedEventArgs e)
+        {
+            CurrUserPrefs.ShowHelp = true;
+        }
+
+        private void OnMenu_Show_Help_Uncheck(object sender, RoutedEventArgs e)
+        {
+            CurrUserPrefs.ShowHelp = false;
         }
     }
 }
