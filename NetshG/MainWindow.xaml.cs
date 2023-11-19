@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -83,17 +84,21 @@ namespace NetshG
             if (ci.Requires.Count >= 1)
             {
                 var name = ci.Requires[0].Name;
-                uiReplace.Visibility = Visibility.Visible;
                 uiReplaceName.Text = name;
                 uiReplaceValue.Text = CurrArgumentSettings.GetCurrent(name, "(not set)");
+
+                uiReplace.Visibility = Visibility.Visible;
             }
             else
             {
                 uiReplace.Visibility = Visibility.Collapsed;
             }
+            uiOutputScroll.ScrollToHome();
             uiCommand.Text = $"{program} {args}";
+            var qresult = RunCommandLine.RunNetshG(program, args + " ?");
             var result = RunCommandLine.RunNetshG(program, args);
-            uiOutput.Text = result;
+            if (result.Contains('\t')) result = "HAS TABS!!\n" + result;
+            uiOutput.Text = qresult + "\n\n\n" + result.Replace("\t", "\\t");
 
             // Handle the parsing...
             if (!string.IsNullOrEmpty(ci.Sets))

@@ -11,6 +11,9 @@ namespace Utilities
             IParse retval = new ParseColonLines(); // TODO: what's the right kind of default parser?
             switch (value)
             {
+                case "Interfaces":
+                    retval = new ParseTable() { ColumnToReturn = "Idx" };
+                    break;
                 case "Profile":
                     retval = new ParseColonLines() { LineMustMatch = "All User Profile", SplitStr = ":" };
                     break;

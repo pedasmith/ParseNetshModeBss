@@ -12,7 +12,7 @@ namespace NetshG
         public static List<CommandInfo> GetCommands()
         {
             var retval = JsonConvert.DeserializeObject<List<CommandInfo>>(AllCommands);
-            //var retval = JsonConvert.DeserializeObject<List<CommandInfo>>(MicroList);
+            // retval = JsonConvert.DeserializeObject<List<CommandInfo>>(MicroList);
             if (retval == null)
             {
                 return new List<CommandInfo>() { };
@@ -22,6 +22,12 @@ namespace NetshG
 
 		public static string MicroList = """
 [
+    {
+		"Cmd":"netsh",
+		"Args":"interface ipv4 show interfaces",
+		"Sets": "InterfaceIndex",
+		"SetParser": "Interfaces"
+	},
 	{
 		"Cmd":"netsh",
 		"Args":"wlan show profiles",
@@ -156,6 +162,15 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
+		"Args":"interface ipv4 show config InterfaceIndex",
+		"Requires":[
+			{
+				"Name": "InterfaceIndex"
+			}
+		]
+	},
+    {
+		"Cmd":"netsh",
 		"Args":"interface ipv4 show destinationcache"
 	},
     {
@@ -204,7 +219,9 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show interfaces"
+		"Args":"interface ipv4 show interfaces",
+		"Sets": "InterfaceIndex",
+		"SetParser": "Interfaces"
 	},
     {
 		"Cmd":"netsh",
@@ -740,7 +757,7 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show createalluserprofiles"
+		"Args":"wlan show createalluserprofile"
 	},
     {
 		"Cmd":"netsh",

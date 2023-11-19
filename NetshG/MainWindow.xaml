@@ -67,7 +67,7 @@
                     <Button Content="&lt;" Grid.Column="2" Click="OnPrev" />
                     <Button Content=">" Grid.Column="3" Click="OnNext" />
                 </Grid>
-                <ScrollViewer Grid.Row="2">
+                <ScrollViewer x:Name="uiOutputScroll" Grid.Row="2">
                     <TextBox x:Name="uiOutput" Style="{StaticResource rOutput}" />
                 </ScrollViewer>
 
