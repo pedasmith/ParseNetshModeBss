@@ -20,10 +20,14 @@ using Utilities;
 
 namespace NetshG
 {
+    public interface CanDoCommand
+    {
+        void DoCommand(CommandInfo ci);
+    }
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, CanDoCommand
     {
         public MainWindow()
         {
@@ -90,7 +94,7 @@ namespace NetshG
             DoCommand(ci);
         }
 
-        private void DoCommand(CommandInfo ci)
+        public void DoCommand(CommandInfo ci)
         { 
             var program = ci.Cmd;
             var args = ci.Args;
@@ -101,18 +105,14 @@ namespace NetshG
 
             args = CurrArgumentSettings.Replace(args, ci.Requires);
             var argsWithExtraMore = CurrArgumentSettings.Replace(args + argsExtra + moreArgs, ci.Requires);
-            if (ci.Requires.Count >= 1)
-            {
-                var name = ci.Requires[0].Name;
-                uiReplaceName.Text = name;
-                uiReplaceValue.Text = CurrArgumentSettings.GetCurrent(name, "(not set)").Value;
 
-                uiReplace.Visibility = Visibility.Visible;
-            }
-            else
+            uiReplaceList.Children.Clear();
+            foreach (var item in ci.Requires)
             {
-                uiReplace.Visibility = Visibility.Collapsed;
+                var rvec = new ReplaceViewEditControl(this, item, ci, CurrArgumentSettings);
+                uiReplaceList.Children.Add(rvec);
             }
+
             uiOutputScroll.ScrollToHome();
             uiCommand.Text = $"{program} {argsWithExtraMore}";
             var qresult = RunCommandLine.RunNetshG(program, args + " ?");
@@ -140,30 +140,6 @@ namespace NetshG
         }
 
 
-
-        private void MoveToNextMacroValue(int delta)
-        {
-            var name = uiReplaceName.Text;
-            var currValue = uiReplaceValue.Text;
-            var list = CurrArgumentSettings.GetValueList(name);
-            var index = CurrArgumentSettings.Find(name, currValue);
-            if (index < 0) return;
-            index += delta;
-            if (index < 0 || index >= list.Count) return;
-            var newValue = list[index];
-            CurrArgumentSettings.SetCurrent(name, newValue);
-
-            uiReplaceValue.Text = newValue.Value;
-
-            // And now re-do the command!
-            var ncc = uiCommandList.SelectedItem as NetshCommandControl;
-            var ci = ncc?.CommandInfo;
-            if (ci != null)
-            {
-                DoCommand(ci);
-            }
-        }
-
         private void DoInitializeCommonArguments()
         {
             CurrArgumentSettings.SetValueList("Level", new List<ArgumentSettingValue>() { new ArgumentSettingValue("normal"), new ArgumentSettingValue("verbose") });
@@ -190,15 +166,6 @@ namespace NetshG
 
 
 
-        private void OnNextMacro(object sender, RoutedEventArgs e)
-        {
-            MoveToNextMacroValue(1);
-        }
-
-        private void OnPrevMacro(object sender, RoutedEventArgs e)
-        {
-            MoveToNextMacroValue(-1);
-        }
 
         private void OnMenu_File_Exit(object sender, RoutedEventArgs e)
         {
