@@ -9,13 +9,14 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
-        <TextBlock x:Name="uiReplaceName" Grid.Column="0"/>
-        <TextBlock x:Name="uiReplaceValue" Grid.Column="1" />
-        <Button Content="&lt;" Grid.Column="2" Click="OnPrevMacro" />
-        <Button Content=">" Grid.Column="3" Click="OnNextMacro" />
+        <Button Content="" Grid.Column="0" Click="OnPrevMacro" Style="{StaticResource rPrevNext}" />
+        <Button Content="" Grid.Column="1" Click="OnNextMacro" Style="{StaticResource rPrevNext}" />
+
+        <TextBlock x:Name="uiReplaceName" Grid.Column="2" Style="{StaticResource rReplace}" />
+        <TextBlock x:Name="uiReplaceValue" Grid.Column="3" Style="{StaticResource rReplace}" FontWeight="Bold" />
     </Grid>
 </UserControl>

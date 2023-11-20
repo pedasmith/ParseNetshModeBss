@@ -23,7 +23,7 @@ namespace NetshG
     /// </summary>
     public partial class ReplaceViewEditControl : UserControl
     {
-        private CanDoCommand CanDoCommand = null;
+        private CanDoCommand CanDoCommand;
         private ArgumentSettings CurrArgumentSettings;
         private CommandInfo CurrCommandInfo;
 
