@@ -5,9 +5,14 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Grumpster_Icon_256.ico</ApplicationIcon>
   </PropertyGroup>
 
   <Import Project="..\Utilities\Utilities.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <Content Include="Grumpster_Icon_256.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
