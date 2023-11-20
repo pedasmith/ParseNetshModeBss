@@ -323,25 +323,29 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show dynamicportrange tcp",
+		"Args":"interface ipv6 show dynamicportrange",
+		"ArgsExtra":"tcp",
 		"MoreArgs":"store=Store",
 		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show dynamicportrange udp",
+		"Args":"interface ipv6 show dynamicportrange",
+		"ArgsExtra":"udp",
 		"MoreArgs":"store=Store",
 		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show excludedportrange tcp",
+		"Args":"interface ipv6 show excludedportrange",
+		"ArgsExtra":"tcp",
 		"MoreArgs":"store=Store",
 		"RequireList":"Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show excludedportrange udp",
+		"Args":"interface ipv6 show excludedportrange",
+		"ArgsExtra":"udp",
 		"MoreArgs":"store=Store",
 		"RequireList":"Store"
 	},
@@ -470,6 +474,11 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"interface tcp show rscstats"
+	},
+    {
+		"Cmd":"netsh",
+		"Args":"interface tcp show rscstats InterfaceIndex",
+		"RequireList":"InterfaceIndex"
 	},
     {
 		"Cmd":"netsh",
@@ -655,8 +664,8 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"p2p idmgr show groups ALL",
-		"ArgsExtra":"ALL"
+		"Args":"p2p idmgr show groups",
+		"ArgsExtra":"ALL ALL"
 	},
     {
 		"Cmd":"netsh",
@@ -811,12 +820,14 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show networks mode=ssid",
+		"Args":"wlan show networks",
+		"ArgsExtra":"mode=ssid",
 		"Tags":"#wifi"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show networks mode=bssid",
+		"Args":"wlan show networks",
+		"ArgsExtra":"mode=bssid",
 		"Tags":"#common #wifi"
 	},
     {
