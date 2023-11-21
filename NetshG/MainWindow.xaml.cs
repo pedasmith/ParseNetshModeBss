@@ -68,7 +68,7 @@ namespace NetshG
             }
 
         }
-
+        CommandInfo? LastCommand = null;
         private void OnSelectCommand(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count != 1) return; // only one item selected
@@ -90,6 +90,7 @@ namespace NetshG
                     Args = "wlan show"
                 };
             }
+            LastCommand = ci;
 
             DoCommand(ci);
         }
@@ -204,6 +205,12 @@ namespace NetshG
             {
                 uiOutput.Text = result + "\n" + uiOutput.Text;
             }
+        }
+
+        private void OnRepeat(object sender, RoutedEventArgs e)
+        {
+            if (LastCommand == null) return;
+            DoCommand(LastCommand);
         }
     }
 }

@@ -8,11 +8,43 @@ namespace Utilities
     {
         interface Action
         {
-            void DoAction(string line, Dictionary<string, string> variables, List<string> results);
+            void DoAction(string line, Dictionary<string, string> variables, List<string> results, Dictionary<string, string> resultsList);
+        }
+
+        static class Utilities
+        {
+            public static void EnsureExists(this Dictionary<string, string> dict, string key, string value="")
+            {
+                if (!dict.ContainsKey(key))
+                {
+                    dict.Add(key, value);
+                }
+            }
+            public static void Upsert(this Dictionary<string, string> dict, string key, string value)
+            {
+                if (dict.ContainsKey(key))
+                {
+                    dict[key] = value;
+                }
+                else
+                {
+                    dict.Add(key, value);
+                }
+            }
+            public static string ValueOrKey(this Dictionary<string, string> dict, string key)
+            {
+                if (dict.ContainsKey(key))
+                {
+                    return dict[key];
+                }
+                return key;
+            }
         }
 
         class ActionColonParse : Action
         {
+            public enum WhenRightIsBlank {  AddBlank, AddLeft };
+            public WhenRightIsBlank CurrWhenRightIsBlank = WhenRightIsBlank.AddLeft;
             public string LeftAs { get; set; } = "Name";
             public string RightAs { get; set; } = "Value";
             public ActionColonParse(string leftAs, string rightAs)
@@ -20,15 +52,17 @@ namespace Utilities
                 LeftAs = leftAs;
                 RightAs = rightAs;
             }
-            public void DoAction(string line, Dictionary<string, string> variables, List<string> results)
+            public void DoAction(string line, Dictionary<string, string> variables, List<string> results, Dictionary<string, string> resultsList)
             {
                 var parts = line.Split(':', 2);
                 var l = parts.Length >= 1 ? parts[0] : "";
                 var r = parts.Length >= 2 ? parts[1] : "";
-                if (variables.ContainsKey(LeftAs)) variables[LeftAs] = l; else variables.Add(LeftAs, l);
-                if (variables.ContainsKey(RightAs)) variables[RightAs] = r; else variables.Add(RightAs, r);
+                variables.Upsert(LeftAs, l);
+                variables.Upsert(RightAs, r);
             }
         }
+
+
         class ActionWriteResults : Action
         {
             public List<string> Variables;
@@ -36,19 +70,34 @@ namespace Utilities
             {
                 Variables = varibles;
             }
-            public void DoAction(string line, Dictionary<string, string> variables, List<string> results)
+            public void DoAction(string line, Dictionary<string, string> variables, List<string> results, Dictionary<string, string> resultsList)
             {
                 var report = "";
                 foreach (var item in Variables)
                 {
-                    if (variables.ContainsKey(item))
-                    {
-                        report += variables[item];
-                    }
-                    else
-                    {
-                        report += item;
-                    }
+                    report += variables.ValueOrKey(item);
+                }
+                results.Add(report);
+            }
+        }
+        class ActionWriteResultsList : Action
+        {
+            public string Group;
+            public List<string> Variables;
+            public string Space = " ";
+            public ActionWriteResultsList(string group, List<string> varibles)
+            {
+                Group = group;
+                Variables = varibles;
+            }
+            public void DoAction(string line, Dictionary<string, string> variables, List<string> results, Dictionary<string, string> resultsList)
+            {
+                var report = "";
+                var group = variables.ValueOrKey(Group);
+                resultsList.EnsureExists(group, "");
+                foreach (var item in Variables) // often just one item long
+                {
+                    resultsList[group] += variables.ValueOrKey(item) + Space;
                 }
                 results.Add(report);
             }
@@ -143,6 +192,7 @@ namespace Utilities
             public List<Command> Commands = new List<Command>();
             public Dictionary<string, string> Variables = new Dictionary<string, string>();
             public List<string> Results = new List<string>();
+            public Dictionary<string, string> ResultsList = new Dictionary<string, string>();
             public Parser(List<Command> commands)
             {
                 Commands = commands;
@@ -157,7 +207,7 @@ namespace Utilities
                     {
                         foreach (var action in command.MatchActions)
                         {
-                            action.DoAction(line, Variables, Results);
+                            action.DoAction(line, Variables, Results, ResultsList);
                         }
                         break; // Break after matching!
                     }
@@ -187,7 +237,8 @@ namespace Utilities
                         });
                 var cmdenc = new Command(getEncryption, new List<Action>() {
                     new ActionColonParse("junk", "encryption"),
-                    new ActionWriteResults(new List<string>() { "FOUND! ", "encryption", " IN ", "ssid" })
+                    new ActionWriteResults(new List<string>() { "FOUND! ", "encryption", " IN ", "ssid" }),
+                    new ActionWriteResultsList("encryption", new List<string>() { "ssid" }),
                 }); ;
                 var retval = new Parser(new List<Command>() { cmdSsid, cmdenc });
 
