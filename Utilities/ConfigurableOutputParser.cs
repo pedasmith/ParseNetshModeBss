@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 
 namespace Utilities
@@ -60,6 +61,11 @@ namespace Utilities
                 variables.Upsert(LeftAs, l);
                 variables.Upsert(RightAs, r);
             }
+
+            public override string ToString()
+            {
+                return $"Action: Parse name:value to {LeftAs}:{RightAs}";
+            }
         }
 
 
@@ -78,6 +84,11 @@ namespace Utilities
                     report += variables.ValueOrKey(item);
                 }
                 results.Add(report);
+            }
+            public override string ToString()
+            {
+                var list = string.Join(",", Variables);
+                return $"Action: WriteResults {list}";
             }
         }
         class ActionWriteResultsList : Action
@@ -101,10 +112,15 @@ namespace Utilities
                 }
                 results.Add(report);
             }
+            public override string ToString()
+            {
+                var list = string.Join(",", Variables);
+                return $"Action: WriteResultsList to {Group} {list}";
+            }
         }
-        interface Rule
+        abstract class Rule
         {
-            bool Matches(string line);
+            public abstract bool Matches(string line);
         }
 
         internal class RuleBoolean : Rule
@@ -117,7 +133,7 @@ namespace Utilities
                 CurrRule = rule;
                 Rules = rules;
             }
-            public bool Matches(string line)
+            public override bool Matches(string line)
             {
                 bool andValue = true;
                 bool orValue = false;
@@ -139,40 +155,54 @@ namespace Utilities
                 }
                 return retval;
             }
+            public override string ToString()
+            {
+                var list = string.Join(",", Rules);
+                return $"Match: Boolean {CurrRule}: {list}";
+            }
+
         }
         internal class RuleIndent : Rule
         {
-            public enum IndentRule { Indent, NoIndent };
-            private IndentRule CurrIndentRule { get; set; } = IndentRule.Indent;
-            public RuleIndent(IndentRule indentRule)
+            public enum RuleType { Indent, NoIndent };
+            private RuleType CurrRule { get; set; } = RuleType.Indent;
+            public RuleIndent(RuleType indentRule)
             {
-                CurrIndentRule = indentRule;
+                CurrRule = indentRule;
             }
-            public bool Matches(string line)
+            public override bool Matches(string line)
             {
                 bool hasIndent = line.StartsWith("    ");
                 bool retval = true;
-                switch (CurrIndentRule)
+                switch (CurrRule)
                 {
-                    case IndentRule.NoIndent: retval = !hasIndent; break;
-                    case IndentRule.Indent: retval = hasIndent; break;
+                    case RuleType.NoIndent: retval = !hasIndent; break;
+                    case RuleType.Indent: retval = hasIndent; break;
                 }
                 return retval;
+            }
+            public override string ToString()
+            {
+                return $"Match: Indent {CurrRule}";
             }
         }
         internal class RuleMatches : Rule
         {
-            private string CurrMatchRule { get; set; } = "";
+            private string CurrRule { get; set; } = "";
             public RuleMatches(string match)
             {
-                CurrMatchRule = match;
+                CurrRule = match;
             }
-            public bool Matches(string line)
+            public override bool Matches(string line)
             {
-                if (string.IsNullOrEmpty(CurrMatchRule)) return true;
+                if (string.IsNullOrEmpty(CurrRule)) return true;
 
-                bool retval = line.Contains(CurrMatchRule);
+                bool retval = line.Contains(CurrRule);
                 return retval;
+            }
+            public override string ToString()
+            {
+                return $"Match: Matches {CurrRule}";
             }
         }
 
@@ -185,11 +215,20 @@ namespace Utilities
                 MatchRule = rule;
                 MatchActions = actions;
             }
+
+            public override string ToString()
+            {
+                var list = string.Join("\n\t", MatchActions);
+                return $"Command: Rule={MatchRule} Actions=\n\t{list}";
+            }
         }
 
         class Parser
         {
+            // Always the same for a particular parser e.g. like for a 'Encryption' parser
             public List<Command> Commands = new List<Command>();
+
+            // State values
             public Dictionary<string, string> Variables = new Dictionary<string, string>();
             public List<string> Results = new List<string>();
             public Dictionary<string, string> ResultsList = new Dictionary<string, string>();
@@ -213,7 +252,11 @@ namespace Utilities
                     }
                 }
             }
-
+            public override string ToString()
+            {
+                var list = string.Join("\n\t", Commands);
+                return $"Parser: Commands=\n\t{list}";
+            }
         }
 
         internal static class Make
@@ -223,7 +266,7 @@ namespace Utilities
                 Rule getSsidName = new RuleBoolean(RuleBoolean.RuleType.And,
                         new List<Rule>()
                         {
-                            new RuleIndent(RuleIndent.IndentRule.NoIndent),
+                            new RuleIndent(RuleIndent.RuleType.NoIndent),
                             new RuleMatches("SSID")
                         });
 
@@ -232,7 +275,7 @@ namespace Utilities
                 Rule getEncryption = new RuleBoolean(RuleBoolean.RuleType.And,
                         new List<Rule>()
                         {
-                            new RuleIndent(RuleIndent.IndentRule.Indent),
+                            new RuleIndent(RuleIndent.RuleType.Indent),
                             new RuleMatches("Encryption")
                         });
                 var cmdenc = new Command(getEncryption, new List<Action>() {

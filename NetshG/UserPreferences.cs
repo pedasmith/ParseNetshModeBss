@@ -9,7 +9,7 @@ namespace NetshG
     class UserPreferences
     {
         public bool ReplaceTabs = true;
-        public bool ShowHelp = true;
+        public bool ShowHelp = false;
         public string Tags = "#common";
     }
 }

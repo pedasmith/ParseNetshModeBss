@@ -1,19 +1,8 @@
-﻿using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
+using Newtonsoft.Json;
 
 using ParseNetshModeBss; // to get the utilities classes!
 using Utilities;
@@ -46,6 +35,8 @@ namespace NetshG
             uiMenu_Parameters_Common.Items.Clear();
             DoSetupCommonMenu("Level");
             DoSetupCommonMenu("Store");
+
+            uiMenu_Show_Help.IsChecked = CurrUserPrefs.ShowHelp;
         }
 
         private void DoSetMenuWithTag(string tags)
@@ -201,10 +192,15 @@ namespace NetshG
                 if (line.Length == 0 ) continue;
                 parser.ParseLine(line);
             }
+            var allresults = "";
             foreach (var result in parser.Results )
             {
-                uiOutput.Text = result + "\n" + uiOutput.Text;
+                allresults += result + "\n";
             }
+            var settings = new JsonSerializerSettings() {  Formatting = Formatting.Indented };
+            var json = JsonConvert.SerializeObject(parser, typeof(Utilities.ConfigurableParser.Rule), settings);
+            json = JsonConvert.SerializeObject(parser.Commands[0].MatchRule, Formatting.Indented);
+            uiOutput.Text = allresults + "\nJSON:\n" + json + "\nPARSER:\n" + parser.ToString() + "\n" + uiOutput.Text;
         }
 
         private void OnRepeat(object sender, RoutedEventArgs e)
