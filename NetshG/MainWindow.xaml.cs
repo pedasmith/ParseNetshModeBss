@@ -189,5 +189,21 @@ namespace NetshG
         {
             CurrUserPrefs.ShowHelp = false;
         }
+
+        private void OnParse(object sender, RoutedEventArgs e)
+        {
+            var parser = Utilities.ConfigurableParser.Make.Create_MatchSsidEncrypt();
+            var lines = uiOutput.Text.Split('\n');
+            foreach ( var rawline in lines )
+            {
+                var line = rawline.TrimEnd();
+                if (line.Length == 0 ) continue;
+                parser.ParseLine(line);
+            }
+            foreach (var result in parser.Results )
+            {
+                uiOutput.Text = result + "\n" + uiOutput.Text;
+            }
+        }
     }
 }

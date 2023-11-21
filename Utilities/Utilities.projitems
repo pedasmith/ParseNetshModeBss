@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentSettingValue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConfigurableOutputParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GetParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ILog.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IParse.cs" />

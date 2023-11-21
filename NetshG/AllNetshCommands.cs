@@ -822,7 +822,7 @@ namespace NetshG
 		"Cmd":"netsh",
 		"Args":"wlan show networks",
 		"ArgsExtra":"mode=ssid",
-		"Tags":"#wifi"
+		"Tags":"#common #wifi"
 	},
     {
 		"Cmd":"netsh",

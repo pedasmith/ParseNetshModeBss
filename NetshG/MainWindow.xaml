@@ -54,6 +54,9 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <StackPanel x:Name="uiReplaceList" Grid.Row="1" />
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Encyption" Tag="SsidEncryption"  Click="OnParse" />
+                </StackPanel>
                 <ScrollViewer x:Name="uiOutputScroll" Grid.Row="2">
                     <TextBox x:Name="uiOutput" Style="{StaticResource rOutput}" />
                 </ScrollViewer>
