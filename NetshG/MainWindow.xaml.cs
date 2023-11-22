@@ -198,9 +198,10 @@ namespace NetshG
                 allresults += result + "\n";
             }
             var settings = new JsonSerializerSettings() {  Formatting = Formatting.Indented };
-            var json = JsonConvert.SerializeObject(parser, typeof(Utilities.ConfigurableParser.Rule), settings);
-            json = JsonConvert.SerializeObject(parser.Commands[0].MatchRule, Formatting.Indented);
-            uiOutput.Text = allresults + "\nJSON:\n" + json + "\nPARSER:\n" + parser.ToString() + "\n" + uiOutput.Text;
+            var jsonAll = JsonConvert.SerializeObject(parser, settings);
+            var json = JsonConvert.SerializeObject(parser.Commands[0].MatchRule, typeof(Utilities.ConfigurableParser.Rule), settings);
+            allresults = allresults + "\nJSON:\n" + json + "\nPARSER:\n" + parser.ToString();
+            uiOutput.Text =  allresults + "\n" + uiOutput.Text;
         }
 
         private void OnRepeat(object sender, RoutedEventArgs e)
