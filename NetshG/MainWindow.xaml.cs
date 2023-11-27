@@ -122,12 +122,17 @@ namespace NetshG
             }
             uiOutput.Text = result;
 
-            // Handle the parsing...
+            // Handle the parsing. Parsing is the act of looking at the data from,
+            // e.g., the list of interface and making a list of all interface names.
+            // Those name get set into macros.
             if (!string.IsNullOrEmpty(ci.Sets))
             {
-                var parser = GetParser.Get(ci.SetParser);
-                var setList = parser.ParseForValues(result);
-                CurrArgumentSettings.SetValueList(ci.Sets, setList);
+                var macroParser = GetParser.GetMacroParser(ci.SetParser);
+                if (macroParser != null)
+                {
+                    var setList = macroParser.ParseForValues(result);
+                    CurrArgumentSettings.SetValueList(ci.Sets, setList);
+                }
             }
         }
 

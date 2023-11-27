@@ -13,9 +13,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)ConfigurableOutputParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GetParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ILog.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IParse.cs" />
+    <Compile Include="..\Utilities\IMacroParse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ParseBssidMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ParseColonLines.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ParseDashLineTab.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ParseTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rfc4180_CSV.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RunCommandLine.cs" />

@@ -4,10 +4,9 @@ using System.Text;
 
 namespace Utilities
 {
-    internal class ParseTable : IParse
+    internal class ParseTable : IMacroParse
     {
-#if NEVER_EVER_DEFINED
-        private string ExampleTable = """
+        public string Example = """
 Idx     Met         MTU          State                Name
 ---  ----------  ----------  ------------  ---------------------------
   1          75  4294967295  connected     Loopback Pseudo-Interface 1
@@ -17,7 +16,6 @@ Idx     Met         MTU          State                Name
   5          25        1500  connected     Ethernet 2
 
 """;
-#endif
         public List<string> ColumnNames = new List<string>();
         public List<List<string>> Rows = new List<List<string>>();
 

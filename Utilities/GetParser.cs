@@ -6,16 +6,30 @@ namespace Utilities
 {
     internal  static class GetParser
     {
-        internal static IParse Get(string value)
+        internal static IMacroParse? GetMacroParser(string value)
         {
-            IParse retval = new ParseColonLines(); // TODO: what's the right kind of default parser?
+            IMacroParse? retval = null; 
             switch (value)
             {
+                case "DashLine":
+                    retval = null; // new ParseDashLineTab() {  };
+                    break;
                 case "Interfaces":
                     retval = new ParseTable() { ColumnToReturn = "Idx" };
                     break;
                 case "Profile":
                     retval = new ParseColonLines() { LineMustMatch = "All User Profile", SplitStr = ":" };
+                    break;
+            }
+            return retval;
+        }
+        internal static ITableParse? GetTableParser(string value)
+        {
+            ITableParse? retval = null;
+            switch (value)
+            {
+                case "DashLine":
+                    retval = new ParseDashLineTab() {  };
                     break;
             }
             return retval;

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Utilities
 {
-    internal class ParseColonLines : IParse, ILog
+    internal class ParseColonLines : IMacroParse, ILog
     {
         public string LineMustMatch = ":";
         public string SplitStr = ":";

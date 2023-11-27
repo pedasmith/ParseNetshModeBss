@@ -4,8 +4,13 @@ using System.Text;
 
 namespace Utilities
 {
-    internal interface IParse
+    internal interface IMacroParse
     {
         public List<ArgumentSettingValue> ParseForValues(string value);
+    }
+
+    internal interface ITableParse
+    {
+
     }
 }
