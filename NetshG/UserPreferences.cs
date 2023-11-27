@@ -10,6 +10,6 @@ namespace NetshG
     {
         public bool ReplaceTabs = true;
         public bool ShowHelp = false;
-        public string Tags = "#common";
+        public string Tags = ""; // DBG: should be reset to common: "#common";
     }
 }

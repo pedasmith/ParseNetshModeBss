@@ -661,7 +661,7 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"p2p idmgr show groups",
-		"ArgsExtra":"ALL ALL"
+		"ArgsExtra":"ALL"
 	},
     {
 		"Cmd":"netsh",

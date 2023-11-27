@@ -109,6 +109,7 @@ namespace NetshG
             uiCommand.Text = $"{program} {argsWithExtraMore}";
             var qresult = RunCommandLine.RunNetshG(program, args + " ?");
             var result = RunCommandLine.RunNetshG(program, argsWithExtraMore);
+            var rawResult = result; // for the parser
             if (CurrUserPrefs.ReplaceTabs)
             {
                 if (result.Contains('\t'))
@@ -120,6 +121,17 @@ namespace NetshG
             {
                 result = qresult + "\n\n\n" + result;
             }
+
+            // DBG: Parse with the ParseDashLineTab.cs parser
+            // Will be replaced with more parser types
+            var tableParser = GetParser.GetTableParser("DashLine");
+            if (tableParser != null)
+            {
+                tableParser.Parse(rawResult);
+                var csv = tableParser.AsCsv();
+                result = csv + "\n\n" + result;
+            }
+
             uiOutput.Text = result;
 
             // Handle the parsing. Parsing is the act of looking at the data from,
@@ -134,6 +146,7 @@ namespace NetshG
                     CurrArgumentSettings.SetValueList(ci.Sets, setList);
                 }
             }
+
         }
 
 

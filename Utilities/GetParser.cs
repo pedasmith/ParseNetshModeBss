@@ -23,9 +23,9 @@ namespace Utilities
             }
             return retval;
         }
-        internal static ITableParse? GetTableParser(string value)
+        internal static TableParse? GetTableParser(string value)
         {
-            ITableParse? retval = null;
+            TableParse? retval = null;
             switch (value)
             {
                 case "DashLine":
