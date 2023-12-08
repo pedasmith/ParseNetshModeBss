@@ -107,7 +107,7 @@ namespace NetshG
 
             uiOutputScroll.ScrollToHome();
             uiCommand.Text = $"{program} {argsWithExtraMore}";
-            var qresult = RunCommandLine.RunNetshG(program, args + " ?");
+            var qresult = RunCommandLine.RunNetshG(program, args + " " + ci.Help);
             var result = RunCommandLine.RunNetshG(program, argsWithExtraMore);
             var rawResult = result; // for the parser
             if (CurrUserPrefs.ReplaceTabs)
@@ -124,12 +124,19 @@ namespace NetshG
 
             // DBG: Parse with the ParseDashLineTab.cs parser
             // Will be replaced with more parser types
-            var tableParser = GetParser.GetTableParser("DashLine");
-            if (tableParser != null)
+
+
+            var tableParserName = ci.TableParser;
+            if (!string.IsNullOrEmpty(tableParserName))
             {
-                tableParser.Parse(rawResult);
-                var csv = tableParser.AsCsv();
-                result = csv + "\n\n" + result;
+                var tableParser = GetParser.GetTableParser(tableParserName);
+                if (tableParser != null)
+                {
+                    tableParser.Parse(rawResult);
+                    var csv = tableParser.AsCsv();
+
+                    result = $"Parsed with {tableParserName}\n\n" + csv + "\n-------------------\n\n" + result;
+                }
             }
 
             uiOutput.Text = result;

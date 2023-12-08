@@ -8,11 +8,11 @@ namespace NetshG
     public partial class NetshCommandControl : UserControl
     {
         private string _args = "??";
-        public string Args { get { return _args; } set { _args = value; uiCommand.Text = value; } }
+        public string Args { get { return _args; } set { _args = value; uiCommand.Text = Cmd + " " + Args; } }
 
 
         private string _cmd = "netsh";
-        public string Cmd { get { return _cmd; } set { _cmd = value; uiCommand.Text = value; } }
+        public string Cmd { get { return _cmd; } set { _cmd = value; uiCommand.Text = Cmd + " " + Args; } }
         public string Help { get; set; } = "netsh ?";
 
         public CommandInfo CommandInfo { get; set; } = new CommandInfo();

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace Utilities
 {
@@ -30,8 +32,8 @@ MaxFileSize                           4096
         public string SectionSeperator = "-----";
         public string SubsectionSeperator = "";
 
-        enum MajorFileType { DashedSection, EqualsSection };
-        MajorFileType FileType = MajorFileType.DashedSection;
+        public enum MajorFileType { Unknown, DashedSection, EqualsSection, IndentParser };
+        public MajorFileType FileType = MajorFileType.DashedSection;
 
         private void AutodetectParsing(string file)
         {
@@ -53,7 +55,89 @@ MaxFileSize                           4096
         }
         public override void Parse(string file)
         {
+            if (FileType == MajorFileType.Unknown)
+            {
+                AutodetectParsing(file); // Sets up the settings
+            }
+
+            switch (FileType)
+            {
+                default:
+                case MajorFileType.EqualsSection:
+                case MajorFileType.DashedSection:
+                    ParseSection(file);
+                    break;
+                case MajorFileType.IndentParser:
+                    ParseIndent(file);
+                    break;
+            }
+        }
+
+        private void ParseIndent(string file)
+        {
+            var lines = file.Replace("\r\n", "\n").Split(new char[] { '\n' });
+            var indents = lines.CountIndents();
+            var indentstr = string.Join(",", indents);
+
+            int prevIndent = 0;
+            var prevLine = "";
+            string l0linename = "";
+            string l0namevalue = "";
+            string l0colname = "";
+            string l0index = "";
+            List<string> currRow = new List<string>();
+            for (int i = 0; i < lines.Length; i++)
+            {
+                var line = lines[i];
+                var indent = line.IndentLevel(indents);
+                switch (indent)
+                {
+                    case 0:
+                        if (line.Contains(":")) //  e.g., SSID 1 : MyHouseWiFi
+                        { 
+                            if (currRow.Count > 0)
+                            {
+                                Rows.Add(currRow);
+                                currRow = new List<string>();
+                            }
+                        }
+                        break;
+                    case 1:
+                        if (indent > prevIndent) // we know there's a new section because the indent level bumps up
+                        {
+                            // prevLine is e.g., SSID 1 : MyHouseWiFi
+                            // colname="SSID" index="1" value="MyHouseWiFi"
+                            (l0linename, l0namevalue) = SplitColon(prevLine);
+                            (l0colname, l0index) = SplitSpace(l0linename);
+
+                            ColumnUpsert(l0colname);
+                            var col = ColumnUpsert(l0colname.Trim());
+                            RowEnsureWidth(currRow, col);
+                            currRow[col] = l0namevalue;
+                        }
+                        else // e.g.,     Network type            : Infrastructure
+                        {
+                            var (name, value) = SplitColon(line.Trim());
+                            var col = ColumnUpsert(name.Trim());
+                            RowEnsureWidth(currRow, col);
+                            currRow[col] = value;
+                        }
+                        break;
+                }
+
+                prevLine = line;
+                prevIndent = indent;
+            }
+            if (currRow.Count > 0)
+            {
+                Rows.Add(currRow);
+            }
+        }
+
+        private void ParseSection(string file)
+        {
             AutodetectParsing(file); // Sets up the settings
+
             var lines = file.Replace("\r\n", "\n").Split(new char[] { '\n' });
 
             var currSection = "";
@@ -165,6 +249,13 @@ MaxFileSize                           4096
             var value = fields.Length >= 2 ? fields[1] : "";
             return (name, value);
         }
+        private (string, string) SplitSpace(string line)
+        {
+            var fields = line.Trim().Split(" ", 2); // Unlike SplitSpaces, just one space is enough
+            var name = fields[0];
+            var value = fields.Length >= 2 ? fields[1] : "";
+            return (name, value.TrimStart());
+        }
         private (string, string) SplitSpaces(string line)
         {
             var fields = line.Split("    ", 2); // Split requires at least 4 space
@@ -191,6 +282,48 @@ MaxFileSize                           4096
             }
             return retval;
         }
+
+        public static List<int> CountIndents(this string[]? lines)
+        {
+            if (lines == null) return new List<int>();
+            var count = new SortedSet<int>();
+            foreach (var line in lines) {
+                var nspace = line.CountIndents();
+                if (nspace < 0) continue;
+                count.Add(nspace);
+            }
+            var retval = count.ToList();
+
+            return retval;
+        }
+        public static int CountIndents(this string line)
+        {
+            if (string.IsNullOrEmpty(line)) return -1;
+            if (line.TrimStart() == "") return -1;
+
+            int retval = 0;
+            for (int i = 0; i < line.Length; i++)
+            {
+                if (line[i] != ' ') break;
+                retval++;
+            }
+            if (retval == 1)
+            {
+                ; // TODO: place for a debugger
+            }
+            return retval;
+        }
+
+        public static int IndentLevel(this string line, List<int> indents)
+        {
+            var indent = line.CountIndents();
+            for (int i=0; i<indents.Count; i++)
+            {
+                if (indents[i] == indent) return i; 
+            }
+            return -1;
+        }
+
     }
 
 }

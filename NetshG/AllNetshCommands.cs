@@ -21,7 +21,36 @@ namespace NetshG
 
         public static string AllCommands = """
 [
-   {
+    {
+		"Cmd":"ipconfig",
+		"ArgsExtra":"/all"
+	},
+    {
+		"Cmd":"ipconfig",
+		"ArgsExtra":"/displaydns"
+	},
+    {
+		"Cmd":"ipconfig",
+		"ArgsExtra":"/showclassid *"
+	},
+    {
+		"Cmd":"ipconfig",
+		"ArgsExtra":"/showclassid6 *"
+	},
+    {
+		"Cmd":"systeminfo",
+		"ArgsExtra":"/fo table"
+	},
+    {
+		"Cmd":"systeminfo",
+		"ArgsExtra":"/fo list"
+	},
+    {
+		"Cmd":"systeminfo",
+		"ArgsExtra":"/fo csv"
+	},
+
+    {
 		"Cmd":"netsh",
 		"Args":"advfirewall show allprofiles",
 		"note":"missing parameters"
@@ -824,7 +853,8 @@ namespace NetshG
 		"Cmd":"netsh",
 		"Args":"wlan show networks",
 		"ArgsExtra":"mode=bssid",
-		"Tags":"#common #wifi"
+		"Tags":"#common #wifi #TODO",
+		"TableParser":"Indent"
 	},
     {
 		"Cmd":"netsh",

@@ -28,8 +28,12 @@ namespace Utilities
             TableParse? retval = null;
             switch (value)
             {
+                default:
                 case "DashLine":
-                    retval = new ParseDashLineTab() {  };
+                    retval = new ParseDashLineTab() { };
+                    break;
+                case "Indent":
+                    retval = new ParseDashLineTab() { FileType=ParseDashLineTab.MajorFileType.IndentParser };
                     break;
             }
             return retval;

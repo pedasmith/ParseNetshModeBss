@@ -23,11 +23,12 @@ namespace NetshG
         /// not shown to user and not part of the ? to get help
         /// </summary>
         public string MoreArgs { get; set; } = ""; 
-        public string Help { get; set; } = "";
+        public string Help { get; set; } = "/?";
         public List<CommandRequire> Requires { get; set; } = new List<CommandRequire>();
         public string RequireList { get; set; } = "";
         public string Sets { get; set; } = "";
         public string SetParser { get; set; } = "";
+        public string TableParser { get; set; } = "";
 
         public string Tags { get; set; } = "";
         private List<string>? _taglist = null;
