@@ -67,72 +67,9 @@ MaxFileSize                           4096
                 case MajorFileType.DashedSection:
                     ParseSection(file);
                     break;
-                case MajorFileType.IndentParser:
-                    ParseIndent(file);
-                    break;
             }
         }
 
-        private void ParseIndent(string file)
-        {
-            var lines = file.Replace("\r\n", "\n").Split(new char[] { '\n' });
-            var indents = lines.CountIndents();
-            var indentstr = string.Join(",", indents);
-
-            int prevIndent = 0;
-            var prevLine = "";
-            string l0linename = "";
-            string l0namevalue = "";
-            string l0colname = "";
-            string l0index = "";
-            List<string> currRow = new List<string>();
-            for (int i = 0; i < lines.Length; i++)
-            {
-                var line = lines[i];
-                var indent = line.IndentLevel(indents);
-                switch (indent)
-                {
-                    case 0:
-                        if (line.Contains(":")) //  e.g., SSID 1 : MyHouseWiFi
-                        { 
-                            if (currRow.Count > 0)
-                            {
-                                Rows.Add(currRow);
-                                currRow = new List<string>();
-                            }
-                        }
-                        break;
-                    case 1:
-                        if (indent > prevIndent) // we know there's a new section because the indent level bumps up
-                        {
-                            // prevLine is e.g., SSID 1 : MyHouseWiFi
-                            // colname="SSID" index="1" value="MyHouseWiFi"
-                            (l0linename, l0namevalue) = SplitColon(prevLine);
-                            (l0colname, l0index) = SplitSpace(l0linename);
-
-                            ColumnUpsert(l0colname);
-                            var col = ColumnUpsert(l0colname.Trim());
-                            RowEnsureWidth(currRow, col);
-                            currRow[col] = l0namevalue;
-                        }
-                        else // e.g.,     Network type            : Infrastructure
-                        {
-                            var (name, value) = SplitColon(line.Trim());
-                            var col = ColumnUpsert(name.Trim());
-                            RowEnsureWidth(currRow, col);
-                            currRow[col] = value;
-                        }
-                        break;
-                }
-
-                prevLine = line;
-                prevIndent = indent;
-            }
-            if (currRow.Count > 0)
-            {
-                Rows.Add(currRow);
-            }
-        }
 
         private void ParseSection(string file)
         {
@@ -160,7 +97,7 @@ MaxFileSize                           4096
                     }
                     currRow = new List<string>();
 
-                    var fields = SplitColon(line);
+                    var fields = line.SplitColon();
                     currSection = fields.Item1.Trim(); // Section is previous line e.g. "Domain Profile Settings:" 
                     var col = ColumnUpsert("Section");
                     RowEnsureWidth(currRow, col);
@@ -193,13 +130,13 @@ MaxFileSize                           4096
                 else if (currRow != null) // Working on a row
                 {
                     // Must be data
-                    bool startsWithSpaces = false;
+                    //bool startsWithSpaces = false;
                     if (line.StartsWith(" "))
                     {
                         line = line.TrimStart();
-                        startsWithSpaces = true;
+                        //startsWithSpaces = true;
                     }
-                    var fields = SplitSpaces(line);
+                    var fields = line.SplitSpaces();
                     if (fields.Item1.EndsWith(":") && string.IsNullOrEmpty(fields.Item2))
                     {
                         // E.G., the "Logging:" section of netsh advfirewall show allprofiles
@@ -207,7 +144,7 @@ MaxFileSize                           4096
                     else if (string.IsNullOrEmpty(fields.Item2) && fields.Item1.Contains(":"))
                     {
                         // Example: "maxcacheresponsesize (per-uri cache limit): 262144 bytes" from netsh http show cacheparam
-                        fields = SplitColon(line);
+                        fields = line.SplitColon();
                         var col = ColumnUpsert(fields.Item1.Trim());
                         RowEnsureWidth(currRow, col);
 
@@ -239,33 +176,7 @@ MaxFileSize                           4096
             {
                 Rows.Add(currRow);
             }
-
         }
-
-        private (string, string) SplitColon(string line)
-        {
-            var fields = line.Split(new char[] { ':', }, 2);
-            var name = fields[0];
-            var value = fields.Length >= 2 ? fields[1] : "";
-            return (name, value);
-        }
-        private (string, string) SplitSpace(string line)
-        {
-            var fields = line.Trim().Split(" ", 2); // Unlike SplitSpaces, just one space is enough
-            var name = fields[0];
-            var value = fields.Length >= 2 ? fields[1] : "";
-            return (name, value.TrimStart());
-        }
-        private (string, string) SplitSpaces(string line)
-        {
-            var fields = line.Split("    ", 2); // Split requires at least 4 space
-            var name = fields[0];
-            var value = fields.Length >= 2 ? fields[1] : "";
-            return (name, value.TrimStart());
-        }
-
-
-
     }
 
     public static class StringUtilities
@@ -324,6 +235,26 @@ MaxFileSize                           4096
             return -1;
         }
 
+        public static (string, string) SplitColon(this string line)
+        {
+            var fields = line.Split(new char[] { ':', }, 2);
+            var name = fields[0];
+            var value = fields.Length >= 2 ? fields[1] : "";
+            return (name, value);
+        }
+        public static (string, string) SplitSpace(this string line)
+        {
+            var fields = line.Trim().Split(" ", 2); // Unlike SplitSpaces, just one space is enough
+            var name = fields[0];
+            var value = fields.Length >= 2 ? fields[1] : "";
+            return (name, value.TrimStart());
+        }
+        public static (string, string) SplitSpaces(this string line)
+        {
+            var fields = line.Split("    ", 2); // Split requires at least 4 space
+            var name = fields[0];
+            var value = fields.Length >= 2 ? fields[1] : "";
+            return (name, value.TrimStart());
+        }
     }
-
 }

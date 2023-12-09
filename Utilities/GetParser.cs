@@ -33,7 +33,7 @@ namespace Utilities
                     retval = new ParseDashLineTab() { };
                     break;
                 case "Indent":
-                    retval = new ParseDashLineTab() { FileType=ParseDashLineTab.MajorFileType.IndentParser };
+                    retval = new ParseIndent();
                     break;
             }
             return retval;
