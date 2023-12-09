@@ -127,6 +127,10 @@ namespace NetshG
 
 
             var tableParserName = ci.TableParser;
+            if (string.IsNullOrEmpty(tableParserName))
+            {
+                tableParserName = "Indent"; //DBG: TODO: just for debugging
+            }
             if (!string.IsNullOrEmpty(tableParserName))
             {
                 var tableParser = GetParser.GetTableParser(tableParserName);
