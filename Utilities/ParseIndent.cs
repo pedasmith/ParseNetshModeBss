@@ -45,7 +45,6 @@ namespace Utilities
                         }
                         if (line.Contains(":")) //  e.g., SSID 1 : MyHouseWiFi
                         {
-                            // prevLine is e.g., SSID 1 : MyHouseWiFi
                             // colname="SSID" index="1" value="MyHouseWiFi"
                             (l0linename, l0namevalue) = line.SplitColon();
                             (l0colname, l0index) = l0linename.SplitSpace();
@@ -53,6 +52,16 @@ namespace Utilities
                             l0namevalue = l0namevalue.Trim();
 
                             var col = ColumnUpsert(l0colname);
+                            RowEnsureWidth(currRow, col);
+                            currRow[col] = l0namevalue;
+                            currRowHasData = true;
+                        }
+                        else if (line.StartsWith("Configuration for")) //  e.g., Configuration for interface "Ethernet 2"
+                        {
+                            // This type of value happens with netsh interface ipv4 show config
+                            l0namevalue = line.GetQuotedValue("(not set)");
+
+                            var col = ColumnUpsert("Name");
                             RowEnsureWidth(currRow, col);
                             currRow[col] = l0namevalue;
                             currRowHasData = true;

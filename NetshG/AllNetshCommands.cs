@@ -163,22 +163,48 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show addresses"
+		"Args":"interface ipv4 show addresses",
+		"TableParser":"Indent",
+		"Tags":""
+	},
+    {
+		"Cmd":"netsh",
+		"Args":"interface ipv4 show addresses",
+		"ArgsExtra": "InterfaceIndex",
+		"TableParser":"Indent",
+		"Tags":"",
+		"RequireList":"InterfaceIndex"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show compartments",
 		"MoreArgs":"level=Level store=Store",
 		"TableParser":"List",
+		"Sets":"CompartmentIndex",
+		"SetParser": "List",
+		"Tags":"",
 		"RequireList":"Level,Store"
 	},
     {
 		"Cmd":"netsh",
+		"Args":"interface ipv4 show compartments",
+		"ArgsExtra":"CompartmentIndex",
+		"MoreArgs":"level=Level store=Store",
+		"TableParser":"List",
+		"Tags":"",
+		"RequireList":"Level,Store,CompartmentIndex"
+	},
+    {
+		"Cmd":"netsh",
 		"Args":"interface ipv4 show config",
+		"TableParser":"List",
+		"Tags":""
 	},
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show config InterfaceIndex",
+		"TableParser":"List",
+		"Tags":"",
 		"Requires":[
 			{
 				"Name": "InterfaceIndex"
@@ -195,35 +221,44 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show dnsservers"
+		"Args":"interface ipv4 show destinationcache",
+		"ArgsExtra":"InterfaceIndex",
+		"MoreArgs":"level=Level",
+		"Tags":"#TODO",
+		"RequireList":"Level,InterfaceIndex",
+		"TableParser":"List",
+		"Issues":"when set to verbose=normal, cant be parsed with a List (dashed is better?)"
+	},
+    {
+		"Cmd":"netsh",
+		"Args":"interface ipv4 show dnsservers",
+		"Tags":"#TODO",
+		"TableParser":"Indent"
+	},
+	{
+		"Cmd":"netsh",
+		"Args":"interface ipv4 show dnsservers",
+		"ArgsExtra":"InterfaceIndex",
+		"Tags":"#TODO",
+		"TableParser":"Indent",
+		"RequireList":"InterfaceIndex"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show dynamicportrange",
-		"ArgsExtra": "tcp",
+		"ArgsExtra": "Protocol",
 		"MoreArgs":"store=Store",
-		"RequireList":"Store"
-	},
-    {
-		"Cmd":"netsh",
-		"Args":"interface ipv4 show dynamicportrange",
-		"ArgsExtra": "udp",
-		"MoreArgs":"store=Store",
-		"RequireList":"Store"
+		"RequireList":"Protocol,Store",
+		"Tags":"#TODO",
+		"TableParser":"List"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show excludedportrange",
-		"ArgsExtra": "tcp",
+		"ArgsExtra": "Protocol",
 		"MoreArgs":"store=Store",
-		"RequireList":"Store"
-	},
-    {
-		"Cmd":"netsh",
-		"Args":"interface ipv4 show excludedportrange",
-		"ArgsExtra": "udp",
-		"MoreArgs":"store=Store",
-		"RequireList":"Store"
+		"RequireList":"Protocol,Store",
+		"TableParser":"List"
 	},
     {
 		"Cmd":"netsh",

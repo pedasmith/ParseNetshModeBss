@@ -131,7 +131,7 @@ Reachable Time                     : 25500 ms
                     // Must be a row. Get the exact number of entries.
                     var values = line.Trim().Split(splitChar, 2, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
                     var name = values[0].Trim();
-                    var text = values[1].Trim();
+                    var text = (values.Length > 1) ? values[1].Trim() : "";
                     RowUpsert(row, name, text);
                     rowHasData = true;
                 }

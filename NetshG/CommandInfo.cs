@@ -190,7 +190,7 @@ namespace NetshG
             var curr = GetCurrent(name, "");
             if (curr.Value == "" || !values.Contains(curr))
             {
-                if (values.Count > 1)
+                if (values.Count >= 1)
                 {
                     curr = values[0];
                 }

@@ -17,6 +17,9 @@ namespace Utilities
                 case "Interfaces":
                     retval = new ParseList() { ColumnToReturn = "IfIndex" };
                     break;
+                case "List":
+                    retval = new ParseList() { ColumnToReturn = "Name" };
+                    break;
                 case "Profile":
                     retval = new ParseColonLines() { LineMustMatch = "All User Profile", SplitStr = ":" };
                     break;
