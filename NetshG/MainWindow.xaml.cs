@@ -22,6 +22,10 @@ namespace NetshG
         {
             InitializeComponent();
             this.Loaded += MainWindow_Loaded;
+
+            int nerror = 0;
+            nerror += Utilities.StringUtilities.TestCountStrings();
+
         }
 
         ArgumentSettings CurrArgumentSettings = new ArgumentSettings();
@@ -117,15 +121,24 @@ namespace NetshG
                     result = "HAS TABS!!\n" + result.Replace("\t", "\\t");
                 }
             }
-            if (CurrUserPrefs.ShowHelp)
+
+
+            // Handle the parsing. Parsing is the act of looking at the data from,
+            // e.g., the list of interface and making a list of all interface names.
+            // Those name get set into macros.
+            if (!string.IsNullOrEmpty(ci.Sets))
             {
-                result = qresult + "\n\n\n" + result;
+                var macroParser = GetParser.GetMacroParser(ci.SetParser);
+                if (macroParser != null)
+                {
+                    var setList = macroParser.ParseForValues(rawResult);
+                    CurrArgumentSettings.SetValueList(ci.Sets, setList);
+                }
             }
+
 
             // DBG: Parse with the ParseDashLineTab.cs parser
             // Will be replaced with more parser types
-
-
             var tableParserName = ci.TableParser;
             if (string.IsNullOrEmpty(tableParserName))
             {
@@ -143,20 +156,14 @@ namespace NetshG
                 }
             }
 
+            if (CurrUserPrefs.ShowHelp)
+            {
+                result = qresult + "\n\n\n" + result;
+            }
+
             uiOutput.Text = result;
 
-            // Handle the parsing. Parsing is the act of looking at the data from,
-            // e.g., the list of interface and making a list of all interface names.
-            // Those name get set into macros.
-            if (!string.IsNullOrEmpty(ci.Sets))
-            {
-                var macroParser = GetParser.GetMacroParser(ci.SetParser);
-                if (macroParser != null)
-                {
-                    var setList = macroParser.ParseForValues(result);
-                    CurrArgumentSettings.SetValueList(ci.Sets, setList);
-                }
-            }
+
 
         }
 

@@ -11,6 +11,7 @@
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Button Content="" Grid.Column="0" Click="OnPrevMacro" Style="{StaticResource rPrevNext}" />
@@ -18,5 +19,6 @@
 
         <TextBlock x:Name="uiReplaceName" Grid.Column="2" Style="{StaticResource rReplace}" />
         <TextBlock x:Name="uiReplaceValue" Grid.Column="3" Style="{StaticResource rReplace}" FontWeight="Bold" />
+        <TextBlock x:Name="uiReplaceUserValue" Grid.Column="4" Style="{StaticResource rReplace}" />
     </Grid>
 </UserControl>

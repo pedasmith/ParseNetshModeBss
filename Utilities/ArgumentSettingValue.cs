@@ -33,5 +33,11 @@ namespace Utilities
         }
 
         public bool HasUserString {  get {  return !string.IsNullOrEmpty(_userString); } }
+
+        public override string ToString()
+        {
+            var retval = $"value={Value} userstring={UserString}";
+            return retval;
+        }
     }
 }

@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)GetParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ILog.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ParseIndent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ParseList.cs" />
     <Compile Include="..\Utilities\IMacroParse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ParseBssidMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ParseColonLines.cs" />

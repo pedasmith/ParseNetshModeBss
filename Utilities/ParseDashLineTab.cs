@@ -194,6 +194,44 @@ MaxFileSize                           4096
             return retval;
         }
 
+        public static int CountStrings(this string value, string lookFor)
+        {
+            int retval = 0;
+            var index = value.IndexOf(lookFor);
+            while (index >= 0)
+            {
+                retval++;
+                index = value.IndexOf(lookFor, index + 1);
+            }
+
+            return retval;
+        }
+        private static void Log(string text)
+        {
+            Console.WriteLine(text);
+        }
+        private static int TestCountStrings_One(string value, string lookFor, int expected)
+        {
+            int nerror = 0;
+            var actual = value.CountStrings(lookFor);
+            if (actual != expected)
+            {
+                Log($"ERROR: CountString({value}, {lookFor}) expected={expected} actual={actual}");
+                nerror++;
+            }
+            return nerror;
+        }
+        public static int TestCountStrings()
+        {
+            int nerror = 0;
+            nerror += TestCountStrings_One("one two three four two three four three four four", "zero", 0);
+            nerror += TestCountStrings_One("one two three four two three four three four four", "one", 1);
+            nerror += TestCountStrings_One("one two three four two three four three four four", "two", 2);
+            nerror += TestCountStrings_One("one two three four two three four three four four", "three", 3);
+            nerror += TestCountStrings_One("one two three four two three four three four four", "four", 4);
+            return nerror;
+        }
+
         public static List<int> CountIndents(this string[]? lines)
         {
             if (lines == null) return new List<int>();
@@ -233,6 +271,22 @@ MaxFileSize                           4096
                 if (indents[i] == indent) return i; 
             }
             return -1;
+        }
+
+        /// <summary>
+        /// Returns a string without a trailing \r (CR)
+        /// OBSOLETE: replace is:             var lines = file.Replace("\r\n", "\n").Split(new char[] { '\n' });
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns></returns>
+        public static string ZZZRemoveCR(this string line)
+        {
+            var retval = line;
+            if (retval.EndsWith("\r"))
+            {
+                retval = retval.Substring(0, retval.Length-1);
+            }
+            return retval;
         }
 
         public static (string, string) SplitColon(this string line)

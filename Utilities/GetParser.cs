@@ -15,7 +15,7 @@ namespace Utilities
                     retval = null; // new ParseDashLineTab() {  };
                     break;
                 case "Interfaces":
-                    retval = new ParseTable() { ColumnToReturn = "Idx" };
+                    retval = new ParseList() { ColumnToReturn = "IfIndex" };
                     break;
                 case "Profile":
                     retval = new ParseColonLines() { LineMustMatch = "All User Profile", SplitStr = ":" };
@@ -34,6 +34,9 @@ namespace Utilities
                     break;
                 case "Indent":
                     retval = new ParseIndent();
+                    break;
+                case "List":
+                    retval = new ParseList();
                     break;
             }
             return retval;

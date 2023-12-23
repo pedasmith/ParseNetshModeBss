@@ -19,6 +19,13 @@ namespace NetshG
             return retval;
         }
 
+
+
+
+
+
+
+
         public static string AllCommands = """
 [
     {
@@ -162,11 +169,12 @@ namespace NetshG
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show compartments",
 		"MoreArgs":"level=Level store=Store",
+		"TableParser":"List",
 		"RequireList":"Level,Store"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show config"
+		"Args":"interface ipv4 show config",
 	},
     {
 		"Cmd":"netsh",
@@ -181,7 +189,9 @@ namespace NetshG
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show destinationcache",
 		"MoreArgs":"level=Level",
-		"RequireList":"Level"
+		"Tags":"#TODO",
+		"RequireList":"Level",
+		"TableParser":"List"
 	},
     {
 		"Cmd":"netsh",
@@ -228,6 +238,8 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show interfaces",
+		"Tags":"#common #TODO",
+		"TableParser":"List",
 		"Sets": "InterfaceIndex",
 		"SetParser": "Interfaces",
 		"MoreArgs":"level=Level store=Store",
@@ -503,6 +515,8 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"interface tcp show rscstats InterfaceIndex",
+		"Tags":"#common #TODO",
+		"TableParser":"List",
 		"RequireList":"InterfaceIndex"
 	},
     {

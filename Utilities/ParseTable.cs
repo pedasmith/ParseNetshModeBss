@@ -4,6 +4,7 @@ using System.Text;
 
 namespace Utilities
 {
+    // DBG: TODO: NOTE: update to build off of IMacroParse.cs "TableParse" helper class
     internal class ParseTable : IMacroParse
     {
         public string Example = """
@@ -23,9 +24,9 @@ Idx     Met         MTU          State                Name
         {
         }
 
-        public void DoParse(string value) 
+        private void DoParse(string file) 
         {
-            var lines = value.Split('\n');
+            var lines = file.Replace("\r\n", "\n").Split(new char[] { '\n' });
             bool expectDashes = false;
             int ncol = 0;
             char splitChar = ' ';
@@ -33,9 +34,10 @@ Idx     Met         MTU          State                Name
             {
                 if (line == "\r" || line == "")
                 {
-                    ;
+                    continue;
                 }
-                else if (ColumnNames.Count == 0)
+
+                if (ColumnNames.Count == 0)
                 {
                     var names = line.Trim().Split(splitChar, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
                     foreach (var name in names)
@@ -63,7 +65,7 @@ Idx     Met         MTU          State                Name
             }
         }
 
-        public List<ArgumentSettingValue> GetColumn(string name)
+        private List<ArgumentSettingValue> GetColumn(string name)
         {
             var retval = new List<ArgumentSettingValue>();
             var index = ColumnNames.IndexOf(name);

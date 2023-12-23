@@ -36,6 +36,9 @@ namespace NetshG
             uiReplaceName.Text = ri.Name;
             var value = CurrArgumentSettings.GetCurrent(ri.Name, "(not set)");
             uiReplaceValue.Text = value.Value;
+            var user = value.UserString;
+            if (user == value.Value) user = ""; // not really set, so don't show it.
+            uiReplaceUserValue.Text = user;
         }
 
         private void OnPrevMacro(object sender, RoutedEventArgs e)

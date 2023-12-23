@@ -27,6 +27,28 @@ namespace Utilities
             }
             return index;
         }
+
+        public int ColumnIndex(string name)
+        {
+            var index = ColNames.IndexOf(name);
+            return index;
+
+        }
+        public List<ArgumentSettingValue> GetColumn(string name, string userName)
+        {
+            var retval = new List<ArgumentSettingValue>();
+            var index = ColNames.IndexOf(name);
+            var userIndex = ColNames.IndexOf(userName);
+            foreach (var row in Rows)
+            {
+                bool hasCol = (index >= 0) && (index < row.Count);
+                bool hasUserCol = (userIndex >= 0) && (userIndex < row.Count);
+                var value = hasCol ? row[index] : "";
+                var valueUser = hasUserCol ? row[userIndex] : "";
+                retval.Add(new ArgumentSettingValue(value, valueUser));
+            }
+            return retval;
+        }
         public List<List<string>> Rows { get; } = new List<List<string>>();
         public static void RowEnsureWidth(List<string> row, int index, string defaultValue = "")
         {
@@ -34,6 +56,13 @@ namespace Utilities
             {
                 row.Add(defaultValue);
             }
+        }
+
+        public void RowUpsert(List<string> row, string colName, string value)
+        {
+            var col = ColumnUpsert(colName);
+            RowEnsureWidth(row, col);
+            row[col] = value;
         }
 
         public abstract void Parse(string file);
