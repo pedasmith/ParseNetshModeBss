@@ -30,6 +30,7 @@ Reachable Time                     : 25500 ms
         {
             var retval = defaultValue;
             // The line is like Interface Ethernet 2 Parameters
+            // Example: Compartment 1 Parameters (from netsh interface ipv4 show compartments level=verbose store=active)
             // Strip off the first and last words
             int firstSpace = value.IndexOf(' ');
             int lastSpace = value.LastIndexOf(' ');

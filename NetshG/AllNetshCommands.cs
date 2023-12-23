@@ -141,15 +141,18 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface 6to4 show relay"
+		"Args":"interface 6to4 show relay",
+		"TableParser":"List"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface 6to4 show routing"
+		"Args":"interface 6to4 show routing",
+		"TableParser":"List"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface 6to4 show state"
+		"Args":"interface 6to4 show state",
+		"TableParser":"List"
 	},
     {
 		"Cmd":"netsh",
@@ -197,13 +200,13 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show config",
-		"TableParser":"List",
+		"TableParser":"Indent",
 		"Tags":""
 	},
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show config InterfaceIndex",
-		"TableParser":"List",
+		"TableParser":"Indent",
 		"Tags":"",
 		"Requires":[
 			{
@@ -215,7 +218,7 @@ namespace NetshG
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show destinationcache",
 		"MoreArgs":"level=Level",
-		"Tags":"#TODO",
+		"Tags":"",
 		"RequireList":"Level",
 		"TableParser":"List"
 	},
@@ -224,7 +227,7 @@ namespace NetshG
 		"Args":"interface ipv4 show destinationcache",
 		"ArgsExtra":"InterfaceIndex",
 		"MoreArgs":"level=Level",
-		"Tags":"#TODO",
+		"Tags":"",
 		"RequireList":"Level,InterfaceIndex",
 		"TableParser":"List",
 		"Issues":"when set to verbose=normal, cant be parsed with a List (dashed is better?)"
@@ -232,14 +235,14 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show dnsservers",
-		"Tags":"#TODO",
+		"Tags":"",
 		"TableParser":"Indent"
 	},
 	{
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show dnsservers",
 		"ArgsExtra":"InterfaceIndex",
-		"Tags":"#TODO",
+		"Tags":"",
 		"TableParser":"Indent",
 		"RequireList":"InterfaceIndex"
 	},
@@ -249,7 +252,7 @@ namespace NetshG
 		"ArgsExtra": "Protocol",
 		"MoreArgs":"store=Store",
 		"RequireList":"Protocol,Store",
-		"Tags":"#TODO",
+		"Tags":"",
 		"TableParser":"List"
 	},
     {
@@ -264,7 +267,8 @@ namespace NetshG
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show global",
 		"MoreArgs":"store=Store",
-		"RequireList":"Store"
+		"RequireList":"Store",
+		"TableParser":"DashLine"
 	},
     {
 		"Cmd":"netsh",
@@ -273,7 +277,7 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show interfaces",
-		"Tags":"#common #TODO",
+		"Tags":"#common ",
 		"TableParser":"List",
 		"Sets": "InterfaceIndex",
 		"SetParser": "Interfaces",
@@ -550,7 +554,7 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"interface tcp show rscstats InterfaceIndex",
-		"Tags":"#common #TODO",
+		"Tags":"#common ",
 		"TableParser":"List",
 		"RequireList":"InterfaceIndex"
 	},
@@ -902,7 +906,7 @@ namespace NetshG
 		"Cmd":"netsh",
 		"Args":"wlan show networks",
 		"ArgsExtra":"mode=bssid",
-		"Tags":"#common #wifi #TODO",
+		"Tags":"#common #wifi ",
 		"TableParser":"Indent"
 	},
     {

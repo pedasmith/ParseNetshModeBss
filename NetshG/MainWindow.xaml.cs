@@ -39,6 +39,7 @@ namespace NetshG
             uiMenu_Parameters_Common.Items.Clear();
             DoSetupCommonMenu("Level");
             DoSetupCommonMenu("Store");
+            DoSetupCommonMenu("Parser");
 
             uiMenu_Show_Help.IsChecked = CurrUserPrefs.ShowHelp;
         }
@@ -142,7 +143,8 @@ namespace NetshG
             var tableParserName = ci.TableParser;
             if (string.IsNullOrEmpty(tableParserName))
             {
-                tableParserName = "Indent"; //DBG: TODO: just for debugging
+                //tableParserName = "Indent"; 
+                tableParserName = CurrArgumentSettings.GetCurrent("Parser", "Indent").Value;//DBG: TODO: just for debugging
             }
             if (!string.IsNullOrEmpty(tableParserName))
             {
@@ -173,6 +175,7 @@ namespace NetshG
             CurrArgumentSettings.SetValueList("Level", new List<ArgumentSettingValue>() { new ArgumentSettingValue("normal"), new ArgumentSettingValue("verbose") });
             CurrArgumentSettings.SetValueList("Store", new List<ArgumentSettingValue>() { new ArgumentSettingValue("active"), new ArgumentSettingValue("persistent") });
             CurrArgumentSettings.SetValueList("Protocol", new List<ArgumentSettingValue>() { new ArgumentSettingValue("tcp"), new ArgumentSettingValue("udp") });
+            CurrArgumentSettings.SetValueList("Parser", new List<ArgumentSettingValue>() { new ArgumentSettingValue("DashLine"), new ArgumentSettingValue("Indent"), new ArgumentSettingValue("List") });
 
             CurrArgumentSettings.SetCurrent("Level", CurrArgumentSettings.GetValue("Level", "verbose"));
         }

@@ -141,6 +141,11 @@ namespace Utilities
             var value = fields.Length >= 2 ? fields[1] : "";
             return (name, value.TrimStart());
         }
+        /// <summary>
+        /// Splits the line at a point where there are 4 spaces (or more). String is split into two.
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns>(left),(right) where right might just be "" if it didn't really exist</returns>
         public static (string, string) SplitSpaces(this string line)
         {
             var fields = line.Split("    ", 2); // Split requires at least 4 space

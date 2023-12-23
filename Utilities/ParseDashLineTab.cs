@@ -5,6 +5,7 @@ using System.Text;
 using System.Linq;
 using System.Xml.Linq;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Utilities
 {
@@ -70,10 +71,14 @@ MaxFileSize                           4096
                     break;
             }
         }
-
+        private void Log(string str)
+        {
+            Console.WriteLine(str);
+        }
 
         private void ParseSection(string file)
         {
+            // TODO: this line is 100% not needed (it's done already)
             AutodetectParsing(file); // Sets up the settings
 
             var lines = file.Replace("\r\n", "\n").Split(new char[] { '\n' });
@@ -81,11 +86,13 @@ MaxFileSize                           4096
             var currSection = "";
             List<string>? currRow = null;
             var justSetSection = false;
-
+            var justSetSectionCount = 999; // fake value
+            var nsubsectionCount = 0;
             for (int i=0; i<lines.Length; i++) // First line is never anything
             {
                 var line = lines[i];
                 var nextLine = (i < (lines.Length-1)) ? lines[i + 1] : ""; ;
+                justSetSectionCount++; // bump this; will be reset to zero as needed
                 if (nextLine.Contains(SectionSeperator))
                 {
                     // Section might include a colon and might not.
@@ -105,6 +112,7 @@ MaxFileSize                           4096
                     currRow[col] = currSection;
 
                     justSetSection = true;
+                    justSetSectionCount = 0;
                 }
                 else if (SubsectionSeperator != "" && line.Contains(SubsectionSeperator)) // DBG: IP
                 {
@@ -138,19 +146,42 @@ MaxFileSize                           4096
                         //startsWithSpaces = true;
                     }
                     var fields = line.SplitSpaces();
-                    if (fields.Item1.EndsWith(":") && string.IsNullOrEmpty(fields.Item2))
+                    if (string.IsNullOrEmpty(fields.Item2))
                     {
-                        // E.G., the "Logging:" section of netsh advfirewall show allprofiles
-                    }
-                    else if (string.IsNullOrEmpty(fields.Item2) && fields.Item1.Contains(":"))
-                    {
-                        // Example: "maxcacheresponsesize (per-uri cache limit): 262144 bytes" from netsh http show cacheparam
-                        fields = line.SplitColon();
-                        var col = ColumnUpsert(fields.Item1.Trim());
-                        RowEnsureWidth(currRow, col);
+                        if (fields.Item1.EndsWith(":"))
+                        {
+                            // E.G., the "Logging:" section of netsh advfirewall show allprofiles
+                        }
+                        else if (fields.Item1.Contains(":"))
+                        {
+                            // Example: "maxcacheresponsesize (per-uri cache limit): 262144 bytes" from netsh http show cacheparam
+                            fields = line.SplitColon();
+                            var col = ColumnUpsert(fields.Item1.Trim());
+                            RowEnsureWidth(currRow, col);
 
-                        var value = fields.Item2;
-                        currRow[col] = value.Trim();
+                            var value = fields.Item2;
+                            currRow[col] = value.Trim();
+                        }
+                        else if (fields.Item1 == "INPUT" || fields.Item1 == "OUTPUT")
+                        {
+                            // Example: netsh interface ipv4 show icmpstats divides the overall section (MIB-II ICMP Statistics)
+                            // into two sections: one is input, and the other is output.
+                            // TODO: consider making this more generic
+                            if (currRow != null && nsubsectionCount > 0)
+                            {
+                                Rows.Add(currRow);
+                            }
+                            currRow = new List<string>();
+
+                            var col = ColumnUpsert("Subsection");
+                            RowEnsureWidth(currRow, col);
+                            currRow[col] = fields.Item1;
+                            nsubsectionCount++;
+                        }
+                        else
+                        {
+                            Log($"ERROR: unable to parse dash line={line}");
+                        }
                     }
                     else
                     {
