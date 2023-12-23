@@ -293,24 +293,28 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show ipnettomedia"
+		"Args":"interface ipv4 show ipnettomedia",
+		"Issues":"Unable to parse"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show ipstats",
-		"Tags":"#common"
+		"Tags":"#common",
+		"TableParser":"DashLine"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show joins",
 		"MoreArgs":"level=Level",
-		"RequireList":"Level"
+		"RequireList":"Level",
+		"Issues":"unable to parse"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show neighbors",
 		"MoreArgs":"level=Level store=Store",
-		"RequireList":"Level,Store"
+		"RequireList":"Level,Store",
+		"Issues":"Unable to parse -- has similar problem to show joins"
 	},
     {
 		"Cmd":"netsh",
@@ -320,13 +324,15 @@ namespace NetshG
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show route",
 		"MoreArgs":"level=Level store=Store",
-		"RequireList":"Level,Store"
+		"RequireList":"Level,Store",
+		"Issues":"BUG: the SitePrefixLength, ValidLifeTime, and PrefferredLifeTime are all missing :"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show subinterfaces",
 		"MoreArgs":"level=Level store=Store",
-		"RequireList":"Level,Store"
+		"RequireList":"Level,Store",
+		"TableParser":"List"
 	},
     {
 		"Cmd":"netsh",
@@ -854,27 +860,32 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"wlan show allowexplicitcreds",
+		"TableParser":"DashLine",
 		"Tags":"#wifi"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"wlan show autoconfig",
-		"Tags":"#wifi"
+		"Tags":"#wifi",
+		"Issues":"This is like a DashLine, but the valus are 'is enabled' without a colon or spaces"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"wlan show blockednetworks",
+		"TableParser":"DashLine",
 		"Tags":"#wifi"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"wlan show createalluserprofile",
-		"Tags":"#wifi"
+		"Tags":"#wifi",
+		"Issues":"Not parsable"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"wlan show drivers",
-		"Tags":"#common #wifi"
+		"Tags":"#common #wifi",
+		"Issues":"Similar to Indent but the Auth stuff and more is not parsable"
 	},
     {
 		"Cmd":"netsh",
@@ -884,34 +895,40 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"wlan show hostednetwork",
+		"TableParser":"DashLine",
 		"Tags":"#wifi"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"wlan show hostednetwork setting=security",
+		"TableParser":"DashLine",
 		"Tags":"#wifi"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"wlan show interfaces",
-		"Tags":"#common #wifi"
+		"TableParser":"Indent",
+		"Tags":"#common #wifi",
+		"Issues":"Nearly parseable with List except for the extra space before Hosted network status"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"wlan show networks",
 		"ArgsExtra":"mode=ssid",
+		"TableParser":"Indent",
 		"Tags":"#common #wifi"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"wlan show networks",
 		"ArgsExtra":"mode=bssid",
-		"Tags":"#common #wifi ",
-		"TableParser":"Indent"
+		"TableParser":"Indent",
+		"Tags":"#common #wifi "
 	},
     {
 		"Cmd":"netsh",
 		"Args":"wlan show onlyUseGPProfilesforAllowedNetworks",
+		"TableParser":"DashLine"
 		"Tags":"#wifi"
 	},
 	{
@@ -935,12 +952,14 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"wlan show randomization",
-		"Tags":"#wifi"
+		"Tags":"#wifi",
+		"Issues":"Unable to parse"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"wlan show settings",
-		"Tags":"#wifi"
+		"Tags":"#wifi",
+		"Issues":"Unable to parse with DashLine because of the extra spaces"
 	},
     {
 		"Cmd":"netsh",

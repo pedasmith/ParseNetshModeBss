@@ -56,7 +56,7 @@
                 <StackPanel x:Name="uiReplaceList" Grid.Row="1" />
                 <StackPanel Orientation="Horizontal">
                     <Button Content="Repeat" Click="OnRepeat" />
-                    <Button Content="Encyption" Tag="SsidEncryption"  Click="OnParse" />
+                    <Button Content="Encryption" Tag="SsidEncryption"  Click="OnParse" />
                 </StackPanel>
                 <ScrollViewer x:Name="uiOutputScroll" Grid.Row="2">
                     <TextBox x:Name="uiOutput" Style="{StaticResource rOutput}" />
