@@ -3,9 +3,10 @@ using System.Data;
 using System.Windows;
 using System.Windows.Controls;
 using Newtonsoft.Json;
-
+using Windows.ApplicationModel.DataTransfer;
 using ParseNetshModeBss; // to get the utilities classes!
 using Utilities;
+using Clipboard = Windows.ApplicationModel.DataTransfer.Clipboard;
 
 namespace NetshG
 {
@@ -90,7 +91,7 @@ namespace NetshG
 
             DoCommand(ci);
         }
-
+        TableParse? CurrTableParser = null;
         public void DoCommand(CommandInfo ci)
         { 
             var program = ci.Cmd;
@@ -110,7 +111,9 @@ namespace NetshG
                 uiReplaceList.Children.Add(rvec);
             }
 
+            uiHelpScroll.ScrollToHome();
             uiOutputScroll.ScrollToHome();
+            uiTableScroll.ScrollToHome();
             uiCommand.Text = $"{program} {argsWithExtraMore}";
             var qresult = RunCommandLine.RunNetshG(program, args + " " + ci.Help);
             var result = RunCommandLine.RunNetshG(program, argsWithExtraMore);
@@ -146,27 +149,21 @@ namespace NetshG
                 //tableParserName = "Indent"; 
                 tableParserName = CurrArgumentSettings.GetCurrent("Parser", "Indent").Value;//DBG: TODO: just for debugging
             }
+            string csv = "";
             if (!string.IsNullOrEmpty(tableParserName))
             {
-                var tableParser = GetParser.GetTableParser(tableParserName);
-                if (tableParser != null)
+                CurrTableParser = GetParser.GetTableParser(tableParserName);
+                if (CurrTableParser != null)
                 {
-                    tableParser.Parse(rawResult);
-                    var csv = tableParser.AsCsv();
-
-                    result = $"Parsed with {tableParserName}\n\n" + csv + "\n-------------------\n\n" + result;
+                    CurrTableParser.Parse(rawResult);
+                    csv = CurrTableParser.AsCsv();
                 }
             }
 
-            if (CurrUserPrefs.ShowHelp)
-            {
-                result = qresult + "\n\n\n" + result;
-            }
-
+            uiHelpGrid.Visibility = CurrUserPrefs.ShowHelp ? Visibility.Visible : Visibility.Collapsed;
+            uiHelp.Text = qresult;
             uiOutput.Text = result;
-
-
-
+            uiTable.Text = csv;
         }
 
 
@@ -248,6 +245,27 @@ namespace NetshG
         {
             if (LastCommand == null) return;
             DoCommand(LastCommand);
+        }
+
+        private void OnCopyForExcel(object sender, RoutedEventArgs e)
+        {
+            if (CurrTableParser == null) return;
+            var txt = CurrTableParser.AsHtml();
+            var htmlFormat = HtmlFormatHelper.CreateHtmlFormat(txt);
+            var dp = new DataPackage();
+            dp.SetHtmlFormat(htmlFormat);
+            dp.Properties.Title = "Wi-Fi Scan data";
+            Clipboard.SetContent(dp);
+        }
+
+        private void OnCopyCSV(object sender, RoutedEventArgs e)
+        {
+            if (CurrTableParser == null) return;
+            var txt = CurrTableParser.AsCsv();
+            var dp = new DataPackage();
+            dp.SetText(txt);
+            dp.Properties.Title = "Wi-Fi Scan data";
+            Clipboard.SetContent(dp);
         }
     }
 }

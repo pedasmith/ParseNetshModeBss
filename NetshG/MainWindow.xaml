@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NetshG"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="900">
+        Title="MainWindow" Height="750" Width="900">
     <Window.Resources>
     </Window.Resources>
     <Grid>
@@ -24,7 +24,7 @@
                 <MenuItem Header="_Common" Tag="#common" Click="OnMenu_Show_Tag" />
                 <MenuItem Header="_All" Tag="" Click="OnMenu_Show_Tag" />
                 <MenuItem Header="_Wi-Fi" Tag="#wifi" Click="OnMenu_Show_Tag" />
-                <MenuItem Header="Show _Help" x:Name="uiMenu_Show_Help" IsCheckable="True" IsChecked="False" Checked="OnMenu_Show_Help_Check" Unchecked="OnMenu_Show_Help_Uncheck" />
+                <MenuItem Header="Show _Help" x:Name="uiMenu_Show_Help" IsCheckable="True" IsChecked="True" Checked="OnMenu_Show_Help_Check" Unchecked="OnMenu_Show_Help_Uncheck" />
             </MenuItem>
             <MenuItem Header="_Parameters">
                 <MenuItem Header="_Common" x:Name="uiMenu_Parameters_Common">
@@ -58,9 +58,50 @@
                     <Button Content="Repeat" Click="OnRepeat" />
                     <Button Content="Encryption" Tag="SsidEncryption"  Click="OnParse" />
                 </StackPanel>
-                <ScrollViewer x:Name="uiOutputScroll" Grid.Row="2">
-                    <TextBox x:Name="uiOutput" Style="{StaticResource rOutput}" />
-                </ScrollViewer>
+                <Grid Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="150" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" x:Name="uiHelpGrid" Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <ScrollViewer x:Name="uiHelpScroll" Grid.Row="2" MaxHeight="140">
+                            <TextBox x:Name="uiHelp" Style="{StaticResource rOutput}" />
+                        </ScrollViewer>
+                        <Line Grid.Row="3" Height="10" X1="0" X2="300" Y1="4" Y2="4" StrokeThickness="2" Stroke="Black" />
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <ScrollViewer x:Name="uiOutputScroll" Grid.Row="2">
+                            <TextBox x:Name="uiOutput" Style="{StaticResource rOutput}" />
+                        </ScrollViewer>
+                    </Grid>
+                    <Grid Grid.Row="2" x:Name="uiTableGrid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Line Grid.Row="0" Height="10" X1="0" X2="300" Y1="4" Y2="4" StrokeThickness="2" Stroke="Black" />
+                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                            <Button Content="Copy for Excel" Click="OnCopyForExcel" />
+                            <Button Content="Copy CSV" Click="OnCopyCSV" />
+                        </StackPanel>
+                        <ScrollViewer x:Name="uiTableScroll" Grid.Row="2">
+                            <TextBox x:Name="uiTable" Style="{StaticResource rOutput}" />
+                        </ScrollViewer>
+                    </Grid>
+                </Grid>
             </Grid>
         </Grid>
         <TextBlock Grid.Row="3"  x:Name="uiLog" Style="{StaticResource ResourceKey=rLog}"></TextBlock>

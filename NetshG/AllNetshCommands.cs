@@ -928,7 +928,7 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"wlan show onlyUseGPProfilesforAllowedNetworks",
-		"TableParser":"DashLine"
+		"TableParser":"DashLine",
 		"Tags":"#wifi"
 	},
 	{

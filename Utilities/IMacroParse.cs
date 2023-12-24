@@ -74,7 +74,7 @@ namespace Utilities
             {
                 if (!isFirst) sb.Append(',');
                 isFirst = false;
-                sb.Append(EscapeIfNeeded(colname));
+                sb.Append(EscapeIfNeededCsv(colname));
             }
             sb.Append('\n');
             foreach (var row in Rows)
@@ -84,7 +84,7 @@ namespace Utilities
                 {
                     if (!isFirst) sb.Append(',');
                     isFirst = false;
-                    sb.Append(EscapeIfNeeded(data));
+                    sb.Append(EscapeIfNeededCsv(data));
                 }
                 sb.Append('\n');
             }
@@ -96,7 +96,7 @@ namespace Utilities
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private string EscapeIfNeeded(string value)
+        private string EscapeIfNeededCsv(string value)
         {
             var retval = value;
             bool mustQuote = false;
@@ -110,6 +110,28 @@ namespace Utilities
             {
                 retval = "\"" + retval + "\"";
             }
+            return retval;
+        }
+
+        public string AsHtml()
+        {
+            var sb = new StringBuilder();
+            var str = "";
+            foreach (var colname in ColNames)
+            {
+                str += colname.th();
+            }
+            sb.Append(str.tr());
+            foreach (var row in Rows)
+            {
+                var rowstr = "";
+                foreach (var data in row)
+                {
+                    rowstr += data.td();
+                }
+                sb.Append(rowstr.tr());
+            }
+            var retval = sb.ToString().html();
             return retval;
         }
     }
