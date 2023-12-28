@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 
 namespace Utilities
@@ -48,6 +49,33 @@ namespace Utilities
                 retval.Add(new ArgumentSettingValue(value, valueUser));
             }
             return retval;
+        }
+
+        public DataTable GetDataTable()
+        {
+            var table = new DataTable();
+            var strType = System.Type.GetType("System.String");
+            foreach (var item in ColNames)
+            {
+                var column = new DataColumn()
+                {
+                    DataType = strType,
+                    ColumnName = item,
+                };
+                table.Columns.Add(column);
+            }
+
+            foreach (var row in Rows)
+            {
+                var r = table.NewRow();
+                for (int i=0; i<row.Count; i++)
+                {
+                    var name = ColNames[i];
+                    r[name] = row[i];
+                }
+                table.Rows.Add(r);
+            }
+            return table;
         }
         public List<List<string>> Rows { get; } = new List<List<string>>();
         public static void RowEnsureWidth(List<string> row, int index, string defaultValue = "")

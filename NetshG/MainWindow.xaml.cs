@@ -164,6 +164,7 @@ namespace NetshG
             uiHelp.Text = qresult;
             uiOutput.Text = result;
             uiTable.Text = csv;
+            uiTableDataGrid.DataContext = CurrTableParser == null ? null : CurrTableParser.GetDataTable();
         }
 
 
