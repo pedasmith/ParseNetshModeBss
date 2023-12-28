@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParseNetshModeBss", "ParseN
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utilities", "Utilities\Utilities.shproj", "{F05B4F38-6A74-40FD-B8E1-4BE8488D4A3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetshG", "NetshG\NetshG.csproj", "{6A8AE6D0-0017-49EA-AE17-1E85710B439A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetshG", "NetshG\NetshG.csproj", "{6A8AE6D0-0017-49EA-AE17-1E85710B439A}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "NetshG-Setup", "NetshG-Setup\NetshG-Setup.vdproj", "{E21D78B7-1F72-4A11-BA8C-4B7929D8359A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +25,9 @@ Global
 		{6A8AE6D0-0017-49EA-AE17-1E85710B439A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A8AE6D0-0017-49EA-AE17-1E85710B439A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A8AE6D0-0017-49EA-AE17-1E85710B439A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E21D78B7-1F72-4A11-BA8C-4B7929D8359A}.Debug|Any CPU.ActiveCfg = Debug
+		{E21D78B7-1F72-4A11-BA8C-4B7929D8359A}.Release|Any CPU.ActiveCfg = Release
+		{E21D78B7-1F72-4A11-BA8C-4B7929D8359A}.Release|Any CPU.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
