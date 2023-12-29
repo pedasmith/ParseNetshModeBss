@@ -77,6 +77,18 @@ namespace Utilities
             }
             return table;
         }
+
+        public void MakeRectangular()
+        {
+            var ncol = ColNames.Count;
+            foreach (var row in Rows)
+            {
+                while (row.Count < ncol)
+                {
+                    row.Add("");
+                }
+            }
+        }
         public List<List<string>> Rows { get; } = new List<List<string>>();
         public static void RowEnsureWidth(List<string> row, int index, string defaultValue = "")
         {
@@ -90,6 +102,7 @@ namespace Utilities
         {
             var col = ColumnUpsert(colName);
             RowEnsureWidth(row, col);
+            MakeRectangular();
             row[col] = value;
         }
 

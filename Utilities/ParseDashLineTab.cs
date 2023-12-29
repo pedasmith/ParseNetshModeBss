@@ -107,9 +107,10 @@ MaxFileSize                           4096
 
                     var fields = line.SplitColon();
                     currSection = fields.Item1.Trim(); // Section is previous line e.g. "Domain Profile Settings:" 
-                    var col = ColumnUpsert("Section");
-                    RowEnsureWidth(currRow, col);
-                    currRow[col] = currSection;
+                    RowUpsert(currRow, "Section", currSection);
+                    //var col = ColumnUpsert("Section");
+                    //RowEnsureWidth(currRow, col);
+                    //currRow[col] = currSection;
 
                     justSetSection = true;
                     justSetSectionCount = 0;
@@ -156,11 +157,12 @@ MaxFileSize                           4096
                         {
                             // Example: "maxcacheresponsesize (per-uri cache limit): 262144 bytes" from netsh http show cacheparam
                             fields = line.SplitColon();
-                            var col = ColumnUpsert(fields.Item1.Trim());
-                            RowEnsureWidth(currRow, col);
+                            RowUpsert(currRow, fields.Item1.Trim(), fields.Item2);
+                            //var col = ColumnUpsert(fields.Item1.Trim());
+                            //RowEnsureWidth(currRow, col);
 
-                            var value = fields.Item2;
-                            currRow[col] = value.Trim();
+                            //var value = fields.Item2;
+                            //currRow[col] = value.Trim();
                         }
                         else if (fields.Item1 == "INPUT" || fields.Item1 == "OUTPUT")
                         {
@@ -173,9 +175,10 @@ MaxFileSize                           4096
                             }
                             currRow = new List<string>();
 
-                            var col = ColumnUpsert("Subsection");
-                            RowEnsureWidth(currRow, col);
-                            currRow[col] = fields.Item1;
+                            RowUpsert(currRow, "Subsection", fields.Item1);
+                            //var col = ColumnUpsert("Subsection");
+                            //RowEnsureWidth(currRow, col);
+                            //currRow[col] = fields.Item1;
                             nsubsectionCount++;
                         }
                         else
@@ -188,8 +191,8 @@ MaxFileSize                           4096
                         var colname = fields.Item1;
                         // Example: "Entry Type:                         Base Service Provider" from netsh winsock show catalog
                         if (colname.EndsWith(":")) colname = colname.Trim(':'); // Example: 
-                        var col = ColumnUpsert(colname);
-                        RowEnsureWidth(currRow, col);
+                        //var col = ColumnUpsert(colname);
+                        //RowEnsureWidth(currRow, col);
 
                         var value = fields.Item2;
                         if (value.StartsWith(": "))
@@ -198,7 +201,8 @@ MaxFileSize                           4096
                             // from command netsh dnsclient show encryption
                             value = value.Substring(2); // remove the ": "
                         }
-                        currRow[col] = value;
+                        //currRow[col] = value;
+                        RowUpsert(currRow, colname, value);
                     }
                 }
             } // end of FOR loop through all lines
@@ -208,6 +212,7 @@ MaxFileSize                           4096
             {
                 Rows.Add(currRow);
             }
+            MakeRectangular();
         }
     }
 }

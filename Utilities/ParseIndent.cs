@@ -51,9 +51,10 @@ namespace Utilities
                             l0colname = l0colname.Trim();
                             l0namevalue = l0namevalue.Trim();
 
-                            var col = ColumnUpsert(l0colname);
-                            RowEnsureWidth(currRow, col);
-                            currRow[col] = l0namevalue;
+                            RowUpsert(currRow, l0colname, l0namevalue);
+                            //var col = ColumnUpsert(l0colname);
+                            //RowEnsureWidth(currRow, col);
+                            //currRow[col] = l0namevalue;
                             currRowHasData = true;
                         }
                         else if (line.StartsWith("Configuration for")) //  e.g., Configuration for interface "Ethernet 2"
@@ -61,9 +62,11 @@ namespace Utilities
                             // This type of value happens with netsh interface ipv4 show config
                             l0namevalue = line.GetQuotedValue("(not set)");
 
-                            var col = ColumnUpsert("Name");
-                            RowEnsureWidth(currRow, col);
-                            currRow[col] = l0namevalue;
+                            RowUpsert(currRow, "Name", l0namevalue);
+                            //var col = ColumnUpsert("Name");
+                            //RowEnsureWidth(currRow, col);
+                            //currRow[col] = l0namevalue;
+
                             currRowHasData = true;
                         }
                         if (nextIndent > indent) // save it for later
@@ -87,16 +90,18 @@ namespace Utilities
                         {
                             // Is the BSSID 2 case. Save the current row
                             savedRows[indent] = new List<string>(currRow);
-                            var col = ColumnUpsert(namename);
-                            RowEnsureWidth(currRow, col);
-                            currRow[col] = value;
+                            RowUpsert(currRow, name, value);
+                            //var col = ColumnUpsert(namename);
+                            //RowEnsureWidth(currRow, col);
+                            //currRow[col] = value;
                             currRowHasData = true;
                         }
                         else
                         {
-                            var col = ColumnUpsert(name);
-                            RowEnsureWidth(currRow, col);
-                            currRow[col] = value;
+                            RowUpsert(currRow, name, value);
+                            //var col = ColumnUpsert(name);
+                            //RowEnsureWidth(currRow, col);
+                            //currRow[col] = value;
                             currRowHasData = true;
                         }
 
