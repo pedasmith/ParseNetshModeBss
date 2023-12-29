@@ -83,12 +83,12 @@
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="1" Orientation="Horizontal">
-                            <Button Content="Copy Text" Click="OnCopyText" />
-                            <Button Content="Show Output" Click="OnShowOutput" />
-                            <Button Content="Show Table" Click="OnShowTable" />
-                            <Button Content="Copy for Excel" Click="OnCopyForExcel" />
-                            <Button Content="Copy CSV" Click="OnCopyCSV" />
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" x:Name="uiOutputButtons">
+                            <Button Tag="output table" Content="Copy Text" Click="OnCopyText" />
+                            <Button Tag="table" Content="Show Output" Click="OnShowOutput" />
+                            <Button Tag="allowTable" Content="Show Table" Click="OnShowTable" />
+                            <Button Tag="table" Content="Copy for Excel" Click="OnCopyForExcel" />
+                            <Button Tag="table" Content="Copy CSV" Click="OnCopyCSV" />
                         </StackPanel>
                         <Grid Grid.Row="2">
                             <ScrollViewer x:Name="uiOutputScroll" >

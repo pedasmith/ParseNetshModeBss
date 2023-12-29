@@ -890,7 +890,7 @@ namespace NetshG
 		"Cmd":"netsh",
 		"Args":"wlan show drivers",
 		"Tags":"#common #wifi",
-		"Issues":"Similar to Indent but the Auth stuff and more is not parsable"
+		"Issues":"Similar to Indent but the Auth stuff and more is not parsable. List of radio types is not in any useful order."
 	},
     {
 		"Cmd":"netsh",

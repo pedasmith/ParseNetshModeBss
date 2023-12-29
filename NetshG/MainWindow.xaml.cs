@@ -154,7 +154,7 @@ namespace NetshG
             // DBG: Parse with the ParseDashLineTab.cs parser
             // Will be replaced with more parser types
             var tableParserName = ci.TableParser;
-            var showTable = tableParserName != null;
+            var showTable = string.IsNullOrEmpty(tableParserName) ? ShowWhat.Output : ShowWhat.Table;
             if (string.IsNullOrEmpty(tableParserName))
             {
                 //tableParserName = "Indent"; 
@@ -178,15 +178,36 @@ namespace NetshG
             uiTableDataGrid.DataContext = CurrTableParser == null ? null : CurrTableParser.GetDataTable();
             if (CurrTableParser?.Rows.Count == 0)
             {
-                showTable = false;
+                showTable = ShowWhat.Output;
             }
-            ShowOutputOrTable(showTable);
+            ShowOutputOrTable(showTable, CurrTableParser != null && CurrTableParser.Rows.Count > 0);
         }
 
-        private void ShowOutputOrTable(bool showTable)
+        enum ShowWhat {  Output, Table };
+        private void ShowOutputOrTable(ShowWhat value, bool allowShowTable=false)
         {
-            uiOutputScroll.Visibility = showTable ? Visibility.Collapsed : Visibility.Visible;
-            uiTableDataGrid.Visibility = showTable ? Visibility.Visible : Visibility.Collapsed;
+            uiOutputScroll.Visibility = value==ShowWhat.Output ? Visibility.Visible: Visibility.Collapsed;
+            uiTableDataGrid.Visibility = value == ShowWhat.Table ? Visibility.Visible : Visibility.Collapsed;
+            foreach (var item in uiOutputButtons.Children)
+            {
+                var button = item as Button;
+                if (button == null) continue;
+                var tag = button.Tag as string;
+                if (string.IsNullOrEmpty (tag)) continue;
+                var visibility = Visibility.Collapsed;
+                switch (value)
+                {
+                    case ShowWhat.Output:
+                        if (tag.Contains("output")) visibility = Visibility.Visible;
+                        if (tag.Contains("allowTable") && allowShowTable == true) visibility = Visibility.Visible;
+                        button.Visibility = visibility;
+                        break;
+                    case ShowWhat.Table:
+                        if (tag.Contains("table")) visibility = Visibility.Visible;
+                        button.Visibility = visibility;
+                        break;
+                }
+            }
         }
 
 
@@ -302,12 +323,12 @@ namespace NetshG
 
         private void OnShowTable(object sender, RoutedEventArgs e)
         {
-            ShowOutputOrTable(true);
+            ShowOutputOrTable(ShowWhat.Table, CurrTableParser != null && CurrTableParser.Rows.Count > 0);
         }
 
         private void OnShowOutput(object sender, RoutedEventArgs e)
         {
-            ShowOutputOrTable(false);
+            ShowOutputOrTable(ShowWhat.Output, CurrTableParser != null && CurrTableParser.Rows.Count > 0);
         }
     }
 }
