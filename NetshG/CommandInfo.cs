@@ -18,11 +18,11 @@ namespace NetshG
         /// <summary>
         /// shown to user but not part of the ? to get help
         /// </summary>
-        public string ArgsExtra { get; set; } = "";
+        public string Args2 { get; set; } = "";
         /// <summary>
         /// not shown to user and not part of the ? to get help
         /// </summary>
-        public string MoreArgs { get; set; } = ""; 
+        public string Args5NoUX { get; set; } = ""; 
         public string Help { get; set; } = "/?";
         public List<CommandRequire> Requires { get; set; } = new List<CommandRequire>();
         public string RequireList { get; set; } = "";

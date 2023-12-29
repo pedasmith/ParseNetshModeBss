@@ -106,8 +106,8 @@ namespace NetshG
         { 
             var program = ci.Cmd;
             var args = ci.Args;
-            var argsExtra = ci.ArgsExtra == "" ? "" : " " + ci.ArgsExtra;
-            var moreArgs = ci.MoreArgs == "" ? "" : " " + ci.MoreArgs;
+            var argsExtra = ci.Args2 == "" ? "" : " " + ci.Args2;
+            var moreArgs = ci.Args5NoUX == "" ? "" : " " + ci.Args5NoUX;
 
             uiOutput.Text = "....getting command...";
 
