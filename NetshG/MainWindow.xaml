@@ -7,6 +7,11 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="750" Width="900">
     <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="AppDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -55,10 +60,6 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <StackPanel x:Name="uiReplaceList" Grid.Row="1" />
-                <StackPanel Orientation="Horizontal">
-                    <Button Content="Repeat" Click="OnRepeat" />
-                    <Button Content="Encryption" Tag="SsidEncryption"  Click="OnParse" />
-                </StackPanel>
                 <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
@@ -84,11 +85,13 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="1" Orientation="Horizontal" x:Name="uiOutputButtons">
-                            <Button Tag="output table" Content="Copy Text" Click="OnCopyText" />
-                            <Button Tag="table" Content="Show Output" Click="OnShowOutput" />
-                            <Button Tag="allowTable" Content="Show Table" Click="OnShowTable" />
+                            <Button Content=" Repeat" Click="OnRepeat" />
+                            <!-- <Button Content="Encryption" Tag="SsidEncryption"  Click="OnParse" /> -->
+                            <Button Tag="output table" Content=" Copy Text" Click="OnCopyText" />
+                            <Button Tag="table" Content="🖹 Show Output" Click="OnShowOutput" />
+                            <Button Tag="allowTable" Content=" Show Table" Click="OnShowTable" />
                             <Button Tag="table" Content="Copy for Excel" Click="OnCopyForExcel" />
-                            <Button Tag="table" Content="Copy CSV" Click="OnCopyCSV" />
+                            <Button Tag="table" Content="❜ Copy CSV" Click="OnCopyCSV" />
                         </StackPanel>
                         <Grid Grid.Row="2">
                             <ScrollViewer x:Name="uiOutputScroll" >
@@ -103,7 +106,7 @@
                                       />
                         </Grid>
                     </Grid>
-                    <Grid Grid.Row="2" x:Name="uiTableGrid">
+                    <Grid Grid.Row="2" x:Name="uiTableGrid" Visibility="Collapsed">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
