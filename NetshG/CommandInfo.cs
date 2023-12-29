@@ -46,11 +46,21 @@ namespace NetshG
         }
         public bool HasTag(string tag)
         {
-            if (string.IsNullOrEmpty(tag))
+            if (string.IsNullOrEmpty(tag) || tag == "#allverbose")
             {
                 return true; // no tag == no filter requested == return everything!
             }
             var list = TagList;
+            if (tag == "#all")
+            {
+                // #all means all but not the obsolete entries
+                foreach (var item in list)
+                {
+                    if (item == "#obsolete") return false;
+                }
+                return true;
+            }
+
             foreach (var item in list)
             {
                 if (item == tag) return true;

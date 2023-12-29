@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetshG
 {
-    class UserPreferences
+    internal class UserPreferences
     {
         public bool ReplaceTabs = true;
         public bool ShowHelp = false;

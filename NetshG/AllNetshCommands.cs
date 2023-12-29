@@ -749,24 +749,29 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"p2p idmgr show groups",
-		"ArgsExtra":"ALL"
+		"ArgsExtra":"ALL",
+		"Tags":"#obsolete"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"p2p idmgr show groups",
-		"ArgsExtra":"ALL EXPIRED"
+		"ArgsExtra":"ALL EXPIRED",
+		"Tags":"#obsolete"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"p2p pnrp cloud show list"
+		"Args":"p2p pnrp cloud show list",
+		"Tags":"#obsolete"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"p2p pnrp cloud show names"
+		"Args":"p2p pnrp cloud show names",
+		"Tags":"#obsolete"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"p2p pnrp cloud show statistics"
+		"Args":"p2p pnrp cloud show statistics",
+		"Tags":"#obsolete"
 	},
     {
 		"Cmd":"netsh",

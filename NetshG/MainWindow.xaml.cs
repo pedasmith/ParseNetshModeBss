@@ -30,19 +30,29 @@ namespace NetshG
         }
 
         ArgumentSettings CurrArgumentSettings = new ArgumentSettings();
-        UserPreferences CurrUserPrefs = new UserPreferences();
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             DoInitializeCommonArguments();
-            DoSetMenuWithTag(CurrUserPrefs.Tags);
-
+            DoSetMenuWithTag(App.CurrUserPrefs.Tags);
+            
             uiMenu_Parameters_Common.Items.Clear();
             DoSetupCommonMenu("Level");
             DoSetupCommonMenu("Store");
             DoSetupCommonMenu("Parser");
 
-            uiMenu_Show_Help.IsChecked = CurrUserPrefs.ShowHelp;
+            uiMenu_Show_Help.IsChecked = App.CurrUserPrefs.ShowHelp;
+
+            var tags = App.CurrUserPrefs.Tags;
+            foreach (var item in uiMenuShow.Items)
+            {
+                var menu = item as MenuItem;
+                if (menu == null) continue;
+                if (menu.Tag as string == tags)
+                {
+                    menu.IsChecked = true;
+                }
+            }
         }
 
         private void DoSetMenuWithTag(string tags)
@@ -118,7 +128,7 @@ namespace NetshG
             var qresult = RunCommandLine.RunNetshG(program, args + " " + ci.Help);
             var result = RunCommandLine.RunNetshG(program, argsWithExtraMore);
             var rawResult = result; // for the parser
-            if (CurrUserPrefs.ReplaceTabs)
+            if (App.CurrUserPrefs.ReplaceTabs)
             {
                 if (result.Contains('\t'))
                 {
@@ -160,7 +170,7 @@ namespace NetshG
                 }
             }
 
-            uiHelpGrid.Visibility = CurrUserPrefs.ShowHelp ? Visibility.Visible : Visibility.Collapsed;
+            uiHelpGrid.Visibility = App.CurrUserPrefs.ShowHelp ? Visibility.Visible : Visibility.Collapsed;
             uiHelp.Text = qresult;
             uiOutput.Text = result;
             uiTable.Text = csv;
@@ -206,18 +216,18 @@ namespace NetshG
         {
             var tag = (sender as MenuItem)?.Tag as string;
             if (tag == null) tag = "";
-            CurrUserPrefs.Tags = tag;
-            DoSetMenuWithTag(CurrUserPrefs.Tags);
+            App.CurrUserPrefs.Tags = tag;
+            DoSetMenuWithTag(App.CurrUserPrefs.Tags);
         }
 
         private void OnMenu_Show_Help_Check(object sender, RoutedEventArgs e)
         {
-            CurrUserPrefs.ShowHelp = true;
+            App.CurrUserPrefs.ShowHelp = true;
         }
 
         private void OnMenu_Show_Help_Uncheck(object sender, RoutedEventArgs e)
         {
-            CurrUserPrefs.ShowHelp = false;
+            App.CurrUserPrefs.ShowHelp = false;
         }
 
         private void OnParse(object sender, RoutedEventArgs e)

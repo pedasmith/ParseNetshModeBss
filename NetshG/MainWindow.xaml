@@ -20,9 +20,10 @@
             <MenuItem Header="_File" >
                 <MenuItem Header="E_xit" Click="OnMenu_File_Exit" />
             </MenuItem>
-            <MenuItem Header="_Show" >
+            <MenuItem Header="_Show" x:Name="uiMenuShow">
                 <MenuItem Header="_Common" Tag="#common" Click="OnMenu_Show_Tag" />
-                <MenuItem Header="_All" Tag="" Click="OnMenu_Show_Tag" />
+                <MenuItem Header="_All" Tag="#all" Click="OnMenu_Show_Tag" />
+                <MenuItem Header="_All (verbose)" Tag="#allverbose" Click="OnMenu_Show_Tag" />
                 <MenuItem Header="_Wi-Fi" Tag="#wifi" Click="OnMenu_Show_Tag" />
                 <MenuItem Header="Show _Help" x:Name="uiMenu_Show_Help" IsCheckable="True" IsChecked="True" Checked="OnMenu_Show_Help_Check" Unchecked="OnMenu_Show_Help_Uncheck" />
             </MenuItem>
@@ -38,7 +39,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" MinWidth="350" />
+                <ColumnDefinition Width="auto" MinWidth="375" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             
