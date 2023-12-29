@@ -180,6 +180,11 @@ namespace NetshG
             {
                 showTable = false;
             }
+            ShowOutputOrTable(showTable);
+        }
+
+        private void ShowOutputOrTable(bool showTable)
+        {
             uiOutputScroll.Visibility = showTable ? Visibility.Collapsed : Visibility.Visible;
             uiTableDataGrid.Visibility = showTable ? Visibility.Visible : Visibility.Collapsed;
         }
@@ -271,8 +276,9 @@ namespace NetshG
             var txt = CurrTableParser.AsHtml();
             var htmlFormat = HtmlFormatHelper.CreateHtmlFormat(txt);
             var dp = new DataPackage();
+            dp.SetText(txt);
             dp.SetHtmlFormat(htmlFormat);
-            dp.Properties.Title = "Wi-Fi Scan data";
+            dp.Properties.Title = "Netsh Data";
             Clipboard.SetContent(dp);
         }
 
@@ -282,8 +288,26 @@ namespace NetshG
             var txt = CurrTableParser.AsCsv();
             var dp = new DataPackage();
             dp.SetText(txt);
-            dp.Properties.Title = "Wi-Fi Scan data";
+            dp.Properties.Title = "Netsh Data";
             Clipboard.SetContent(dp);
+        }
+
+        private void OnCopyText(object sender, RoutedEventArgs e)
+        {
+            var dp = new DataPackage();
+            dp.SetText(uiOutput.Text);
+            dp.Properties.Title = "Netsh Data";
+            Clipboard.SetContent(dp);
+        }
+
+        private void OnShowTable(object sender, RoutedEventArgs e)
+        {
+            ShowOutputOrTable(true);
+        }
+
+        private void OnShowOutput(object sender, RoutedEventArgs e)
+        {
+            ShowOutputOrTable(false);
         }
     }
 }
