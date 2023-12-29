@@ -34,16 +34,16 @@ namespace NetshG
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             DoInitializeCommonArguments();
-            DoSetMenuWithTag(App.CurrUserPrefs.Tags);
+            DoSetMenuWithTag(UP.CurrUserPrefs.Tags);
             
             uiMenu_Parameters_Common.Items.Clear();
             DoSetupCommonMenu("Level");
             DoSetupCommonMenu("Store");
             DoSetupCommonMenu("Parser");
 
-            uiMenu_Show_Help.IsChecked = App.CurrUserPrefs.ShowHelp;
+            uiMenu_Show_Help.IsChecked = UP.CurrUserPrefs.ShowHelp;
 
-            var tags = App.CurrUserPrefs.Tags;
+            var tags = UP.CurrUserPrefs.Tags;
             foreach (var item in uiMenuShow.Items)
             {
                 var menu = item as MenuItem;
@@ -128,7 +128,7 @@ namespace NetshG
             var qresult = RunCommandLine.RunNetshG(program, args + " " + ci.Help);
             var result = RunCommandLine.RunNetshG(program, argsWithExtraMore);
             var rawResult = result; // for the parser
-            if (App.CurrUserPrefs.ReplaceTabs)
+            if (UP.CurrUserPrefs.ReplaceTabs)
             {
                 if (result.Contains('\t'))
                 {
@@ -154,6 +154,7 @@ namespace NetshG
             // DBG: Parse with the ParseDashLineTab.cs parser
             // Will be replaced with more parser types
             var tableParserName = ci.TableParser;
+            var showTable = tableParserName != null;
             if (string.IsNullOrEmpty(tableParserName))
             {
                 //tableParserName = "Indent"; 
@@ -170,11 +171,17 @@ namespace NetshG
                 }
             }
 
-            uiHelpGrid.Visibility = App.CurrUserPrefs.ShowHelp ? Visibility.Visible : Visibility.Collapsed;
+            uiHelpGrid.Visibility = UP.CurrUserPrefs.ShowHelp ? Visibility.Visible : Visibility.Collapsed;
             uiHelp.Text = qresult;
             uiOutput.Text = result;
             uiTable.Text = csv;
             uiTableDataGrid.DataContext = CurrTableParser == null ? null : CurrTableParser.GetDataTable();
+            if (CurrTableParser?.Rows.Count == 0)
+            {
+                showTable = false;
+            }
+            uiOutputScroll.Visibility = showTable ? Visibility.Collapsed : Visibility.Visible;
+            uiTableDataGrid.Visibility = showTable ? Visibility.Visible : Visibility.Collapsed;
         }
 
 
@@ -216,18 +223,18 @@ namespace NetshG
         {
             var tag = (sender as MenuItem)?.Tag as string;
             if (tag == null) tag = "";
-            App.CurrUserPrefs.Tags = tag;
-            DoSetMenuWithTag(App.CurrUserPrefs.Tags);
+            UP.CurrUserPrefs.Tags = tag;
+            DoSetMenuWithTag(UP.CurrUserPrefs.Tags);
         }
 
         private void OnMenu_Show_Help_Check(object sender, RoutedEventArgs e)
         {
-            App.CurrUserPrefs.ShowHelp = true;
+            UP.CurrUserPrefs.ShowHelp = true;
         }
 
         private void OnMenu_Show_Help_Uncheck(object sender, RoutedEventArgs e)
         {
-            App.CurrUserPrefs.ShowHelp = false;
+            UP.CurrUserPrefs.ShowHelp = false;
         }
 
         private void OnParse(object sender, RoutedEventArgs e)

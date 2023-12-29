@@ -6,10 +6,17 @@ using System.Threading.Tasks;
 
 namespace NetshG
 {
-    internal class UserPreferences
+    public class UserPreferences
     {
         public bool ReplaceTabs = true;
-        public bool ShowHelp = false;
+        private bool _showHelp = false;
+        public bool ShowHelp { get { return _showHelp; } set { _showHelp = value; } }
         public string Tags = "#common"; // DBG: should be reset to common: "#common";
+
+    }
+
+    public static class UP
+    {
+        public static UserPreferences CurrUserPrefs = new UserPreferences();
     }
 }

@@ -25,7 +25,7 @@
                 <MenuItem Header="_All" Tag="#all" Click="OnMenu_Show_Tag" />
                 <MenuItem Header="_All (verbose)" Tag="#allverbose" Click="OnMenu_Show_Tag" />
                 <MenuItem Header="_Wi-Fi" Tag="#wifi" Click="OnMenu_Show_Tag" />
-                <MenuItem Header="Show _Help" x:Name="uiMenu_Show_Help" IsCheckable="True" IsChecked="True" Checked="OnMenu_Show_Help_Check" Unchecked="OnMenu_Show_Help_Uncheck" />
+                <MenuItem Header="Show _Help" x:Name="uiMenu_Show_Help" IsCheckable="True" Checked="OnMenu_Show_Help_Check" Unchecked="OnMenu_Show_Help_Uncheck" />
             </MenuItem>
             <MenuItem Header="_Parameters">
                 <MenuItem Header="_Common" x:Name="uiMenu_Parameters_Common">
@@ -84,14 +84,10 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="2">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="300" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <ScrollViewer x:Name="uiOutputScroll" Grid.Row="2">
+                            <ScrollViewer x:Name="uiOutputScroll" >
                                 <TextBox x:Name="uiOutput" Style="{StaticResource rOutput}" />
                             </ScrollViewer>
-                            <DataGrid x:Name="uiTableDataGrid" ItemsSource="{Binding}" Grid.Column="1" 
+                            <DataGrid x:Name="uiTableDataGrid" ItemsSource="{Binding}" Visibility="Collapsed" 
                                       CanUserAddRows="False"
                                       CanUserDeleteRows="False"
                                       CanUserResizeRows="False"

@@ -16,7 +16,6 @@ namespace NetshG
     public partial class App : Application
     {
         string filename = "NetshG_UserPreferences.json";
-        internal static UserPreferences CurrUserPrefs = new UserPreferences();
 
         private void Log(string str)
         {
@@ -35,7 +34,7 @@ namespace NetshG
                     var pref = JsonConvert.DeserializeObject<UserPreferences>(json);
                     if (pref != null)
                     {
-                        CurrUserPrefs = pref;
+                        UP.CurrUserPrefs = pref;
                     }
                 }
             }
@@ -56,7 +55,7 @@ namespace NetshG
             using (IsolatedStorageFileStream stream = new IsolatedStorageFileStream(filename, FileMode.Create, storage))
             {
                 var settings = new JsonSerializerSettings() { Formatting = Formatting.Indented };
-                var json = JsonConvert.SerializeObject(CurrUserPrefs, settings);
+                var json = JsonConvert.SerializeObject(UP.CurrUserPrefs, settings);
                 using (StreamWriter writer = new StreamWriter(stream))
                 {
                     writer.Write(json);
