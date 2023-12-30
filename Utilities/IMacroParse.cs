@@ -60,7 +60,9 @@ namespace Utilities
                 var column = new DataColumn()
                 {
                     DataType = strType,
-                    ColumnName = item,
+                    Caption = item,
+                    // BUG: ColumnName = item -- Change 2023-12-30; index by number, not name, and never use the name. 
+                    // It turns out (hah!) that you can't have a name with a slash in it.
                 };
                 table.Columns.Add(column);
             }
@@ -70,8 +72,8 @@ namespace Utilities
                 var r = table.NewRow();
                 for (int i=0; i<row.Count; i++)
                 {
-                    var name = ColNames[i];
-                    r[name] = row[i];
+                    //var name = ColNames[i];
+                    r[i] = row[i];
                 }
                 table.Rows.Add(r);
             }

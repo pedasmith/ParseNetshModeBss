@@ -130,6 +130,10 @@ Reachable Time                     : 25500 ms
                 else
                 {
                     // Must be a row. Get the exact number of entries.
+                    if (line.Contains("DHCP/Static"))
+                    {
+                        ; // TODO: handy place for debugging
+                    }
                     if (line.Trim() == "") continue; // Ignore blank lines here
                     var values = line.Trim().Split(splitChar, 2, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
                     var name = values[0].Trim();
