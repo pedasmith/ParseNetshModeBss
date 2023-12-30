@@ -124,9 +124,14 @@ namespace NetshG
             uiHelpScroll.ScrollToHome();
             uiOutputScroll.ScrollToHome();
             uiTableScroll.ScrollToHome();
+
             uiCommand.Text = $"{program} {argsWithExtraMore}";
             var qresult = RunCommandLine.RunNetshG(program, args + " " + ci.Help);
             var result = RunCommandLine.RunNetshG(program, argsWithExtraMore);
+            if (false && argsWithExtraMore.Contains("mode=bss")) //Note: this is a great place to set the results to a fixed example string!
+            {
+                result = ParseIndent.Example1; // Set to fixed Example string for debugging problems.
+            }
             var rawResult = result; // for the parser
             if (UP.CurrUserPrefs.ReplaceTabs)
             {
@@ -149,6 +154,7 @@ namespace NetshG
                     CurrArgumentSettings.SetValueList(ci.Sets, setList);
                 }
             }
+
 
 
             // DBG: Parse with the ParseDashLineTab.cs parser
