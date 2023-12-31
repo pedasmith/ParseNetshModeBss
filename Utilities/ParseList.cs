@@ -11,7 +11,7 @@ namespace Utilities
             var retval = defaultValue;
             // The line is like Interface Ethernet 2 Parameters
             // Example: Compartment 1 Parameters (from netsh interface ipv4 show compartments level=verbose store=active)
-            // Strip off the first and last words
+            // Strip off the first and last words to return "Compartment 1"
             int firstSpace = value.IndexOf(' ');
             int lastSpace = value.LastIndexOf(' ');
             if (firstSpace != -1 && lastSpace != -1 && lastSpace > firstSpace)
@@ -60,6 +60,10 @@ namespace Utilities
             AutodetectParseType(file);
             var lines = file.Replace("\r\n", "\n").Split(new char[] { '\n' });
             var indents = lines.CountIndents();
+            if (indents.Count == 2)
+            {
+                // e.g., the netsh wlan show interfaces where the non-indented lines are 
+            }
 
 
             bool expectDashes = false;
@@ -73,25 +77,32 @@ namespace Utilities
             {
                 var line = lines[i];
                 var nextLine = (i + 1 < lines.Length) ? lines[i + 1] : "";
+                var indentLevel = line.IndentLevel(indents);
 
-                if (line == "")
+                // Do stuff based on parse type
+                switch (CurrParseType)
                 {
-                    switch (CurrParseType)
-                    {
-                        case ParseType.NamesWithDashes:
+                    case ParseType.NamesWithDashes:
+                        if (line == "")
+                        {
                             continue;
-                        case ParseType.NoNames:
-                            // Empty line and parse type is NoNames -- the empty line indicates new data.
+                        }
+                        break; ;
+                    case ParseType.NoNames:
+                        // Empty line and parse type is NoNames -- the empty line indicates new data.
+                        var newrowOnBlank = line == "" && indents.Count != 2;
+                        var newrowOnName = line.Trim().StartsWith("Name ") && indents.Count == 2;
+                        if (newrowOnBlank || newrowOnName)
+                        {
                             if (rowHasData)
                             {
                                 Rows.Add(row);
                                 rowHasData = false;
                             }
                             row = MakeNewRow();
-                            break;
-                    }
+                        }
+                        break;
                 }
-
 
                 if (nextLine.Contains(Dashes))
                 {
@@ -116,6 +127,10 @@ namespace Utilities
                 }
                 else
                 {
+                    if (indents.Count == 2 && indentLevel == 0)
+                    {
+                        continue;
+                    }
                     // Must be a row. Get the exact number of entries.
                     if (line.Contains("DHCP/Static"))
                     {

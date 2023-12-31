@@ -261,7 +261,7 @@ namespace NetshG
 		"Args2": "Protocol",
 		"Args5NoUX":"store=Store",
 		"RequireList":"Protocol,Store",
-		"TableParser":"List"
+		"Issues":"Nearly impossible to parse?"
 	},
     {
 		"Cmd":"netsh",
