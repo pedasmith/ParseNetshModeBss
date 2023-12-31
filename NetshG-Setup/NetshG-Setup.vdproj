@@ -15,7 +15,19 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_FA741292157547D3BBD421658024590F"
+        "MsmKey" = "8:_16A3C477D41844A6A295A461185F5511"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_7D341CA30B8B4DD99EEA3A00F01571FB"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D32850EC815142CE98DEAF6D8703D7EC"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -37,6 +49,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
+            }
         }
         "Release"
         {
@@ -53,6 +81,32 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.DesktopRuntime.3.1.x64"
+                    {
+                    "Name" = "8:.NET Desktop Runtime 3.1.32 (x64)"
+                    "ProductCode" = "8:Microsoft.NetCore.DesktopRuntime.3.1.x64"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.DesktopRuntime.3.1.x86"
+                    {
+                    "Name" = "8:.NET Desktop Runtime 3.1.32 (x86)"
+                    "ProductCode" = "8:Microsoft.NetCore.DesktopRuntime.3.1.x86"
+                    }
+                }
+            }
         }
     }
     "Deployable"
@@ -92,6 +146,46 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_16A3C477D41844A6A295A461185F5511"
+            {
+            "SourcePath" = "8:..\\NetshG\\Grumpster_Icon_256.ico"
+            "TargetName" = "8:Grumpster_Icon_256.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_0BE64AC56DC04E70ACE2C85683420BF9"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7D341CA30B8B4DD99EEA3A00F01571FB"
+            {
+            "SourcePath" = "8:..\\NetshG\\Grumpster_Icon_256.png"
+            "TargetName" = "8:Grumpster_Icon_256.png"
+            "Tag" = "8:"
+            "Folder" = "8:_0BE64AC56DC04E70ACE2C85683420BF9"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -110,6 +204,17 @@
                 {
                 }
             }
+            "{1525181F-901A-416C-8A58-119130FE478E}:_B3E4B746CA974C0E93BF2A7D320FC365"
+            {
+            "Name" = "8:#1921"
+            "AlwaysCreate" = "11:FALSE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Property" = "8:StartMenuFolder"
+                "Folders"
+                {
+                }
+            }
             "{1525181F-901A-416C-8A58-119130FE478E}:_C2459648911D48579E22F856C87C512B"
             {
             "Name" = "8:#1919"
@@ -124,7 +229,7 @@
             "{1525181F-901A-416C-8A58-119130FE478E}:_EE5A96C7D17E4E7886B411BF910EEEF6"
             {
             "Name" = "8:#1916"
-            "AlwaysCreate" = "11:FALSE"
+            "AlwaysCreate" = "11:TRUE"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Property" = "8:DesktopFolder"
@@ -148,15 +253,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:NetshG"
-        "ProductCode" = "8:{8E3C91FF-231C-4102-A0B4-73816FF0EB49}"
-        "PackageCode" = "8:{A446F64A-7137-4711-A821-CCDB1566AD6B}"
+        "ProductCode" = "8:{97F0F602-5EB0-486B-8BC4-F16E3ABE3C4B}"
+        "PackageCode" = "8:{120F9383-F98E-4D15-894A-B727C159FA93}"
         "UpgradeCode" = "8:{2E18B577-4539-4115-A380-C61A067CA537}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.3.4"
         "Manufacturer" = "8:ShipwreckSoftware"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -269,6 +374,48 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_0035AD97356342DD98DC1C00E3421BB9"
+            {
+            "Name" = "8:NetshG"
+            "Arguments" = "8:"
+            "Description" = "8:Graphical interface for NETSH"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_D32850EC815142CE98DEAF6D8703D7EC"
+            "Folder" = "8:_C2459648911D48579E22F856C87C512B"
+            "WorkingFolder" = "8:_0BE64AC56DC04E70ACE2C85683420BF9"
+            "Icon" = "8:_16A3C477D41844A6A295A461185F5511"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_A36D0898E31B4CA5A4D9409A99834341"
+            {
+            "Name" = "8:NetshG"
+            "Arguments" = "8:"
+            "Description" = "8:Graphical interface for NETSH"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_D32850EC815142CE98DEAF6D8703D7EC"
+            "Folder" = "8:_B3E4B746CA974C0E93BF2A7D320FC365"
+            "WorkingFolder" = "8:_0BE64AC56DC04E70ACE2C85683420BF9"
+            "Icon" = "8:_16A3C477D41844A6A295A461185F5511"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_FA59D56805DA4736A5009C558CDBB0AC"
+            {
+            "Name" = "8:NetshG"
+            "Arguments" = "8:"
+            "Description" = "8:Graphical interface for NETSH"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_D32850EC815142CE98DEAF6D8703D7EC"
+            "Folder" = "8:_EE5A96C7D17E4E7886B411BF910EEEF6"
+            "WorkingFolder" = "8:_0BE64AC56DC04E70ACE2C85683420BF9"
+            "Icon" = "8:_16A3C477D41844A6A295A461185F5511"
+            "Feature" = "8:"
+            }
         }
         "UserInterface"
         {
@@ -307,8 +454,8 @@
                             "Type" = "3:15"
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1258"
+                            "Setting" = "3:2"
+                            "Value" = "8:"
                             "DefaultValue" = "8:#1258"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -373,54 +520,6 @@
             "Attributes" = "3:1"
                 "Dialogs"
                 {
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_1A89DEE15BB846E48D22F0E1F4889013"
-                    {
-                    "Sequence" = "3:100"
-                    "DisplayName" = "8:Welcome"
-                    "UseDynamicProperties" = "11:TRUE"
-                    "IsDependency" = "11:FALSE"
-                    "SourcePath" = "8:<VsdDialogDir>\\VsdWelcomeDlg.wid"
-                        "Properties"
-                        {
-                            "BannerBitmap"
-                            {
-                            "Name" = "8:BannerBitmap"
-                            "DisplayName" = "8:#1001"
-                            "Description" = "8:#1101"
-                            "Type" = "3:8"
-                            "ContextData" = "8:Bitmap"
-                            "Attributes" = "3:4"
-                            "Setting" = "3:1"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "CopyrightWarning"
-                            {
-                            "Name" = "8:CopyrightWarning"
-                            "DisplayName" = "8:#1002"
-                            "Description" = "8:#1102"
-                            "Type" = "3:3"
-                            "ContextData" = "8:"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1202"
-                            "DefaultValue" = "8:#1202"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                            "Welcome"
-                            {
-                            "Name" = "8:Welcome"
-                            "DisplayName" = "8:#1003"
-                            "Description" = "8:#1103"
-                            "Type" = "3:3"
-                            "ContextData" = "8:"
-                            "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1203"
-                            "DefaultValue" = "8:#1203"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                        }
-                    }
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_5BB5B393D842454488723C4C31CF02B9"
                     {
                     "Sequence" = "3:200"
@@ -452,28 +551,6 @@
                             "Setting" = "3:0"
                             "Value" = "3:1"
                             "DefaultValue" = "3:1"
-                            "UsePlugInResources" = "11:TRUE"
-                            }
-                        }
-                    }
-                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_C0827BA1427C4FC09FDA69F7408A520F"
-                    {
-                    "Sequence" = "3:300"
-                    "DisplayName" = "8:Confirm Installation"
-                    "UseDynamicProperties" = "11:TRUE"
-                    "IsDependency" = "11:FALSE"
-                    "SourcePath" = "8:<VsdDialogDir>\\VsdConfirmDlg.wid"
-                        "Properties"
-                        {
-                            "BannerBitmap"
-                            {
-                            "Name" = "8:BannerBitmap"
-                            "DisplayName" = "8:#1001"
-                            "Description" = "8:#1101"
-                            "Type" = "3:8"
-                            "ContextData" = "8:Bitmap"
-                            "Attributes" = "3:4"
-                            "Setting" = "3:1"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -668,7 +745,7 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_FA741292157547D3BBD421658024590F"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_D32850EC815142CE98DEAF6D8703D7EC"
             {
             "SourcePath" = "8:..\\NetshG\\obj\\Release\\net7.0-windows10.0.22000.0\\apphost.exe"
             "TargetName" = "8:"
@@ -692,6 +769,7 @@
             "OutputGroupCanonicalName" = "8:PublishItems"
             "OutputProjectGuid" = "8:{6A8AE6D0-0017-49EA-AE17-1E85710B439A}"
             "ShowKeyOutput" = "11:TRUE"
+            "PublishProfilePath" = "8:..\\NetshG\\Properties\\PublishProfiles\\FolderProfile.pubxml"
                 "ExcludeFilters"
                 {
                 }

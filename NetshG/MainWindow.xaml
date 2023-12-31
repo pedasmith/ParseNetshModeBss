@@ -27,7 +27,9 @@
                 <MenuItem Header="_All" Tag="#all" Click="OnMenu_Show_Tag" />
                 <MenuItem Header="All (verbose)" Tag="#allverbose" Click="OnMenu_Show_Tag" />
                 <MenuItem Header="_Wi-Fi" Tag="#wifi" Click="OnMenu_Show_Tag" />
-                <MenuItem Header="_Debug" Tag="List" Click="OnMenu_Show_Tag" />
+                <!--
+                <MenuItem Header="_Debug" Tag="List" Click="OnMenu_Show_Tag" />\
+                -->
                 <MenuItem Header="Show Help" x:Name="uiMenu_Show_Help" IsCheckable="True" Checked="OnMenu_Show_Help_Check" Unchecked="OnMenu_Show_Help_Uncheck" />
             </MenuItem>
             <MenuItem Header="_Parameters">
@@ -36,6 +38,7 @@
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_Help file" Click="OnMenu_Help_Help" />
+                <MenuItem Header="_Keyboard shortcuts" Click="OnMenu_Help_Shortcuts" />
             </MenuItem>
         </Menu>
 

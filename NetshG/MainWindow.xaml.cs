@@ -28,31 +28,36 @@ namespace NetshG
             this.Loaded += MainWindow_Loaded;
 
             // ^C
-            CommandAdd(Key.C, ModifierKeys.Control, OnCopy);
+            KeyDescriptions.Clear();
+            CommandAdd(Key.C, ModifierKeys.Control, OnCopy, "^C", "Copy data from output or table");
 
             // Alt-F4 for Exit
-            CommandAdd(Key.F1, ModifierKeys.None, OnMenu_Help_Help);
-            CommandAdd(Key.F4, ModifierKeys.Alt, OnMenu_File_Exit);
-            CommandAdd(Key.F5, ModifierKeys.Alt, OnRepeat);
+            CommandAdd(Key.F1, ModifierKeys.None, OnMenu_Help_Help, "F1", "Show help file");
+            CommandAdd(Key.F4, ModifierKeys.Alt, OnMenu_File_Exit, "ALT+F4", "Exit program");
+            CommandAdd(Key.F5, ModifierKeys.None, OnRepeat, "F5", "Repeat command");
 
             // Specialized
-            CommandAdd(Key.A, ModifierKeys.Alt, (s, e) => { DoSetMenuWithTag("#all"); });
-            CommandAdd(Key.C, ModifierKeys.Alt, (s, e) => { DoSetMenuWithTag("#common"); });
-            CommandAdd(Key.O, ModifierKeys.Alt, (s, e) => { ShowOutputOrTable(ShowWhat.Output); });
-            CommandAdd(Key.R, ModifierKeys.Alt, OnRepeat);
-            CommandAdd(Key.T, ModifierKeys.Alt, (s, e) => { ShowOutputOrTable(ShowWhat.Table); });
-            CommandAdd(Key.W, ModifierKeys.Alt, (s, e) => { DoSetMenuWithTag("#wifi"); });
+            CommandAdd(Key.A, ModifierKeys.Alt, (s, e) => { DoSetMenuWithTag("#all"); }, "ALT+A", "Show all commands in command list");
+            CommandAdd(Key.C, ModifierKeys.Alt, (s, e) => { DoSetMenuWithTag("#common"); }, "ALT+C", "Show common command in command list");
+            CommandAdd(Key.O, ModifierKeys.Alt, (s, e) => { ShowOutputOrTable(ShowWhat.Output); }, "ALT-O", "Show output as text, not as table");
+            CommandAdd(Key.R, ModifierKeys.Alt, OnRepeat, "ALT+R", "Repeat command");
+            CommandAdd(Key.T, ModifierKeys.Alt, (s, e) => { ShowOutputOrTable(ShowWhat.Table); }, "ALT+T", "Show output as table, not as text");
+            CommandAdd(Key.V, ModifierKeys.Alt, (s, e) => { ToggleOutputOrTable(); }, "ALT+V", "Toggle between text and table for output");
+            CommandAdd(Key.W, ModifierKeys.Alt, (s, e) => { DoSetMenuWithTag("#wifi"); }, "ALT+W", "Show common Wi-Fi commands");
 
             int nerror = 0;
             nerror += Utilities.StringUtilities.TestCountStrings();
         }
+        public static List<HelpDescription> KeyDescriptions = new List<HelpDescription>();
 
 
-        private void CommandAdd(Key key, ModifierKeys mod, ExecutedRoutedEventHandler handler)
+        private void CommandAdd(Key key, ModifierKeys mod, ExecutedRoutedEventHandler handler, string shortcut, string description)
         {
             RoutedCommand cmdOutput = new RoutedCommand();
             cmdOutput.InputGestures.Add(new KeyGesture(key, mod));
             CommandBindings.Add(new CommandBinding(cmdOutput, handler));
+
+            KeyDescriptions.Add(new HelpDescription(shortcut, description));
         }
 
         private 
@@ -270,10 +275,35 @@ namespace NetshG
         }
 
         enum ShowWhat {  Output, Table };
+        ShowWhat CurrShowWhat = ShowWhat.Output;
+        private void ToggleOutputOrTable()
+        {
+            switch (CurrShowWhat)
+            {
+                case ShowWhat.Output: ShowOutputOrTable(ShowWhat.Table); break;
+                case ShowWhat.Table: ShowOutputOrTable(ShowWhat.Output); break;
+            }
+        }
+        /// <summary>
+        /// Sets up the UX to show either the output or the table. But is a little smart; won't
+        /// show the table unless it's actually possible to see something
+        /// </summary>
+        /// <param name="value"></param>
         private void ShowOutputOrTable(ShowWhat value)
         {
+            //
+            // Smarts: decide if the table can be shown or not.
+            //
             var allowShowTable = CurrTableParser != null && CurrTableParser.Rows.Count > 0;
+            if (value == ShowWhat.Table && !allowShowTable)
+            {
+                value = ShowWhat.Output;
+            }
+            CurrShowWhat = value;
 
+            // 
+            // Now display the output or table
+            //
             uiOutputScroll.Visibility = value==ShowWhat.Output ? Visibility.Visible: Visibility.Collapsed;
             uiTableDataGrid.Visibility = value == ShowWhat.Table ? Visibility.Visible : Visibility.Collapsed;
             foreach (var item in uiOutputButtons.Children)
@@ -442,6 +472,12 @@ namespace NetshG
         private void OnMenu_Help_Help(object sender, RoutedEventArgs e)
         {
             var w = new HelpWindow();
+            w.Show();
+        }
+
+        private void OnMenu_Help_Shortcuts(object sender, RoutedEventArgs e)
+        {
+            var w = new HelpKeyboardShortcutWindow();
             w.Show();
         }
     }
