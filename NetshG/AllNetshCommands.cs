@@ -912,7 +912,7 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"wlan show interfaces",
-		"TableParser":"Indent",
+		"TableParser":"List",
 		"Tags":"#common #wifi",
 		"Issues":"Nearly parseable with List except for the extra space before Hosted network status"
 	},

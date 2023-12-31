@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Automation.Peers;
 using Utilities;
 
 namespace NetshG
@@ -64,6 +65,11 @@ namespace NetshG
             foreach (var item in list)
             {
                 if (item == tag) return true;
+            }
+
+            if (this.TableParser == tag)
+            {
+                return true;
             }
             return false;
         }
