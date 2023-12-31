@@ -25,6 +25,7 @@ namespace NetshG
         /// </summary>
         public string Args5NoUX { get; set; } = ""; 
         public string Help { get; set; } = "/?";
+        public string Issues { get; set; } = "Command has no known issues.";
         public List<CommandRequire> Requires { get; set; } = new List<CommandRequire>();
         public string RequireList { get; set; } = "";
         public string Sets { get; set; } = "";

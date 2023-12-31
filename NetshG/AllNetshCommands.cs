@@ -60,7 +60,7 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"advfirewall show allprofiles",
-		"note":"missing parameters"
+		"Issues":"The Ok. at the end is awkward to parse."
 	},
     {
 		"Cmd":"netsh",
@@ -72,7 +72,8 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"advfirewall show global"
+		"Args":"advfirewall show global",
+		"Issues":"The StrongCRLCheck is awkward to parse, as is the timestampt for SAIdleTimeMin."
 	},
     {
 		"Cmd":"netsh",
@@ -92,7 +93,9 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"dnsclient show encryption"
+		"Args":"dnsclient show encryption",
+		"TableParser":"DashLine",
+		"Issues":"Dealing with IPv6 is awkward at best."
 	},
     {
 		"Cmd":"netsh",
@@ -100,7 +103,8 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"dnsclient show state"
+		"Args":"dnsclient show state",
+		"Issues":"The spacing between lines is awkward and looks like multiple sections."
 	},
     {
 		"Cmd":"netsh",
@@ -108,7 +112,8 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"http show cachestate"
+		"Args":"http show cachestate",
+		"Issues":"The output is not designed to be parsed -- the value (0) is written in the middle of a sentence as 'no cache entries'"
 	},
     {
 		"Cmd":"netsh",
@@ -117,7 +122,7 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"http show servicestate",
-		"notes":"has verbose=yes|no instead of level"
+		"Issues":"Has verbose=yes|no instead of level"
 	},
     {
 		"Cmd":"netsh",
@@ -201,7 +206,8 @@ namespace NetshG
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show config",
 		"TableParser":"Indent",
-		"Tags":""
+		"Tags":"",
+		"Issues":"The Statically Configured DNS servers is difficult to parse because it's two lines of text."
 	},
     {
 		"Cmd":"netsh",
@@ -230,13 +236,14 @@ namespace NetshG
 		"Tags":"",
 		"RequireList":"Level,InterfaceIndex",
 		"TableParser":"List",
-		"Issues":"when set to verbose=normal, cant be parsed with a List (dashed is better?)"
+		"Issues":"when set to verbose=normal, can't be parsed with a List parser."
 	},
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show dnsservers",
 		"Tags":"",
-		"TableParser":"Indent"
+		"TableParser":"Indent",
+		"Issues":"The interface name for each header line is quoted, which makes it hard to parse."
 	},
 	{
 		"Cmd":"netsh",
@@ -261,18 +268,20 @@ namespace NetshG
 		"Args2": "Protocol",
 		"Args5NoUX":"store=Store",
 		"RequireList":"Protocol,Store",
-		"Issues":"Nearly impossible to parse?"
+		"Issues":"Nearly impossible to parse because of the table struction. The * for adminstered port exclusions does not have a column header name."
 	},
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show global",
 		"Args5NoUX":"store=Store",
 		"RequireList":"Store",
-		"TableParser":"DashLine"
+		"TableParser":"DashLine",
+		"Issues":"This command outputs two tables which must be forced into a single table."
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show icmpstats"
+		"Args":"interface ipv4 show icmpstats",
+		"Issues":"Difficult to parse because the title (MIB-II ICMP Statistics) looks like a section header, but it's not"
 	},
     {
 		"Cmd":"netsh",
@@ -289,12 +298,13 @@ namespace NetshG
 		"Args":"interface ipv4 show ipaddresses",
 		"Tags":"#common",
 		"Args5NoUX":"level=Level store=Store",
-		"RequireList":"Level,Store"
+		"RequireList":"Level,Store",
+		"TableParser":"DashLine"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show ipnettomedia",
-		"Issues":"Unable to parse"
+		"Issues":"Unable to parse because of the tabular format."
 	},
     {
 		"Cmd":"netsh",
@@ -307,25 +317,26 @@ namespace NetshG
 		"Args":"interface ipv4 show joins",
 		"Args5NoUX":"level=Level",
 		"RequireList":"Level",
-		"Issues":"unable to parse"
+		"Issues":"Unable to parse because of the multiple blank lines means that determining the headers 'Interface 1' is difficult."
 	},
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show neighbors",
 		"Args5NoUX":"level=Level store=Store",
 		"RequireList":"Level,Store",
-		"Issues":"Unable to parse -- has similar problem to show joins"
+		"Issues":"Unable to parse for similar reasons as the show joins"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show offload"
+		"Args":"interface ipv4 show offload",
+		"Issues":"Difficult to parse because the values are sentences instead of in item : value format"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show route",
 		"Args5NoUX":"level=Level store=Store",
 		"RequireList":"Level,Store",
-		"Issues":"BUG: the SitePrefixLength, ValidLifeTime, and PrefferredLifeTime are all missing :"
+		"Issues":"The SitePrefixLength, ValidLifeTime, and PreferredLifeTime colons are all missing :"
 	},
     {
 		"Cmd":"netsh",
@@ -336,21 +347,25 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show tcpconnections"
+		"Args":"interface ipv4 show tcpconnections",
+		"Issues":"One of the few outputs that uses tabs. Column headers are tab seperated, but not the data columns."
 	},
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show tcpstats",
-		"Tags":"#common"
+		"Tags":"#common",
+		"TableParser":"List"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv4 show udpconnections"
+		"Args":"interface ipv4 show udpconnections",
+		"Issues":"Why does tcpconnections use tabs, but udpconnections does not? "
 	},
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show udpstats",
-		"Tags":"#common"
+		"Tags":"#common",
+		"Issues":"Splitting the table into normal and extended statistics makes is harder to parse, not easier."
 	},
     {
 		"Cmd":"netsh",
@@ -385,7 +400,8 @@ namespace NetshG
 		"Args":"interface ipv6 show addresses",
 		"Tags":"#common",
 		"Args5NoUX":"level=Level store=Store",
-		"RequireList":"Level,Store"
+		"RequireList":"Level,Store",
+		"TableParser":"DashLine"
 	},
     {
 		"Cmd":"netsh",
@@ -401,7 +417,8 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show dnsservers"
+		"Args":"interface ipv6 show dnsservers",
+		"Issues":"Multi-value items (like DNS Servers configured through DHCP) are difficult to parse."
 	},
     {
 		"Cmd":"netsh",
@@ -547,7 +564,8 @@ namespace NetshG
 		"Cmd":"netsh",
 		"Args":"interface tcp show global",
 		"Args5NoUX":"store=Store",
-		"RequireList":"Store"
+		"RequireList":"Store",
+		"Issues":"The Query active state message is difficult to parse."
 	},
     {
 		"Cmd":"netsh",
@@ -572,8 +590,14 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
+		"Args":"interface tcp show supplemental"
+	},
+    {
+		"Cmd":"netsh",
 		"Args":"interface tcp show supplemental",
-		"note":"missing template"
+		"Args2":"template=ITSSTemplate",
+		"RequireList":"ITSSTemplate",
+		"Issues":"List of template options in the help is inconsistant. Automatic doesn't provide useful data."
 	},
     {
 		"Cmd":"netsh",
@@ -739,12 +763,14 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"nlm show connectivity",
-		"Tags":"#common"
+		"Tags":"#common",
+		"Issues":"The Connectivity is hard to parse because it's a list. Should be split into two lines."
 	},
     {
 		"Cmd":"netsh",
 		"Args":"nlm show cost",
-		"Tags":"#common"
+		"Tags":"#common",
+		"TableParser":"DashLine"
 	},
     {
 		"Cmd":"netsh",
@@ -775,7 +801,8 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"ras show wanports"
+		"Args":"ras show wanports",
+		"TableParser":"DashLine"
 	},
     {
 		"Cmd":"netsh",
@@ -791,7 +818,8 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"show helper"
+		"Args":"show helper",
+		"Issues":"The Command column is hard to parse because of the indentation levels."
 	},
     {
 		"Cmd":"netsh",
@@ -831,7 +859,8 @@ namespace NetshG
 		"Cmd":"netsh",
 		"Args":"trace show scenarios",
 		"Sets":"Scenario",
-		"SetParser":"Scenario"
+		"SetParser":"Scenario",
+		"Issues":"The DirectAccessServer help value is blank. The list is difficult to parse."
 	},
     {
 		"Cmd":"netsh",
@@ -839,7 +868,8 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"winhttp show advproxy"
+		"Args":"winhttp show advproxy",
+		"Issues":"This is one of the few values in JSON format"
 	},
     {
 		"Cmd":"netsh",
@@ -872,7 +902,7 @@ namespace NetshG
 		"Cmd":"netsh",
 		"Args":"wlan show autoconfig",
 		"Tags":"#wifi",
-		"Issues":"This is like a DashLine, but the valus are 'is enabled' without a colon or spaces"
+		"Issues":"This is hard to parse because the value is written like a sentence instead of with lines of name : value "
 	},
     {
 		"Cmd":"netsh",
@@ -895,17 +925,20 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"wlan show filters",
-		"Tags":"#wifi"
+		"Tags":"#wifi",
+		"Issues":"Having the list be <None> for no entries is difficult to parse."
 	},
     {
 		"Cmd":"netsh",
 		"Args":"wlan show hostednetwork",
 		"TableParser":"DashLine",
-		"Tags":"#wifi"
+		"Tags":"#wifi",
+		"Issues":"Splitting the results into two tables makes this harder to parse without having much values."
 	},
     {
 		"Cmd":"netsh",
-		"Args":"wlan show hostednetwork setting=security",
+		"Args":"wlan show hostednetwork",
+		"Args2":"setting=security",
 		"TableParser":"DashLine",
 		"Tags":"#wifi"
 	},
@@ -921,14 +954,16 @@ namespace NetshG
 		"Args":"wlan show networks",
 		"Args2":"mode=ssid",
 		"TableParser":"Indent",
-		"Tags":"#common #wifi"
+		"Tags":"#common #wifi",
+		"Issues":"Value is sometimes just one network even when multiple networks are visible."
 	},
     {
 		"Cmd":"netsh",
 		"Args":"wlan show networks",
 		"Args2":"mode=bssid",
 		"TableParser":"Indent",
-		"Tags":"#common #wifi "
+		"Tags":"#common #wifi",
+		"Issues":"Value is often just one BSSID even when multitple BSSIDs are visible."
 	},
     {
 		"Cmd":"netsh",
@@ -952,7 +987,8 @@ namespace NetshG
 			{ 
 				"Name": "Profile",
 			}
-		]
+		],
+		"Issues":"Output is awkward to parse because the different sections are parsed as different rows."
 	},
     {
 		"Cmd":"netsh",
@@ -974,7 +1010,9 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"wlan show wirelesscapabilities",
-		"Tags":"#wifi"
+		"Tags":"#wifi",
+		"TableParser":"DashLine",
+		"Issues": "System capabilities are hard to parse because they are sentences and not name : value pairs."
 	}
 
 ]

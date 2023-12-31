@@ -11,25 +11,6 @@ namespace Utilities
 {
     internal class ParseDashLineTab : TableParse
     {
-        public const string Example = """
-Domain Profile Settings: 
-----------------------------------------------------------------------
-State                                 ON
-Firewall Policy                       BlockInbound,AllowOutbound
-LocalFirewallRules                    N/A (GPO-store only)
-LocalConSecRules                      N/A (GPO-store only)
-InboundUserNotification               Enable
-RemoteManagement                      Disable
-UnicastResponseToMulticast            Enable
-
-Logging:
-LogAllowedConnections                 Disable
-LogDroppedConnections                 Disable
-FileName                              %systemroot%\system32\LogFiles\Firewall\pfirewall.log
-MaxFileSize                           4096
-
-""";
-
         public bool SuppressLastOk = true;
         public string SectionSeperator = "-----";
         public string SubsectionSeperator = "";
@@ -78,9 +59,6 @@ MaxFileSize                           4096
 
         private void ParseSection(string file)
         {
-            // TODO: this line is 100% not needed (it's done already)
-            AutodetectParsing(file); // Sets up the settings
-
             var lines = file.Replace("\r\n", "\n").Split(new char[] { '\n' });
 
             var currSection = "";
@@ -214,5 +192,24 @@ MaxFileSize                           4096
             }
             MakeRectangular();
         }
+
+        public const string Example1 = """
+Domain Profile Settings: 
+----------------------------------------------------------------------
+State                                 ON
+Firewall Policy                       BlockInbound,AllowOutbound
+LocalFirewallRules                    N/A (GPO-store only)
+LocalConSecRules                      N/A (GPO-store only)
+InboundUserNotification               Enable
+RemoteManagement                      Disable
+UnicastResponseToMulticast            Enable
+
+Logging:
+LogAllowedConnections                 Disable
+LogDroppedConnections                 Disable
+FileName                              %systemroot%\system32\LogFiles\Firewall\pfirewall.log
+MaxFileSize                           4096
+
+""";
     }
 }

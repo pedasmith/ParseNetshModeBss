@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NetshG"
         mc:Ignorable="d"
-        Title="MainWindow" Height="750" Width="900">
+        Title="MainWindow" Height="750" Width="1200">
     <Window.Resources>
     </Window.Resources>
 
@@ -14,6 +14,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         
@@ -123,5 +124,11 @@
             </Grid>
         </Grid>
         <TextBlock Grid.Row="3"  x:Name="uiLog" Style="{StaticResource ResourceKey=rLog}"></TextBlock>
+        <Border Grid.Row="4" BorderThickness="1" BorderBrush="Black" Margin="2,2,2,2" Padding="2,2,2,2  ">
+            <Grid>
+                <TextBlock x:Name="uiIssues" />
+                <TextBlock x:Name="uiCount" HorizontalAlignment="Right" />
+            </Grid>
+        </Border>
     </Grid>
 </Window>

@@ -125,10 +125,36 @@ namespace Utilities
 
         public static (string, string) SplitColon(this string line)
         {
+            var ncolon = line.CountChar(':');
+            var ignoreFirstColon = false;
+            if (ncolon >= 2) // Grrrr .. some ipv6 are just 23::0 or similar, so we have to stop at two,
+            {
+                // Line is likely to have an IPv6. If the first colon has a hex digit or colon on either side,
+                // then assume is really just one long line.
+                var idx = line.IndexOf(':');
+                if (idx > 0 && idx < line.Length-2)
+                {
+                    if (line[idx-1].CharIsIPv6() && line[idx+1].CharIsIPv6())
+                    {
+                        ignoreFirstColon = true;
+                    }
+                }
+            }
+            if (ignoreFirstColon)
+            {
+                return (line, "");
+            }
+
             var fields = line.Split(new char[] { ':', }, 2);
             var name = fields[0];
             var value = fields.Length >= 2 ? fields[1] : "";
             return (name, value);
+        }
+
+        public static bool CharIsIPv6(this char ch)
+        {
+            var retval = Char.IsAsciiHexDigit(ch) || ch == ':';
+            return retval;
         }
         public static (string, string) SplitSpace(this string line)
         {
