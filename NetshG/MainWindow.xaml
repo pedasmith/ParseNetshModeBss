@@ -32,6 +32,15 @@
                 -->
                 <MenuItem Header="Show Help" x:Name="uiMenu_Show_Help" IsCheckable="True" Checked="OnMenu_Show_Help_Check" Unchecked="OnMenu_Show_Help_Uncheck" />
             </MenuItem>
+            <MenuItem Header="_Repeat">
+                <MenuItem Header="_Repeat Once" Click="OnRepeat"/>
+                <MenuItem Header=" 1 _second" Tag=" 1" Click="OnMenuRepeatStart"/>
+                <MenuItem Header="10 second" Tag="10" Click="OnMenuRepeatStart"/>
+                <MenuItem Header=" 1 _minute" Tag="60" Click="OnMenuRepeatStart"/>
+                <MenuItem Header="10 minute" Tag="600" Click="OnMenuRepeatStart"/>
+                <MenuItem Header=" 1 _hour" Tag="3600" Click="OnMenuRepeatStart"/>
+                <MenuItem  x:Name="uiMenuRepeatStop" Header="Stop" Tag="1" Click="OnMenuRepeatStop" IsEnabled="False" />
+            </MenuItem>
             <MenuItem Header="_Parameters">
                 <MenuItem Header="Common" x:Name="uiMenu_Parameters_Common">
                 </MenuItem>
@@ -129,8 +138,14 @@
         <TextBlock Grid.Row="3"  x:Name="uiLog" Style="{StaticResource ResourceKey=rLog}"></TextBlock>
         <Border Grid.Row="4" BorderThickness="1" BorderBrush="Black" Margin="2,2,2,2" Padding="2,2,2,2  ">
             <Grid>
-                <TextBlock x:Name="uiIssues" />
-                <TextBlock x:Name="uiCount" HorizontalAlignment="Right" />
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="uiIssues" Grid.Column="0" />
+                <TextBlock x:Name="uiRepeat"  Margin="30,0,30,0" Grid.Column="1" />
+                <TextBlock x:Name="uiCount" Grid.Column="2" />
             </Grid>
         </Border>
     </Grid>

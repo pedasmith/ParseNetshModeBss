@@ -52,7 +52,29 @@
                 <Run FontWeight="Bold">Show Help</Run>
                 <LineBreak />
                 <Run>
-                    When a command is run, will also show the help for the command.
+                    When a command is run, will also show the help for the command. The help is
+                    taken straight from the NETSH command.
+                </Run>
+                <LineBreak />
+                <LineBreak />
+                <Run FontWeight="Bold">Repeat / Repeat Once</Run>
+                <LineBreak />
+                <Run>
+                    Repeats a command once. If the auto-repeat is on, will stop auto-repeat
+                </Run>
+                <LineBreak />
+                <LineBreak />
+                <Run FontWeight="Bold">Repeat time interval</Run>
+                <LineBreak />
+                <Run>
+                    Repeats a command at the given interval (e.g., every second, every 10 seconds, and so on)
+                </Run>
+                <LineBreak />
+                <LineBreak />
+                <Run FontWeight="Bold">Repeat / Repeat Stop</Run>
+                <LineBreak />
+                <Run>
+                    If the auto-repeat is on, will stop auto-repeat
                 </Run>
                 <LineBreak />
                 <LineBreak />
@@ -68,6 +90,13 @@
                 <LineBreak />
                 <Run>
                     Shows this help text; this is also where the version information is shown.
+                </Run>
+                <LineBreak />
+                <LineBreak />
+                <Run FontWeight="Bold">Help Keyboard Shortcuts</Run>
+                <LineBreak />
+                <Run>
+                    Shows a list of keyboard shortcuts.
                 </Run>
                 <LineBreak />
                 <LineBreak />
