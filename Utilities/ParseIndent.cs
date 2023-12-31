@@ -122,7 +122,7 @@ namespace Utilities
 
                         if (indent == 2 && nextIndent < indent)
                         {
-                            // TODO: make robust
+                            // NOTE: not clear how robust this is for more types of input
                             // row is complete; add to table and restore the old row
                             Rows.Add(currRow);
                             currRowHasData = false; // it has an echo of data. But don't save it unless more is added.

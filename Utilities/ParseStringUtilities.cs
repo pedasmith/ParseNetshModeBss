@@ -82,10 +82,6 @@ namespace Utilities
                 if (line[i] != ' ') break;
                 retval++;
             }
-            if (retval == 1)
-            {
-                ; // TODO: place for a debugger
-            }
             return retval;
         }
 

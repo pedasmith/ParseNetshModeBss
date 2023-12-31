@@ -223,6 +223,7 @@ namespace NetshG
             uiProgress.Visibility = Visibility.Collapsed;
             uiHelpGrid.Visibility = UP.CurrUserPrefs.ShowHelp ? Visibility.Visible : Visibility.Collapsed;
             uiHelp.Text = qresult;
+            if (result.Trim() == "") result = "\n\n\n\nNo data returned by the command";
             uiOutput.Text = result;
             uiTable.Text = csv;
             if (CurrTableParser != null)
