@@ -33,6 +33,9 @@
                 <MenuItem Header="Common" x:Name="uiMenu_Parameters_Common">
                 </MenuItem>
             </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_Help file" Click="OnMenu_Help_Help" />
+            </MenuItem>
         </Menu>
 
         <Grid Grid.Row="2">

@@ -31,7 +31,9 @@ namespace NetshG
             CommandAdd(Key.C, ModifierKeys.Control, OnCopy);
 
             // Alt-F4 for Exit
+            CommandAdd(Key.F1, ModifierKeys.None, OnMenu_Help_Help);
             CommandAdd(Key.F4, ModifierKeys.Alt, OnMenu_File_Exit);
+            CommandAdd(Key.F5, ModifierKeys.Alt, OnRepeat);
 
             // Specialized
             CommandAdd(Key.A, ModifierKeys.Alt, (s, e) => { DoSetMenuWithTag("#all"); });
@@ -422,5 +424,10 @@ namespace NetshG
             ShowOutputOrTable(ShowWhat.Output);
         }
 
+        private void OnMenu_Help_Help(object sender, RoutedEventArgs e)
+        {
+            var w = new HelpWindow();
+            w.Show();
+        }
     }
 }
