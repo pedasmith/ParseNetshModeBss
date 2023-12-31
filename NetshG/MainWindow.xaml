@@ -61,7 +61,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="*" />
-                        <RowDefinition Height="150" />
+                        <RowDefinition Height="auto" MaxHeight="150" />
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0" x:Name="uiHelpGrid" Visibility="Collapsed">
                         <Grid.RowDefinitions>
@@ -91,6 +91,7 @@
                             <Button Tag="table" Content="❜ Copy CSV" Click="OnCopyCSV" />
                         </StackPanel>
                         <Grid Grid.Row="2">
+                            <ProgressBar x:Name="uiProgress" IsIndeterminate="True" Visibility="Collapsed" Height="10" Width="100" />
                             <ScrollViewer x:Name="uiOutputScroll" >
                                 <TextBox x:Name="uiOutput" Style="{StaticResource rOutput}" />
                             </ScrollViewer>

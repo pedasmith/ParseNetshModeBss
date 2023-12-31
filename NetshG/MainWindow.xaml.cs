@@ -8,6 +8,8 @@ using ParseNetshModeBss; // to get the utilities classes!
 using Utilities;
 using Clipboard = Windows.ApplicationModel.DataTransfer.Clipboard;
 using System.Windows.Input;
+using System;
+using System.Threading.Tasks;
 
 namespace NetshG
 {
@@ -127,81 +129,98 @@ namespace NetshG
             DoCommand(ci);
         }
         TableParse? CurrTableParser = null;
-        public void DoCommand(CommandInfo ci)
+
+        public async void DoCommand(CommandInfo ci)
         { 
             var program = ci.Cmd;
             var args = ci.Args;
             var argsExtra = ci.Args2 == "" ? "" : " " + ci.Args2;
             var moreArgs = ci.Args5NoUX == "" ? "" : " " + ci.Args5NoUX;
-
-            uiOutput.Text = "....getting command...";
-
             args = CurrArgumentSettings.Replace(args, ci.Requires);
             var argsWithExtraMore = CurrArgumentSettings.Replace(args + argsExtra + moreArgs, ci.Requires);
 
-            uiReplaceList.Children.Clear();
-            foreach (var item in ci.Requires)
-            {
-                var rvec = new ReplaceViewEditControl(this, item, ci, CurrArgumentSettings);
-                uiReplaceList.Children.Add(rvec);
-            }
 
-            uiHelpScroll.ScrollToHome();
-            uiOutputScroll.ScrollToHome();
-            uiTableScroll.ScrollToHome();
+            string result = "No results", qresult= "No help results", csv = "";
+            ShowWhat showTable = ShowWhat.Output;
+            uiProgress.Visibility = Visibility.Visible;
+            uiOutput.Text = $"....getting results for {program} {argsWithExtraMore}...";
+            ShowOutputOrTable(ShowWhat.Output);
+            await Task.Delay(50);
+            try
+            {
 
-            uiCommand.Text = $"{program} {argsWithExtraMore}";
-            var qresult = RunCommandLine.RunNetshG(program, args + " " + ci.Help);
-            var result = RunCommandLine.RunNetshG(program, argsWithExtraMore);
-            if (false && argsWithExtraMore.Contains("mode=bss")) //Note: this is a great place to set the results to a fixed example string!
-            {
-                result = ParseIndent.Example1; // Set to fixed Example string for debugging problems.
-            }
-            var rawResult = result; // for the parser
-            if (UP.CurrUserPrefs.ReplaceTabs)
-            {
-                if (result.Contains('\t'))
+                uiReplaceList.Children.Clear();
+                foreach (var item in ci.Requires)
                 {
-                    result = "HAS TABS!!\n" + result.Replace("\t", "\\t");
+                    var rvec = new ReplaceViewEditControl(this, item, ci, CurrArgumentSettings);
+                    uiReplaceList.Children.Add(rvec);
+                }
+
+                uiHelpScroll.ScrollToHome();
+                uiOutputScroll.ScrollToHome();
+                uiTableScroll.ScrollToHome();
+
+                uiCommand.Text = $"{program} {argsWithExtraMore}";
+                qresult = await RunCommandLine.RunNetshGAsync(program, args + " " + ci.Help);
+                result = await RunCommandLine.RunNetshGAsync(program, argsWithExtraMore);
+                if (false && argsWithExtraMore.Contains("mode=bss")) //Note: this is a great place to set the results to a fixed example string!
+                {
+                    result = ParseIndent.Example1; // Set to fixed Example string for debugging problems.
+                }
+                var rawResult = result; // for the parser
+                if (UP.CurrUserPrefs.ReplaceTabs)
+                {
+                    if (result.Contains('\t'))
+                    {
+                        result = "HAS TABS!!\n" + result.Replace("\t", "\\t");
+                    }
+                }
+
+
+                // Handle the parsing. Parsing is the act of looking at the data from,
+                // e.g., the list of interface and making a list of all interface names.
+                // Those name get set into macros.
+                if (!string.IsNullOrEmpty(ci.Sets))
+                {
+                    var macroParser = GetParser.GetMacroParser(ci.SetParser);
+                    if (macroParser != null)
+                    {
+                        var setList = macroParser.ParseForValues(rawResult);
+                        CurrArgumentSettings.SetValueList(ci.Sets, setList);
+                    }
+                }
+
+
+                //
+                // Parse the results
+                //
+                var tableParserName = ci.TableParser;
+                showTable = ShowWhat.Output;
+                if (string.IsNullOrEmpty(tableParserName))
+                {
+                    //tableParserName = "Indent"; 
+                    tableParserName = CurrArgumentSettings.GetCurrent("Parser", "Indent").Value;//DBG: TODO: just for debugging
+                }
+                else
+                {
+                    showTable = ShowWhat.Table;
+                }
+                csv = "";
+                if (!string.IsNullOrEmpty(tableParserName))
+                {
+                    CurrTableParser = GetParser.GetTableParser(tableParserName);
+                    if (CurrTableParser != null)
+                    {
+                        CurrTableParser.Parse(rawResult);
+                        csv = CurrTableParser.AsCsv();
+                    }
                 }
             }
-
-
-            // Handle the parsing. Parsing is the act of looking at the data from,
-            // e.g., the list of interface and making a list of all interface names.
-            // Those name get set into macros.
-            if (!string.IsNullOrEmpty(ci.Sets))
+            catch (Exception)
             {
-                var macroParser = GetParser.GetMacroParser(ci.SetParser);
-                if (macroParser != null)
-                {
-                    var setList = macroParser.ParseForValues(rawResult);
-                    CurrArgumentSettings.SetValueList(ci.Sets, setList);
-                }
+
             }
-
-
-
-            // DBG: Parse with the ParseDashLineTab.cs parser
-            // Will be replaced with more parser types
-            var tableParserName = ci.TableParser;
-            var showTable = ShowWhat.Output;
-            if (string.IsNullOrEmpty(tableParserName))
-            {
-                //tableParserName = "Indent"; 
-                tableParserName = CurrArgumentSettings.GetCurrent("Parser", "Indent").Value;//DBG: TODO: just for debugging
-            }
-            string csv = "";
-            if (!string.IsNullOrEmpty(tableParserName))
-            {
-                CurrTableParser = GetParser.GetTableParser(tableParserName);
-                if (CurrTableParser != null)
-                {
-                    CurrTableParser.Parse(rawResult);
-                    csv = CurrTableParser.AsCsv();
-                }
-            }
-
+            uiProgress.Visibility = Visibility.Collapsed;
             uiHelpGrid.Visibility = UP.CurrUserPrefs.ShowHelp ? Visibility.Visible : Visibility.Collapsed;
             uiHelp.Text = qresult;
             uiOutput.Text = result;
@@ -212,9 +231,9 @@ namespace NetshG
                 uiTableDataGrid.AutoGenerateColumns = true;
                 uiTableDataGrid.DataContext = CurrDataTable;
 
-                if (CurrTableParser.Rows.Count >  0)
+                if (CurrTableParser.Rows.Count ==  0)
                 {
-                    showTable = ShowWhat.Table;
+                    showTable = ShowWhat.Output;
                 }
             }
             else

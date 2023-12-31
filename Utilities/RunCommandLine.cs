@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ParseNetshModeBss
 {
@@ -25,7 +26,7 @@ namespace ParseNetshModeBss
             return retval;
         }
 
-        public static string RunNetshG(string program = "netsh", string args = "wlan show networks mode=bssid")
+        public static async Task<string> RunNetshGAsync(string program = "netsh", string args = "wlan show networks mode=bssid")
         {
             string retval = "";
             var start = new ProcessStartInfo()
@@ -44,8 +45,15 @@ namespace ParseNetshModeBss
 
             using (Process? proc = Process.Start(start))
             {
-                retval = proc?.StandardOutput.ReadToEnd() ?? "";
-                proc!.WaitForExit();
+                if (proc != null)
+                {
+                    retval = await proc.StandardOutput.ReadToEndAsync();
+                    await proc.WaitForExitAsync();
+                }
+                else
+                {
+                    retval = "";
+                }
             }
             return retval;
         }
