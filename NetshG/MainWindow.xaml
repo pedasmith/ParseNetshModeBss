@@ -47,6 +47,7 @@
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_Help file" Click="OnMenu_Help_Help" />
+                <MenuItem Header="_Versions" Click="OnMenu_Help_Versions" />
                 <MenuItem Header="_Keyboard shortcuts" Click="OnMenu_Help_Shortcuts" />
             </MenuItem>
         </Menu>

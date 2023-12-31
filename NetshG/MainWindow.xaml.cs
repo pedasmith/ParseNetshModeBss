@@ -525,7 +525,12 @@ namespace NetshG
             var w = new HelpWindow();
             w.Show();
         }
+        private void OnMenu_Help_Versions(object sender, RoutedEventArgs e)
+        {
+            var w = new HelpVersionsWindow();
+            w.Show();
 
+        }
         private void OnMenu_Help_Shortcuts(object sender, RoutedEventArgs e)
         {
             var w = new HelpKeyboardShortcutWindow();
@@ -576,5 +581,7 @@ namespace NetshG
                 DoCommand(LastCommand, true); // true=suppress the ugly flash. It's OK for when the user requests a new display, but is terrible for repeating.
             }));
         }
+
+
     }
 }
