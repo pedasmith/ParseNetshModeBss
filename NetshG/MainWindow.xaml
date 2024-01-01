@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NetshG"
         mc:Ignorable="d"
-        Title="MainWindow" Height="750" Width="1200">
+        Title="NETSHG -- Gui shell for the NETSH command" Height="750" Width="1200">
     <Window.Resources>
     </Window.Resources>
 

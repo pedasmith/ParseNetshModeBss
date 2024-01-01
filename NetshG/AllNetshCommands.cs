@@ -59,6 +59,12 @@ namespace NetshG
 
     {
 		"Cmd":"netsh",
+		"Args":"advfirewall firewall show rule",
+		"Args2":"name=all",
+		"Tags":"#common"
+	},
+    {
+		"Cmd":"netsh",
 		"Args":"advfirewall show allprofiles",
 		"Issues":"The Ok. at the end is awkward to parse."
 	},
@@ -1013,7 +1019,12 @@ namespace NetshG
 		"Tags":"#wifi",
 		"TableParser":"DashLine",
 		"Issues": "System capabilities are hard to parse because they are sentences and not name : value pairs."
-	}
+	},
+    {
+		"Cmd":"netsh",
+		"Args":"wlan show wlanreport",
+		"Tags":"#wifi #common"
+	},
 
 ]
 """;
