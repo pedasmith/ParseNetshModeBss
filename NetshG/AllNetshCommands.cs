@@ -106,7 +106,8 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"dnsclient show global"
+		"Args":"dnsclient show global",
+		"TableParser":"List"
 	},
     {
 		"Cmd":"netsh",
@@ -115,7 +116,8 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"http show cacheparam"
+		"Args":"http show cacheparam",
+		"TableParser":"DashLine"
 	},
     {
 		"Cmd":"netsh",
@@ -133,11 +135,13 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"http show setting"
+		"Args":"http show setting",
+		"TableParser":"DashLine"
 	},
     {
 		"Cmd":"netsh",
-		"Args":"http show sslcert"
+		"Args":"http show sslcert",
+		"Issues":"when there's no data, still produces text. That makes it hard to parse the no-certs case"
 	},
     {
 		"Cmd":"netsh",
@@ -539,7 +543,8 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface ipv6 show tfofallback"
+		"Args":"interface ipv6 show tfofallback",
+		"Issues":"Very unusual format will require special parser."
 	},
     {
 		"Cmd":"netsh",
@@ -547,7 +552,8 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface isatap show router"
+		"Args":"interface isatap show router",
+		"TableParser":"List"
 	},
     {
 		"Cmd":"netsh",
@@ -575,7 +581,8 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface show interface"
+		"Args":"interface show interface",
+		"Issues":"Unusual format. The key (Interface name) is weirdly the last column, not the first, requiring custom logic."
 	},
     {
 		"Cmd":"netsh",
