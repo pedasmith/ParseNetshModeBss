@@ -6,6 +6,11 @@ namespace Utilities
 {
     public static class StringUtilities
     {
+        public static string AsDataColumnNameCompatible(this string value)
+        {
+            var retval = value.Replace("/", "-").Replace(".", "-");
+            return retval;
+        }
         public static int CountChar(this string value, char lookFor)
         {
             int retval = 0;

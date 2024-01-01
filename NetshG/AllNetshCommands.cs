@@ -30,7 +30,8 @@ namespace NetshG
 [
     {
 		"Cmd":"ipconfig",
-		"Args2":"/all"
+		"Args2":"/all",
+		"Tags":"#common"
 	},
     {
 		"Cmd":"ipconfig",
@@ -177,6 +178,11 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
+		"Args":"interface ipv4 dump",
+		"Tags":"#common"
+	},
+    {
+		"Cmd":"netsh",
 		"Args":"interface ipv4 show addresses",
 		"TableParser":"Indent",
 		"Tags":""
@@ -213,7 +219,7 @@ namespace NetshG
 		"Args":"interface ipv4 show config",
 		"TableParser":"Indent",
 		"Tags":"",
-		"Issues":"The Statically Configured DNS servers is difficult to parse because it's two lines of text."
+		"Issues":"The Statically Configured DNS servers is difficult to parse because it's two lines of text. It's not clear why there isn't an ipv6 version of this command."
 	},
     {
 		"Cmd":"netsh",
@@ -395,6 +401,11 @@ namespace NetshG
 	},
     {
 		"Cmd":"netsh",
+		"Args":"interface ipv6 dump",
+		"Tags":"#common"
+	},
+    {
+		"Cmd":"netsh",
 		"Args":"interface ipv6 isatap show router"
 	},
     {
@@ -571,11 +582,13 @@ namespace NetshG
 		"Args":"interface tcp show global",
 		"Args5NoUX":"store=Store",
 		"RequireList":"Store",
+		"Tags":"#common",
 		"Issues":"The Query active state message is difficult to parse."
 	},
     {
 		"Cmd":"netsh",
-		"Args":"interface tcp show heuristics"
+		"Args":"interface tcp show heuristics",
+		"Tags":"#common"
 	},
     {
 		"Cmd":"netsh",
@@ -625,7 +638,8 @@ namespace NetshG
 		"Cmd":"netsh",
 		"Args":"interface udp show global",
 		"Args5NoUX":"store=Store",
-		"RequireList":"Store"
+		"RequireList":"Store",
+		"Tags":"#common"
 	},
     {
 		"Cmd":"netsh",

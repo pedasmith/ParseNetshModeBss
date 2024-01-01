@@ -61,12 +61,13 @@ namespace Utilities
                 {
                     DataType = strType,
                     Caption = item,
-                    ColumnName = item.Replace("/", "-")
+                    ColumnName = item.AsDataColumnNameCompatible()
                     // BUG: ColumnName = item -- Change 2023-12-30; index by number, not name, and never use the name. 
                     // It turns out (hah!) that you can't have a name with a slash in it. 
                     // It also turns out that you can't have a Caption without creating a column name
                     // Nope, the Caption is totally ignored by default. I've got special code in MainWindow.xaml
                     // to set the DataGrid column.header from the Caption property here.
+                    // 2024-01-01: It also turns out that dots are not allowed, either.
                 };
                 table.Columns.Add(column);
             }
