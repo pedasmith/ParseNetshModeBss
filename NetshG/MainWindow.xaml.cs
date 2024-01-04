@@ -54,6 +54,7 @@ namespace NetshG
 
             int nerror = 0;
             nerror += Utilities.StringUtilities.TestCountStrings();
+
         }
         /// <summary>
         /// Set here, but used by the HelpKeyboardShortcutWindow to show shortcuts. That way the help is always
@@ -121,6 +122,9 @@ namespace NetshG
                     menu.IsChecked = true;
                 }
             }
+
+            var cmdlist = AllNetshCommands.GetCommands();
+            CommandInfo.VerifyAllSetters(cmdlist, CurrArgumentSettings);
         }
 
         private void DoSetMenuWithTag(string tags)

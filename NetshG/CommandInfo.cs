@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Automation.Peers;
 using Utilities;
+using Utilities.ConfigurableParser;
 
 namespace NetshG
 {
@@ -84,6 +86,60 @@ namespace NetshG
                 Requires.Add(new CommandRequire() { Name = item });
             }
         }
+
+
+        /// <summary>
+        /// Given an arg like InterfaceIndex return a list of commands that can set this values.
+        /// </summary>
+        /// <param name="arg"></param>
+        /// <param name="commands"></param>
+        /// <param name="existingArgs"></param>
+        /// <returns>null=</returns>
+        public static List<CommandInfo> GetMissingSettersFor(string arg, List<CommandInfo> commands)
+        {
+            // arg is e.g. InterfaceIndex or Level
+            var retval = new List<CommandInfo>();
+            foreach (var command in commands)
+            {
+                if (command.Sets == arg)
+                {
+                    retval.Add(command);
+                }
+            }
+            return retval;
+        }
+
+        public static string VerifyAllSetters(List<CommandInfo> commands, ArgumentSettings existingArgs)
+        {
+            string retval = "";
+            foreach (var command in commands)
+            {
+                foreach (var requires in command.Requires)
+                {
+                    if (requires == null) continue;
+                    var list = GetMissingSettersFor(requires.Name, commands);
+                    if (list.Count > 1)
+                    {
+                        retval += $"ERROR: {command.Cmd} {command.Args} {command.Args2} ARG={requires.Name} can be set by {list.Count} commands\n";
+                        foreach (var item in list)
+                        {
+                            retval += $"    {item.Cmd} {item.Args} {item.Args2}\n";
+                        }
+                    }
+                    else if (list.Count == 1)
+                    {
+                        var setby = list[0];
+                        retval += $"NOTE: ARG={requires.Name} FROM {command.Cmd} {command.Args} {command.Args2}  can be set by {setby.Cmd} {setby.Args} {setby.Args2}\n";
+                    }
+                    else if (list.Count == 0 && existingArgs.GetCurrent(requires.Name, "").UserString == "")
+                    {
+                        retval += $"ERROR: {command.Cmd} {command.Args} {command.Args2} ARG={requires.Name} cannot be set\n";
+                    }
+                }
+            }
+            return retval;
+        }
+
     }
 
     public class CommandRequire
