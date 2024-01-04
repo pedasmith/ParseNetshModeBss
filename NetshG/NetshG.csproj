@@ -8,7 +8,7 @@
     <ApplicationIcon>Grumpster_Icon_256.ico</ApplicationIcon>
     <AssemblyVersion></AssemblyVersion>
     <Title>NetshG GUI shell for the Netsh command line program</Title>
-    <VersionPrefix>1.5.50</VersionPrefix>
+    <VersionPrefix>1.6.60</VersionPrefix>
   </PropertyGroup>
 
   <Import Project="..\Utilities\Utilities.projitems" Label="Shared" />

@@ -15,6 +15,16 @@
         <TextBlock Grid.Row="0" Style="{StaticResource rTitle}">About NetshG</TextBlock>
         <ScrollViewer Grid.Row="1" Padding="10,2,12,5" >
             <TextBlock TextWrapping="Wrap" x:Name="uiHelpText">
+                <Run FontWeight="Bold">Version 1.6 2024-01-03</Run>
+                <LineBreak />
+                <Run>
+                    Will automatically call the right command when a 
+                    previously-unseen argument is needed. For example,
+                    if an InterfaceIndex is needed, will so a show interfaces
+                    to get a list of interfaces, and will then pick one to show.
+                </Run>
+                <LineBreak />
+                <LineBreak />
                 <Run FontWeight="Bold">Version 1.4 2023-12-31</Run>
                 <LineBreak />
                 <Run>

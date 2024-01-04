@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Automation.Peers;
@@ -89,26 +90,39 @@ namespace NetshG
 
 
         /// <summary>
-        /// Given an arg like InterfaceIndex return a list of commands that can set this values.
+        /// Given an arg like InterfaceIndex return a list of allCommands that can set this values. Return an empty list
+        /// if the arg is already in the existingArgs structure.
         /// </summary>
         /// <param name="arg"></param>
-        /// <param name="commands"></param>
+        /// <param name="allCommands"></param>
         /// <param name="existingArgs"></param>
         /// <returns>null=</returns>
-        public static List<CommandInfo> GetMissingSettersFor(string arg, List<CommandInfo> commands)
+        public static List<CommandInfo> GetMissingSettersFor(string arg, List<CommandInfo> allCommands, ArgumentSettings existingArgs, List<CommandInfo> returnList)
         {
             // arg is e.g. InterfaceIndex or Level
-            var retval = new List<CommandInfo>();
-            foreach (var command in commands)
+            var existing = existingArgs.GetCurrent(arg, "");
+            if (existing.UserString == "")
             {
-                if (command.Sets == arg)
+                foreach (var command in allCommands)
                 {
-                    retval.Add(command);
+                    if (command.Sets == arg)
+                    {
+                        returnList.Add(command);
+                    }
                 }
+            }
+            return returnList;
+        }
+        public static List<CommandInfo> GetAllMissingSettersFor(CommandInfo ci, List<CommandInfo> allCommands, ArgumentSettings existingArgs)
+        {
+            var retval = new List<CommandInfo>();
+            foreach (var require in ci.Requires)
+            {
+                if (require == null) continue;
+                GetMissingSettersFor(require.Name, allCommands, existingArgs, retval);
             }
             return retval;
         }
-
         public static string VerifyAllSetters(List<CommandInfo> commands, ArgumentSettings existingArgs)
         {
             string retval = "";
@@ -117,10 +131,11 @@ namespace NetshG
                 foreach (var requires in command.Requires)
                 {
                     if (requires == null) continue;
-                    var list = GetMissingSettersFor(requires.Name, commands);
+                    var startingList = new List<CommandInfo>();
+                    var list = GetMissingSettersFor(requires.Name, commands, existingArgs, startingList);
                     if (list.Count > 1)
                     {
-                        retval += $"ERROR: {command.Cmd} {command.Args} {command.Args2} ARG={requires.Name} can be set by {list.Count} commands\n";
+                        retval += $"ERROR: {command.Cmd} {command.Args} {command.Args2} ARG={requires.Name} can be set by {list.Count} allCommands\n";
                         foreach (var item in list)
                         {
                             retval += $"    {item.Cmd} {item.Args} {item.Args2}\n";

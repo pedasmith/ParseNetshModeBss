@@ -17,7 +17,7 @@ namespace NetshG
 {
     public interface CanDoCommand
     {
-        void DoCommand(CommandInfo ci, bool suppressFlash = false);
+        Task DoCommand(CommandInfo ci, bool suppressFlash = false);
     }
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -148,7 +148,7 @@ namespace NetshG
             }
             uiIssues.Text = $"{tags}: {cmdlist.Count} commands";
         }
-        private void OnSelectCommand(object sender, SelectionChangedEventArgs e)
+        private async void OnSelectCommand(object sender, SelectionChangedEventArgs e)
         {
             OnMenuRepeatStop(sender, e); // If I was repeating, stop it.
 
@@ -172,11 +172,25 @@ namespace NetshG
             }
             LastCommand = ci;
 
-            DoCommand(ci);
+            await DoCommand(ci);
         }
 
         bool AmDoCommand = false;
-        public async void DoCommand(CommandInfo ci, bool suppressFlash = false)
+        public async Task DoCommand(CommandInfo ci, bool supressFlash = false)
+        {
+            // 
+            var cmdlist = AllNetshCommands.GetCommands();
+
+            var requireList = CommandInfo.GetAllMissingSettersFor(ci, cmdlist, CurrArgumentSettings);
+            foreach (var requireci in requireList)
+            {
+                // Step one: get all of the missing items. Note that there's a strong assumption that
+                // the list is one level deep; there's no place where A depends on B depends on C.
+                await DoCommandAsyncRaw(requireci, true); // always suppress the flash for getting these values
+            }
+            await DoCommandAsyncRaw(ci, supressFlash);
+        }
+        public async Task DoCommandAsyncRaw(CommandInfo ci, bool suppressFlash)
         {
             AmDoCommand = true;
             var program = ci.Cmd;
@@ -471,7 +485,7 @@ namespace NetshG
         }
 #endif
 
-        private void OnRepeat(object sender, RoutedEventArgs e)
+        private async void OnRepeat(object sender, RoutedEventArgs e)
         {
             // ALT-R will either do a single repeat OR will stop a current repeat loop
             if (AmRepeating())
@@ -480,7 +494,7 @@ namespace NetshG
                 return;
             }
             if (LastCommand == null) return;
-            DoCommand(LastCommand);
+            await DoCommand(LastCommand);
         }
 
         private void OnCopy(object sender, RoutedEventArgs e)
@@ -588,10 +602,10 @@ namespace NetshG
         {
             // Need to run on the UI thread
             if (AmDoCommand) return; // e.g., netsh wlan show all is very slow and doesn't work in 1 second
-            this.Dispatcher.BeginInvoke(new Action(() =>
+            this.Dispatcher.BeginInvoke(new Action(async () => 
             {
                 if (LastCommand == null) return;
-                DoCommand(LastCommand, true); // true=suppress the ugly flash. It's OK for when the user requests a new display, but is terrible for repeating.
+                await DoCommand(LastCommand, true); // true=suppress the ugly flash. It's OK for when the user requests a new display, but is terrible for repeating.
             }));
         }
 

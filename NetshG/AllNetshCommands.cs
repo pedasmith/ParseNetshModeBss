@@ -444,30 +444,16 @@ namespace NetshG
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv6 show dynamicportrange",
-		"Args2":"tcp",
+		"Args2": "Protocol",
 		"Args5NoUX":"store=Store",
-		"RequireList":"Store"
-	},
-    {
-		"Cmd":"netsh",
-		"Args":"interface ipv6 show dynamicportrange",
-		"Args2":"udp",
-		"Args5NoUX":"store=Store",
-		"RequireList":"Store"
+		"RequireList":"Protocol,Store"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv6 show excludedportrange",
-		"Args2":"tcp",
+		"Args2":"Protocol",
 		"Args5NoUX":"store=Store",
-		"RequireList":"Store"
-	},
-    {
-		"Cmd":"netsh",
-		"Args":"interface ipv6 show excludedportrange",
-		"Args2":"udp",
-		"Args5NoUX":"store=Store",
-		"RequireList":"Store"
+		"RequireList":"Protocol,Store"
 	},
     {
 		"Cmd":"netsh",
