@@ -144,7 +144,7 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock x:Name="uiIssues" Grid.Column="0" />
+                <TextBox x:Name="uiIssues" Grid.Column="0" Style="{StaticResource ResourceKey=rReadOnly}" />
                 <TextBlock x:Name="uiRepeat"  Margin="30,0,30,0" Grid.Column="1" />
                 <TextBlock x:Name="uiCount" Grid.Column="2" />
             </Grid>
