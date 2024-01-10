@@ -136,7 +136,7 @@
                 </Grid>
             </Grid>
         </Grid>
-        <TextBlock Grid.Row="3"  x:Name="uiLog" Style="{StaticResource ResourceKey=rLog}"></TextBlock>
+        <TextBox Grid.Row="3"  x:Name="uiLog" Style="{StaticResource ResourceKey=rLog}"></TextBox>
         <Border Grid.Row="4" BorderThickness="1" BorderBrush="Black" Margin="2,2,2,2" Padding="2,2,2,2  ">
             <Grid>
                 <Grid.ColumnDefinitions>
