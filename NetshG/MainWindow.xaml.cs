@@ -128,14 +128,14 @@ namespace NetshG
                 }
             }
 
-            var cmdlist = AllNetshCommands.GetCommands();
+            var cmdlist = AllNetshCommands.GetCommandsShow();
             CommandInfo.VerifyAllSetters(cmdlist, CurrArgumentSettings);
         }
 
         private void DoSetMenuWithTag(string tags)
         {
             UP.CurrUserPrefs.Tags = tags;
-            var cmdlist = AllNetshCommands.GetCommands();
+            var cmdlist = AllNetshCommands.GetCommandsShow();
 
             if (cmdlist.Count == 0)
             {
@@ -189,7 +189,7 @@ namespace NetshG
         public async Task DoCommandAsync(CommandInfo ci, CommandOptions commandOptions = CommandOptions.None)
         {
             // 
-            var cmdlist = AllNetshCommands.GetCommands();
+            var cmdlist = AllNetshCommands.GetCommandsShow();
 
             var requireList = CommandInfo.GetAllMissingSettersFor(ci, cmdlist, CurrArgumentSettings);
             foreach (var requireci in requireList)
