@@ -32,7 +32,7 @@
                 -->
                 <MenuItem Header="Show Help" x:Name="uiMenu_Show_Help" IsCheckable="True" Checked="OnMenu_Show_Help_Check" Unchecked="OnMenu_Show_Help_Uncheck" />
             </MenuItem>
-            <MenuItem Header="_Reset" x:Name="uiMenuReset">
+            <MenuItem Header="_Clear and Reset" x:Name="uiMenuReset">
                 <MenuItem Header="_Common" Tag="#common" Click="OnMenu_Reset_Tag" />
                 <MenuItem Header="_All" Tag="#all" Click="OnMenu_Reset_Tag" />
                 <MenuItem Header="All (verbose)" Tag="#allverbose" Click="OnMenu_Reset_Tag" />
@@ -73,7 +73,7 @@
                 <!--- Values are set by MainWindow_Loaded from AllNetshCommands.GetCommands() -->
             </ListView>
             <TextBox x:Name="uiCommand" Grid.Row="0" Grid.Column="1" Style="{StaticResource rCommand}" />
-            <Grid Grid.Row="1" Grid.Column="1">
+            <Grid Grid.Row="1" Grid.Column="1" x:Name="uiCommandOutput">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
@@ -141,6 +141,9 @@
                     </Grid>
                 </Grid>
             </Grid>
+            <FlowDocumentScrollViewer x:Name="uiHelpMD" Grid.Row="1" Grid.Column="1" Visibility="Collapsed" Background="AntiqueWhite" >
+                
+            </FlowDocumentScrollViewer>
         </Grid>
         <TextBox Grid.Row="3"  x:Name="uiLog" Style="{StaticResource ResourceKey=rLog}"></TextBox>
         <Border Grid.Row="4" BorderThickness="1" BorderBrush="Black" Margin="2,2,2,2" Padding="2,2,2,2  ">

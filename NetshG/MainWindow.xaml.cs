@@ -13,6 +13,20 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Timers;
 using static NetshG.CanDoCommand;
+using System.IO;
+using System.Windows.Resources;
+using System.Xml.Linq;
+using Markdig;
+using Markdig.Wpf;
+using System.Text;
+using System.Windows.Documents;
+using System.Xaml;
+using System.Reflection;
+
+
+
+using XamlReader = System.Windows.Markup.XamlReader;
+
 
 namespace NetshG
 {
@@ -221,6 +235,8 @@ namespace NetshG
             ShowWhat showWhat = CurrShowWhat ?? ShowWhat.Output;
             bool haveNoPreferenceForShow = CurrShowWhat == null;
             uiProgress.Visibility = Visibility.Visible;
+            uiCommandOutput.Visibility = Visibility.Visible;
+            Help_Remove(); // make the help go away
 
             Log($"DoCommand: {program} {args} {args2} {args5}");
             if (!commandOptions.HasFlag(CommandOptions.SuppressFlash))
@@ -285,7 +301,7 @@ namespace NetshG
 
 
                 // Handle the "Set" parsing. E.G., Look at the data from, list of interface and making a
-                // list of all interface names. Those name get set into macros.
+                // list of all interface names. Those helpFileName get set into macros.
                 if (!string.IsNullOrEmpty(ci.Sets))
                 {
                     var macroParser = GetParser.GetMacroParser(ci.SetParser);
@@ -401,7 +417,7 @@ namespace NetshG
         /// Sets up the UX to show either the output or the table. But is a little smart; won't
         /// show the table unless it's actually possible to see something
         /// </summary>
-        /// <param name="value"></param>
+        /// <param helpFileName="value"></param>
         private void ShowOutputOrTable(ShowWhat value)
         {
             //
@@ -510,29 +526,7 @@ namespace NetshG
             UP.CurrUserPrefs.ShowHelp = false;
         }
 
-#if NEVER_EVER_DEFINED
-        private void OnParse(object sender, RoutedEventArgs e)
-        {
-            var parser = Utilities.ConfigurableParser.Make.Create_MatchSsidEncrypt();
-            var lines = uiOutput.Text.Split('\n');
-            foreach ( var rawline in lines )
-            {
-                var line = rawline.TrimEnd();
-                if (line.Length == 0 ) continue;
-                parser.ParseLine(line);
-            }
-            var allresults = "";
-            foreach (var result in parser.Results )
-            {
-                allresults += result + "\n";
-            }
-            var settings = new JsonSerializerSettings() {  Formatting = Formatting.Indented };
-            var jsonAll = JsonConvert.SerializeObject(parser, settings);
-            var json = JsonConvert.SerializeObject(parser.Commands[0].MatchRule, typeof(Utilities.ConfigurableParser.Rule), settings);
-            allresults = allresults + "\nJSON:\n" + json + "\nPARSER:\n" + parser.ToString();
-            uiOutput.Text =  allresults + "\n" + uiOutput.Text;
-        }
-#endif
+
 
         private async void OnRepeat(object sender, RoutedEventArgs e)
         {
@@ -596,16 +590,61 @@ namespace NetshG
             ShowOutputOrTable(ShowWhat.Output);
         }
 
+
         private void OnMenu_Help_Help(object sender, RoutedEventArgs e)
         {
-            var w = new HelpWindow();
-            w.Show();
+            ShowHelp("/Netshg_help.md");
+        }
+
+        MarkdownPipeline? mdpipe = null;
+        string lastHelpFile = "";
+        private void Help_Remove()
+        {
+            uiHelpMD.Visibility = Visibility.Collapsed;
+        }
+        private void ShowHelp(string helpFileName)
+        {
+            var isdifferent = helpFileName != lastHelpFile;
+            lastHelpFile = helpFileName;
+            if (uiHelpMD.Visibility == Visibility.Visible && !isdifferent)
+            {
+                Help_Remove();
+                return;
+            }
+
+            uiHelpMD.Visibility = Visibility.Visible;
+            uiCommandOutput.Visibility = Visibility.Collapsed;
+            Uri uri = new Uri(helpFileName, UriKind.Relative);
+            StreamResourceInfo commands = Application.GetContentStream(uri);
+            var sr = new StreamReader(commands.Stream);
+            var markdown = sr.ReadToEnd();
+            var version = Assembly.GetExecutingAssembly()?.GetName()?.Version?.ToString();
+            markdown = markdown.Replace("{VERSION}", version);
+
+            if (mdpipe == null)
+            {
+                mdpipe = new MarkdownPipelineBuilder()
+                    .UseSupportedExtensions()
+                    .Build();
+            }
+            if (mdpipe == null) return;
+
+            var xaml = Markdig.Wpf.Markdown.ToXaml(markdown, mdpipe);
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(xaml)))
+            {
+                using (var reader = new XamlXmlReader(stream, new MyXamlSchemaContext()))
+                {
+                    if (XamlReader.Load(reader) is FlowDocument document)
+                    {
+                        uiHelpMD.Document = document;
+                    }
+                }
+            }
+
         }
         private void OnMenu_Help_Versions(object sender, RoutedEventArgs e)
         {
-            var w = new HelpVersionsWindow();
-            w.Show();
-
+            ShowHelp("/Netshg_help_versions.md");
         }
         private void OnMenu_Help_Shortcuts(object sender, RoutedEventArgs e)
         {
@@ -658,5 +697,19 @@ namespace NetshG
             }));
         }
 
+    }
+
+    // See https://github.com/Kryptos-FR/markdig.wpf/blob/develop/src/Markdig.Xaml.SampleApp/MainWindow.xaml.cs
+    class MyXamlSchemaContext : XamlSchemaContext
+    {
+        public override bool TryGetCompatibleXamlNamespace(string xamlNamespace, out string compatibleNamespace)
+        {
+            if (xamlNamespace.Equals("clr-namespace:Markdig.Wpf", StringComparison.Ordinal))
+            {
+                compatibleNamespace = $"clr-namespace:Markdig.Wpf;assembly={Assembly.GetAssembly(typeof(Markdig.Wpf.Styles))?.FullName}";
+                return true;
+            }
+            return base.TryGetCompatibleXamlNamespace(xamlNamespace, out compatibleNamespace);
+        }
     }
 }

@@ -8,7 +8,7 @@
     <ApplicationIcon>Grumpster_Icon_256.ico</ApplicationIcon>
     <AssemblyVersion></AssemblyVersion>
     <Title>NetshG GUI shell for the Netsh command line program</Title>
-    <VersionPrefix>1.6.60</VersionPrefix>
+    <VersionPrefix>1.7.70</VersionPrefix>
   </PropertyGroup>
 
   <Import Project="..\Utilities\Utilities.projitems" Label="Shared" />
@@ -16,6 +16,8 @@
   <ItemGroup>
     <None Remove="AllCommands_Reset.json" />
     <None Remove="AllCommands_Show.json" />
+    <None Remove="Netshg_help.md" />
+    <None Remove="Netshg_help_versions.md" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,9 +28,17 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Grumpster_Icon_256.ico" />
+    <Content Include="Netshg_help.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Netshg_help_versions.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.34.0" />
+    <PackageReference Include="Markdig.Wpf" Version="0.5.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
