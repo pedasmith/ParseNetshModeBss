@@ -128,14 +128,15 @@ namespace NetshG
                 }
             }
 
-            var cmdlist = AllNetshCommands.GetCommandsShow();
+            // Just for testing
+            var cmdlist = AllNetshCommands.GetCommands(AllNetshCommands.CommandType.Show);
             CommandInfo.VerifyAllSetters(cmdlist, CurrArgumentSettings);
         }
 
-        private void DoSetMenuWithTag(string tags)
+        private void DoSetMenuWithTag(string tags, AllNetshCommands.CommandType menuType = AllNetshCommands.CommandType.Show)
         {
             UP.CurrUserPrefs.Tags = tags;
-            var cmdlist = AllNetshCommands.GetCommandsShow();
+            var cmdlist = AllNetshCommands.GetCommands(menuType);
 
             if (cmdlist.Count == 0)
             {
@@ -188,8 +189,9 @@ namespace NetshG
         bool AmDoCommand = false;
         public async Task DoCommandAsync(CommandInfo ci, CommandOptions commandOptions = CommandOptions.None)
         {
-            // 
-            var cmdlist = AllNetshCommands.GetCommandsShow();
+            // We know we have to use the "Show" commands to get the data. Any other list
+            // will potentially reset some part of the system, and we don't want that.
+            var cmdlist = AllNetshCommands.GetCommands(AllNetshCommands.CommandType.Show);
 
             var requireList = CommandInfo.GetAllMissingSettersFor(ci, cmdlist, CurrArgumentSettings);
             foreach (var requireci in requireList)
@@ -215,7 +217,7 @@ namespace NetshG
             var argsWithExtraMore = CurrArgumentSettings.Replace(args + args2 + args5, ci.Requires);
 
 
-            string result = "No results", qresult= "No help results", csv = "";
+            string result = "No results", result_help= "No help results", csv = "";
             ShowWhat showWhat = CurrShowWhat ?? ShowWhat.Output;
             bool haveNoPreferenceForShow = CurrShowWhat == null;
             uiProgress.Visibility = Visibility.Visible;
@@ -243,10 +245,29 @@ namespace NetshG
                 uiTableScroll.ScrollToHome();
 
                 uiCommand.Text = $"{program} {argsWithExtraMore}";
-                qresult = await RunCommandLine.RunNetshGAsync(program, args + " " + ci.Help);
+                if (ci.Help.Contains("#nohelp"))
+                {
+                    // Example: he explorer.exe ms-availablenetworks
+                    if (!string.IsNullOrEmpty(ci.HelpText))
+                    {
+                        result_help = ci.HelpText;
+                    }
+                    else
+                    {
+                        result_help = "No help is available for this command";
+                    }
+                }
+                else
+                {
+                    result_help = await RunCommandLine.RunNetshGAsync(program, args + " " + ci.Help);
+                    if (!string.IsNullOrEmpty(ci.HelpText))
+                    {
+                        result_help = ci.HelpText + "\n\n" + result_help;
+                    }
+                }
                 // Set this early so that for long-running commands the user has something to look
                 // at (it also helps with reducing the screen flashing)
-                uiHelp.Text = qresult;
+                uiHelp.Text = result_help;
 
                 result = await RunCommandLine.RunNetshGAsync(program, argsWithExtraMore);
                 if (false && argsWithExtraMore.Contains("mode=bss")) //Note: this is a great place to set the results to a fixed example string!
@@ -469,9 +490,15 @@ namespace NetshG
         {
             var tag = (sender as MenuItem)?.Tag as string;
             if (tag == null) tag = "";
-            DoSetMenuWithTag(tag);
+            DoSetMenuWithTag(tag, AllNetshCommands.CommandType.Show);
         }
 
+        private void OnMenu_Reset_Tag(object sender, RoutedEventArgs e)
+        {
+            var tag = (sender as MenuItem)?.Tag as string;
+            if (tag == null) tag = "";
+            DoSetMenuWithTag(tag, AllNetshCommands.CommandType.Reset);
+        }
 
         private void OnMenu_Show_Help_Check(object sender, RoutedEventArgs e)
         {
@@ -630,7 +657,6 @@ namespace NetshG
                 await DoCommandAsync(LastCommand, CommandOptions.SuppressFlash);
             }));
         }
-
 
     }
 }

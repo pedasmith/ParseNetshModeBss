@@ -32,6 +32,12 @@
                 -->
                 <MenuItem Header="Show Help" x:Name="uiMenu_Show_Help" IsCheckable="True" Checked="OnMenu_Show_Help_Check" Unchecked="OnMenu_Show_Help_Uncheck" />
             </MenuItem>
+            <MenuItem Header="_Reset" x:Name="uiMenuReset">
+                <MenuItem Header="_Common" Tag="#common" Click="OnMenu_Reset_Tag" />
+                <MenuItem Header="_All" Tag="#all" Click="OnMenu_Reset_Tag" />
+                <MenuItem Header="All (verbose)" Tag="#allverbose" Click="OnMenu_Reset_Tag" />
+                <MenuItem Header="_Wi-Fi" Tag="#wifi" Click="OnMenu_Reset_Tag" />
+            </MenuItem>
             <MenuItem Header="_Repeat">
                 <MenuItem Header="_Repeat Once" Click="OnRepeat"/>
                 <MenuItem Header=" 1 _second" Tag=" 1" Click="OnMenuRepeatStart"/>

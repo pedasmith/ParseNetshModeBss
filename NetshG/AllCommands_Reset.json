@@ -1,0 +1,46 @@
+﻿[
+  {
+    "Cmd": "explorer",
+    "Args2": "ms-availablenetworks:",
+    "Help": "#nohelp",
+    "HelpText": "Refreshes the list of potentially available Wi-Fi networks. This is useful before the netsh wlan show networks mode=bssid",
+    "Tags": "#common"
+  },
+  {
+    "Cmd": "ipconfig",
+    "Args2": "/flushdns",
+    "Tags": "#common"
+  },
+  {
+    "Cmd": "ipconfig",
+    "Args2": "/registerdns",
+    "Tags": "#common"
+  },
+  {
+    "Cmd": "ipconfig",
+    "Args2": "/release",
+    "Tags": "#common"
+  },
+  {
+    "Cmd": "ipconfig",
+    "Args2": "/renew",
+    "Tags": "#common"
+  },
+  {
+    "Cmd": "netsh",
+    "Args": "interface ipv4 reset",
+    "Tags": "#common",
+    "Issues": "Help has grammar issues 'Restarting computer is required before the default settings to be effect'"
+  },
+  {
+    "Cmd": "netsh",
+    "Args": "interface ipv6 reset",
+    "Tags": "#common",
+    "Issues": "Help has grammar issues 'Restarting computer is required before the default settings to be effect'"
+  },
+  {
+    "Cmd": "netsh",
+    "Args": "winsock reset",
+    "Tags": "#common"
+  }
+]

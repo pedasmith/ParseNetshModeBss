@@ -255,7 +255,7 @@ namespace Utilities
             public override string ToString()
             {
                 var list = string.Join("\n\t", Commands);
-                return $"Parser: Commands=\n\t{list}";
+                return $"Parser: CommandsShow=\n\t{list}";
             }
         }
 

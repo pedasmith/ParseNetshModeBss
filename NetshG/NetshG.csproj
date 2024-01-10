@@ -14,10 +14,14 @@
   <Import Project="..\Utilities\Utilities.projitems" Label="Shared" />
 
   <ItemGroup>
+    <None Remove="AllCommands_Reset.json" />
     <None Remove="AllCommands_Show.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="AllCommands_Reset.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="AllCommands_Show.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

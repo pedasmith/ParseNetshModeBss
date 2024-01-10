@@ -27,7 +27,14 @@ namespace NetshG
         /// not shown to user and not part of the ? to get help
         /// </summary>
         public string Args5NoUX { get; set; } = ""; 
+        /// <summary>
+        /// Help is the command modifier (like /?) needed to get help from the command itself. Set to #nohelp if no help is available.
+        /// </summary>
         public string Help { get; set; } = "/?";
+        /// <summary>
+        /// Additional help text. For commands with help (most of them), will prefix the command help 
+        /// </summary>
+        public string HelpText { get; set; } = "";
         public string Issues { get; set; } = "Command has no known issues.";
         public List<CommandRequire> Requires { get; set; } = new List<CommandRequire>();
         public string RequireList { get; set; } = "";
