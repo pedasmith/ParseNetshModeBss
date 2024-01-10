@@ -6,8 +6,9 @@ namespace Utilities
 {
     internal class ParseIndent : TableParse
     {
+        List<string>[] savedRows = new List<string>[5]; // 5 is kind of arbitrary...
 
-         public override void Parse(string file)
+        public override void Parse(string file)
         {
             var lines = file.Replace("\r\n", "\n").Split(new char[] { '\n' });
             var indents = lines.CountIndents();
@@ -23,7 +24,6 @@ namespace Utilities
             var currRowHasData = false;
 
             // Saved rows
-            List<string>[] savedRows = new List<string>[5]; // 5 is kind of arbitrary...
 
             for (int i = 0; i < lines.Length; i++)
             {
@@ -53,21 +53,13 @@ namespace Utilities
                             l0namevalue = l0namevalue.Trim();
 
                             RowUpsert(currRow, l0colname, l0namevalue);
-                            //var col = ColumnUpsert(l0colname);
-                            //RowEnsureWidth(currRow, col);
-                            //currRow[col] = l0namevalue;
                             currRowHasData = true;
                         }
                         else if (line.StartsWith("Configuration for")) //  e.g., Configuration for interface "Ethernet 2"
                         {
                             // This type of value happens with netsh interface ipv4 show config
                             l0namevalue = line.GetQuotedValue("(not set)");
-
                             RowUpsert(currRow, "Name", l0namevalue);
-                            //var col = ColumnUpsert("Name");
-                            //RowEnsureWidth(currRow, col);
-                            //currRow[col] = l0namevalue;
-
                             currRowHasData = true;
                         }
                         if (nextIndent > indent) // save it for later
@@ -97,10 +89,6 @@ namespace Utilities
                             savedRows[indent] = new List<string>(currRow);
                             RowUpsert(currRow, nameNoIndex, value);
                             currRowHasData = true;
-
-                            //var col = ColumnUpsert(nameNoIndex);
-                            //RowEnsureWidth(currRow, col);
-                            //currRow[col] = value;
                         }
                         else if (string.IsNullOrEmpty(value) && nextIndent > indent)
                         {
@@ -114,10 +102,6 @@ namespace Utilities
                         {
                             RowUpsert(currRow, name, value);
                             currRowHasData = true;
-
-                            //var col = ColumnUpsert(name);
-                            //RowEnsureWidth(currRow, col);
-                            //currRow[col] = value;
                         }
 
                         if (indent == 2 && nextIndent < indent)

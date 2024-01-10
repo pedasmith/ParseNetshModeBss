@@ -12,12 +12,16 @@ using System;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Timers;
+using static NetshG.CanDoCommand;
 
 namespace NetshG
 {
     public interface CanDoCommand
     {
-        Task DoCommand(CommandInfo ci, bool suppressFlash = false);
+        [Flags]
+        enum CommandOptions {  None, SuppressFlash=0x01, AppendToTable=0x02 }
+        Task DoCommandAsync(CommandInfo ci, CommandOptions commandOptions = CommandOptions.None);
+        void DoClearTable();
     }
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -75,6 +79,7 @@ namespace NetshG
         /// Used by e.g., copy, and to decide if we can show a table
         /// </summary>
         TableParse? CurrTableParser = null;
+        string CurrTableParserName = "";
 
         /// <summary>
         /// Used to make the grid actually work -- it's needed for the callback on creating columns
@@ -172,11 +177,16 @@ namespace NetshG
             }
             LastCommand = ci;
 
-            await DoCommand(ci);
+            await DoCommandAsync(ci);
         }
 
+        public void DoClearTable()
+        {
+            CurrTableParserName = ""; // blank it out so that the next command clears the table.
+            ; // TODO: write this code
+        }
         bool AmDoCommand = false;
-        public async Task DoCommand(CommandInfo ci, bool supressFlash = false)
+        public async Task DoCommandAsync(CommandInfo ci, CommandOptions commandOptions = CommandOptions.None)
         {
             // 
             var cmdlist = AllNetshCommands.GetCommands();
@@ -184,36 +194,43 @@ namespace NetshG
             var requireList = CommandInfo.GetAllMissingSettersFor(ci, cmdlist, CurrArgumentSettings);
             foreach (var requireci in requireList)
             {
-                // Step one: get all of the missing items. Note that there's a strong assumption that
+                // Do the commands on the list of missing items. Note that there's a strong assumption that
                 // the list is one level deep; there's no place where A depends on B depends on C.
-                await DoCommandAsyncRaw(requireci, true); // always suppress the flash for getting these values
+                await DoCommandAsyncRaw(requireci, CommandOptions.SuppressFlash); // always suppress the flash for getting these values
             }
-            await DoCommandAsyncRaw(ci, supressFlash);
+            await DoCommandAsyncRaw(ci, commandOptions);
         }
-        public async Task DoCommandAsyncRaw(CommandInfo ci, bool suppressFlash)
+        private void Log(string str)
+        {
+            Console.WriteLine(str);
+        }
+        public async Task DoCommandAsyncRaw(CommandInfo ci, CommandOptions commandOptions)
         {
             AmDoCommand = true;
             var program = ci.Cmd;
             var args = ci.Args;
-            var argsExtra = ci.Args2 == "" ? "" : " " + ci.Args2;
-            var moreArgs = ci.Args5NoUX == "" ? "" : " " + ci.Args5NoUX;
+            var args2 = ci.Args2 == "" ? "" : " " + ci.Args2;
+            var args5 = ci.Args5NoUX == "" ? "" : " " + ci.Args5NoUX;
             args = CurrArgumentSettings.Replace(args, ci.Requires);
-            var argsWithExtraMore = CurrArgumentSettings.Replace(args + argsExtra + moreArgs, ci.Requires);
+            var argsWithExtraMore = CurrArgumentSettings.Replace(args + args2 + args5, ci.Requires);
 
 
             string result = "No results", qresult= "No help results", csv = "";
             ShowWhat showWhat = CurrShowWhat ?? ShowWhat.Output;
             bool haveNoPreferenceForShow = CurrShowWhat == null;
             uiProgress.Visibility = Visibility.Visible;
-            if (!suppressFlash)
+
+            Log($"DoCommand: {program} {args} {args2} {args5}");
+            if (!commandOptions.HasFlag(CommandOptions.SuppressFlash))
             {
                 uiOutput.Text = $"\n\n\n\n....getting results for {program} {argsWithExtraMore}...";
                 ShowOutputOrTable(ShowWhat.Output);
                 await Task.Delay(50);
             }
+
+
             try
             {
-
                 uiReplaceList.Children.Clear();
                 foreach (var item in ci.Requires)
                 {
@@ -246,9 +263,8 @@ namespace NetshG
                 }
 
 
-                // Handle the parsing. Parsing is the act of looking at the data from,
-                // e.g., the list of interface and making a list of all interface names.
-                // Those name get set into macros.
+                // Handle the "Set" parsing. E.G., Look at the data from, list of interface and making a
+                // list of all interface names. Those name get set into macros.
                 if (!string.IsNullOrEmpty(ci.Sets))
                 {
                     var macroParser = GetParser.GetMacroParser(ci.SetParser);
@@ -279,7 +295,13 @@ namespace NetshG
                 csv = "";
                 if (!string.IsNullOrEmpty(tableParserName))
                 {
-                    CurrTableParser = GetParser.GetTableParser(tableParserName);
+                    if (!commandOptions.HasFlag(CommandOptions.AppendToTable) 
+                        || CurrTableParserName == tableParserName)
+                    {
+                        CurrTableParser = GetParser.GetTableParser(tableParserName);
+                        CurrTableParserName = tableParserName;
+                    }
+
                     if (CurrTableParser != null)
                     {
                         CurrTableParser.Parse(rawResult);
@@ -494,7 +516,7 @@ namespace NetshG
                 return;
             }
             if (LastCommand == null) return;
-            await DoCommand(LastCommand);
+            await DoCommandAsync(LastCommand);
         }
 
         private void OnCopy(object sender, RoutedEventArgs e)
@@ -605,7 +627,7 @@ namespace NetshG
             this.Dispatcher.BeginInvoke(new Action(async () => 
             {
                 if (LastCommand == null) return;
-                await DoCommand(LastCommand, true); // true=suppress the ugly flash. It's OK for when the user requests a new display, but is terrible for repeating.
+                await DoCommandAsync(LastCommand, CommandOptions.SuppressFlash);
             }));
         }
 

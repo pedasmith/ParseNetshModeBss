@@ -34,6 +34,7 @@ namespace NetshG
                     var pref = JsonConvert.DeserializeObject<UserPreferences>(json);
                     if (pref != null)
                     {
+                        pref.ReplaceTabs = false; // Never persists
                         UP.CurrUserPrefs = pref;
                     }
                 }

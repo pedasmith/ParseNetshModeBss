@@ -189,14 +189,14 @@ namespace NetshG
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show addresses",
 		"TableParser":"Indent",
-		"Tags":""
+		"Tags":"#common"
 	},
     {
 		"Cmd":"netsh",
 		"Args":"interface ipv4 show addresses",
 		"Args2": "InterfaceIndex",
 		"TableParser":"Indent",
-		"Tags":"",
+		"Tags":"#common",
 		"RequireList":"InterfaceIndex"
 	},
     {

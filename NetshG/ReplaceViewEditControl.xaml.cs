@@ -1,5 +1,9 @@
-﻿using System.Windows;
+﻿using System.Security.Cryptography;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
+using System.Xml.Linq;
+using static NetshG.CanDoCommand;
 
 namespace NetshG
 {
@@ -26,17 +30,16 @@ namespace NetshG
             uiReplaceUserValue.Text = user;
         }
 
-        private void OnPrevMacro(object sender, RoutedEventArgs e)
+        private async void OnPrevMacro(object sender, RoutedEventArgs e)
         {
-            MoveToNextMacroValue(-1);
-
+            await MoveToNextMacroValueAsync(-1);
         }
 
-        private void OnNextMacro(object sender, RoutedEventArgs e)
+        private async void OnNextMacro(object sender, RoutedEventArgs e)
         {
-            MoveToNextMacroValue(1);
+            await MoveToNextMacroValueAsync(1);
         }
-        private void MoveToNextMacroValue(int delta)
+        private async Task MoveToNextMacroValueAsync(int delta)
         {
             if (CanDoCommand == null) return;
             if (CurrArgumentSettings == null) return;
@@ -44,19 +47,52 @@ namespace NetshG
 
             var name = uiReplaceName.Text;
             var currValue = uiReplaceValue.Text;
-            var list = CurrArgumentSettings.GetValueList(name);
             var index = CurrArgumentSettings.Find(name, currValue);
             if (index < 0) return;
             index += delta;
+            await MoveToMacroValueAsync(index, CommandOptions.None);
+        }
+
+        private async Task MoveToMacroValueAsync(int index, CommandOptions commandOptions)
+        {
+            var name = uiReplaceName.Text;
+            var list = CurrArgumentSettings.GetValueList(name);
             if (index < 0 || index >= list.Count) return;
+
             var newValue = list[index];
             CurrArgumentSettings.SetCurrent(name, newValue);
 
             uiReplaceValue.Text = newValue.Value;
 
             // And now re-do the command!
-            CanDoCommand.DoCommand(CurrCommandInfo);
+            await CanDoCommand.DoCommandAsync(CurrCommandInfo, commandOptions);
+
         }
 
+        bool stopStepAll = false;
+        private async void OnStepAllGo(object sender, RoutedEventArgs e)
+        {
+            stopStepAll = false;
+            uiStepAllGo.Visibility = Visibility.Collapsed;
+            uiStepAllStop.Visibility = Visibility.Visible;
+            await Task.Delay(10); // let the UX update
+
+            CanDoCommand.DoClearTable();
+            var name = uiReplaceName.Text;
+            var list = CurrArgumentSettings.GetValueList(name);
+            for (var index=0; index<list.Count && stopStepAll==false; index++)
+            {
+                await MoveToMacroValueAsync(index, CommandOptions.SuppressFlash | CommandOptions.AppendToTable);
+            }
+
+            //uiStepAllGo.Visibility = Visibility.Visible;
+            //uiStepAllStop.Visibility = Visibility.Collapsed;
+
+        }
+
+        private void OnStepAllStop(object sender, RoutedEventArgs e)
+        {
+            stopStepAll = true;
+        }
     }
 }
