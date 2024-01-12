@@ -42,5 +42,10 @@
     "Cmd": "netsh",
     "Args": "winsock reset",
     "Tags": "#common"
+  },
+  {
+    "Cmd": "netsh",
+    "Args": "wlan disconnect",
+    "Tags": "#common"
   }
 ]

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Utilities
 {
-    // DBG: TODO: NOTE: update to build off of IMacroParse.cs "TableParse" helper class
+    // NOTE: update to build off of IMacroParse.cs "TableParse" helper class
     // Note that right now (2023-12-30), nothing actually uses this class
     internal class ParseTable : IMacroParse
     {

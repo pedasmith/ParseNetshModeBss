@@ -19,8 +19,13 @@
         <Button Content="" Grid.Column="1" Click="OnNextMacro" Style="{StaticResource rPrevNext}" />
 
         <TextBlock Grid.Column="2" x:Name="uiReplaceName" Style="{StaticResource rReplace}" />
+        <ComboBox Grid.Column="4" x:Name="uiValueList" SelectionChanged="OnChangeValue">
+            
+        </ComboBox>
+        <!--
         <TextBlock Grid.Column="3" x:Name="uiReplaceValue" Style="{StaticResource rReplace}" FontWeight="Bold" />
         <TextBlock Grid.Column="4" x:Name="uiReplaceUserValue" Style="{StaticResource rReplace}" />
+        -->
 
         <StackPanel Grid.Column="5" Orientation="Horizontal">
             <Button x:Name="uiStepAllGo" Content="⭮ Step All" Click="OnStepAllGo" MinWidth="80" />

@@ -93,11 +93,11 @@ namespace Utilities
                     justSetSection = true;
                     justSetSectionCount = 0;
                 }
-                else if (SubsectionSeperator != "" && line.Contains(SubsectionSeperator)) // DBG: IP
+                else if (SubsectionSeperator != "" && line.Contains(SubsectionSeperator)) // NOTE: IP
                 {
                     ; // Skip it
                 }
-                else if (SubsectionSeperator != "" && nextLine.Contains(SubsectionSeperator)) // DBG: IP
+                else if (SubsectionSeperator != "" && nextLine.Contains(SubsectionSeperator)) // NOTE: IP
                 {
                     ; // Skip it
                 }
@@ -146,7 +146,7 @@ namespace Utilities
                         {
                             // Example: netsh interface ipv4 show icmpstats divides the overall section (MIB-II ICMP Statistics)
                             // into two sections: one is input, and the other is output.
-                            // TODO: consider making this more generic
+                            // NOTE: consider making this more generic
                             if (currRow != null && nsubsectionCount > 0)
                             {
                                 Rows.Add(currRow);

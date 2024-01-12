@@ -33,7 +33,7 @@ namespace NetshG
     public interface CanDoCommand
     {
         [Flags]
-        enum CommandOptions {  None, SuppressFlash=0x01, AppendToTable=0x02 }
+        enum CommandOptions {  None, SuppressFlash=0x01, AppendToTable=0x02, KeepRepeatButtons=0x04 }
         Task DoCommandAsync(CommandInfo ci, CommandOptions commandOptions = CommandOptions.None);
         void DoClearTable();
     }
@@ -198,7 +198,7 @@ namespace NetshG
         public void DoClearTable()
         {
             CurrTableParserName = ""; // blank it out so that the next command clears the table.
-            ; // TODO: write this code
+            uiOutput.Text = "";
         }
         bool AmDoCommand = false;
         public async Task DoCommandAsync(CommandInfo ci, CommandOptions commandOptions = CommandOptions.None)
@@ -249,11 +249,17 @@ namespace NetshG
 
             try
             {
-                uiReplaceList.Children.Clear();
-                foreach (var item in ci.Requires)
+                bool haveCorrectRequires =
+                    commandOptions.HasFlag(CommandOptions.KeepRepeatButtons)
+                    && uiReplaceList.Children.Count > 0;
+                if (!haveCorrectRequires)
                 {
-                    var rvec = new ReplaceViewEditControl(this, item, ci, CurrArgumentSettings);
-                    uiReplaceList.Children.Add(rvec);
+                    uiReplaceList.Children.Clear();
+                    foreach (var item in ci.Requires)
+                    {
+                        var rvec = new ReplaceViewEditControl(this, item, ci, CurrArgumentSettings);
+                        uiReplaceList.Children.Add(rvec);
+                    }
                 }
 
                 uiHelpScroll.ScrollToHome();
@@ -319,8 +325,8 @@ namespace NetshG
                 var tableParserName = ci.TableParser;
                 if (string.IsNullOrEmpty(tableParserName))
                 {
-                    //tableParserName = "Indent"; 
-                    tableParserName = CurrArgumentSettings.GetCurrent("Parser", "Indent").Value;//DBG: TODO: just for debugging
+                    tableParserName = CurrArgumentSettings.GetCurrent("Parser", "Indent").Value;// Used while the parsers are figured out. 
+                    // Goal is for all output type to have a parser; that will be a challenge given the nature of the output.
                 }
                 else
                 {
@@ -333,7 +339,7 @@ namespace NetshG
                 if (!string.IsNullOrEmpty(tableParserName))
                 {
                     if (!commandOptions.HasFlag(CommandOptions.AppendToTable) 
-                        || CurrTableParserName == tableParserName)
+                        || CurrTableParserName != tableParserName)
                     {
                         CurrTableParser = GetParser.GetTableParser(tableParserName);
                         CurrTableParserName = tableParserName;
@@ -354,7 +360,14 @@ namespace NetshG
             uiProgress.Visibility = Visibility.Collapsed;
             uiHelpGrid.Visibility = UP.CurrUserPrefs.ShowHelp ? Visibility.Visible : Visibility.Collapsed;
             if (result.Trim() == "") result = "\n\n\n\nNo data returned by the command";
-            uiOutput.Text = result;
+            if (commandOptions.HasFlag(CommandOptions.AppendToTable) && !string.IsNullOrEmpty(uiOutput.Text))
+            {
+                uiOutput.Text = uiOutput.Text + "\n\n\n" + result;
+            }
+            else
+            {
+                uiOutput.Text = result;
+            }
             uiTable.Text = csv;
             if (CurrTableParser != null)
             {
