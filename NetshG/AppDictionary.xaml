@@ -32,7 +32,7 @@
         <Setter Property="FontWeight" Value="Bold" />
     </Style>
     <Style TargetType="TextBox" x:Key="rOutput" BasedOn="{StaticResource rReadOnly}">
-        <Setter Property="FontFamily" Value="Cascadia Mono" />
+        <Setter Property="FontFamily" Value="Cascadia Mono,Consolas" />
         <Setter Property="FontSize" Value="12" />
     </Style>
     <Style TargetType="TextBox" x:Key="rCommand" BasedOn="{StaticResource rReadOnly}">
