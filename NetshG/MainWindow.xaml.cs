@@ -147,10 +147,12 @@ namespace NetshG
             CommandInfo.VerifyAllSetters(cmdlist, CurrArgumentSettings);
         }
 
+        AllNetshCommands.CommandType CurrCommandType = AllNetshCommands.CommandType.Show;
         private void DoSetMenuWithTag(string tags, AllNetshCommands.CommandType menuType = AllNetshCommands.CommandType.Show)
         {
             UP.CurrUserPrefs.Tags = tags;
-            var cmdlist = AllNetshCommands.GetCommands(menuType);
+            CurrCommandType = menuType;
+            var cmdlist = AllNetshCommands.GetCommands(CurrCommandType);
 
             if (cmdlist.Count == 0)
             {
@@ -166,7 +168,30 @@ namespace NetshG
                     uiCommandList.Items.Add(ctrl);
                 }
             }
-            uiIssues.Text = $"{tags}: {cmdlist.Count} commands";
+            uiIssues.Text = $"{tags}: {uiCommandList.Items.Count} commands out of {cmdlist.Count}";
+        }
+
+        private void DoSetMenuWithSearch (string search)
+        {
+            var cmdlist = AllNetshCommands.GetCommands(CurrCommandType);
+
+            if (cmdlist.Count == 0)
+            {
+                uiIssues.Text = "ERROR: unable to load commands";
+                return;
+            }
+            uiCommandList.Items.Clear();
+            search = search.ToLower();
+            foreach (var cmd in cmdlist)
+            {
+                if (cmd.AllUserText.ToLower().Contains(search))
+                {
+                    var ctrl = new NetshCommandControl(cmd);
+                    uiCommandList.Items.Add(ctrl);
+                }
+            }
+            uiIssues.Text = $"{search}: {uiCommandList.Items.Count} commands out of {cmdlist.Count}";
+
         }
         private async void OnSelectCommand(object sender, SelectionChangedEventArgs e)
         {
@@ -710,6 +735,11 @@ namespace NetshG
             }));
         }
 
+        private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
+        {
+            var searchText = (sender as TextBox)?.Text ?? "";
+            DoSetMenuWithSearch(searchText);
+        }
     }
 
     // See https://github.com/Kryptos-FR/markdig.wpf/blob/develop/src/Markdig.Xaml.SampleApp/MainWindow.xaml.cs
