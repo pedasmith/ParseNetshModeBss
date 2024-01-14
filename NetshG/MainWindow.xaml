@@ -69,9 +69,23 @@
             </Grid.ColumnDefinitions>
             
             <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource ResourceKey=rTitle}">Netsh Gui Interface</TextBlock>
-            <ListView x:Name="uiCommandList" Grid.Row="1" Grid.Column="0" SelectionChanged="OnSelectCommand">
-                <!--- Values are set by MainWindow_Loaded from AllNetshCommands.GetCommands() -->
-            </ListView>
+            <Grid Grid.Row="1" Grid.Column="0" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" VerticalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" x:Name="uiSearch" TextChanged="OnSearchTextChanged"  />
+                    <TextBlock Grid.Column="0" Text="🔎" HorizontalAlignment="Right"/>
+                </Grid>
+                <ListView Grid.Row="1" x:Name="uiCommandList" SelectionChanged="OnSelectCommand" VerticalAlignment="Stretch">
+                    <!--- Values are set by MainWindow_Loaded from AllNetshCommands.GetCommands() -->
+                </ListView>
+            </Grid>
             <TextBox x:Name="uiCommand" Grid.Row="0" Grid.Column="1" Style="{StaticResource rCommand}" />
             <Grid Grid.Row="1" Grid.Column="1" x:Name="uiCommandOutput">
                 <Grid.RowDefinitions>

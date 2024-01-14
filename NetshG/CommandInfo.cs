@@ -10,7 +10,6 @@ namespace NetshG
 {
     public class CommandInfo
     {
-        public string ID { get; set; } = "";
         /// <summary>
         /// e.g. netsh
         /// </summary>
@@ -41,6 +40,13 @@ namespace NetshG
         public string Sets { get; set; } = "";
         public string SetParser { get; set; } = "";
         public string TableParser { get; set; } = "";
+
+        public string AllUserText {  get 
+            {
+                var retval = $"{Cmd} {Args} {Args2} {Args5NoUX} {Tags}";
+                return retval;
+            } 
+        }
 
         public string Tags { get; set; } = "";
         private List<string>? _taglist = null;
