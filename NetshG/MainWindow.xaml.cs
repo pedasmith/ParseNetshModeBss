@@ -240,6 +240,8 @@ namespace NetshG
                 // the list is one level deep; there's no place where A depends on B depends on C.
                 await DoCommandAsyncRaw(requireci, CommandOptions.SuppressFlash); // always suppress the flash for getting these values
             }
+
+            // Now run the command for real
             await DoCommandAsyncRaw(ci, commandOptions);
         }
         private void Log(string str)
@@ -248,6 +250,10 @@ namespace NetshG
         }
         public async Task DoCommandAsyncRaw(CommandInfo ci, CommandOptions commandOptions)
         {
+            // This method is all about the UX needed to run the command. The command is finally
+            // run with the RunCommandLine.RunNetshGAsync method
+            //
+
             AmDoCommand = true;
             var program = ci.Cmd;
             var args = ci.Args;
@@ -275,10 +281,10 @@ namespace NetshG
 
             try
             {
-                bool haveCorrectRequires =
+                bool haveCorrectRequiresUX =
                     commandOptions.HasFlag(CommandOptions.KeepRepeatButtons)
                     && uiReplaceList.Children.Count > 0;
-                if (!haveCorrectRequires)
+                if (!haveCorrectRequiresUX)
                 {
                     uiReplaceList.Children.Clear();
                     foreach (var item in ci.Requires)
@@ -292,10 +298,12 @@ namespace NetshG
                 uiOutputScroll.ScrollToHome();
                 uiTableScroll.ScrollToHome();
 
+
+                // Fill in the help text (if appropriate)
                 uiCommand.Text = $"{program} {argsWithExtraMore}";
                 if (ci.Help.Contains("#nohelp"))
                 {
-                    // Example: he explorer.exe ms-availablenetworks
+                    // Example: the explorer.exe ms-availablenetworks
                     if (!string.IsNullOrEmpty(ci.HelpText))
                     {
                         result_help = ci.HelpText;
@@ -317,7 +325,10 @@ namespace NetshG
                 // at (it also helps with reducing the screen flashing)
                 uiHelp.Text = result_help;
 
-                result = await RunCommandLine.RunNetshGAsync(program, argsWithExtraMore);
+                //
+                // Actually run the command!
+                //
+                result = await RunCommandLine.RunNetshGAsync(program, argsWithExtraMore, uiOutput);
                 if (false && argsWithExtraMore.Contains("mode=bss")) //Note: this is a great place to set the results to a fixed example string!
                 {
                     result = ParseIndent.Example1; // Set to fixed Example string for debugging problems.

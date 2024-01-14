@@ -131,6 +131,7 @@
                             <ProgressBar x:Name="uiProgress" IsIndeterminate="True" Visibility="Collapsed" Height="10" Width="100" />
                             <ScrollViewer x:Name="uiOutputScroll" >
                                 <!-- Primary output text for the NETSH command. -->
+                                <!-- It's a read-only TextBox so the user can copy the text. -->
                                 <TextBox x:Name="uiOutput" Style="{StaticResource rOutput}" />
                             </ScrollViewer>
                             <!-- Primary output grid for the NETSH command -->
