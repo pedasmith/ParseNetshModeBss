@@ -128,6 +128,7 @@ namespace NetshG
             DoSetupCommonMenu("Level");
             DoSetupCommonMenu("Store");
             DoSetupCommonMenu("Parser");
+            DoSetupCommonMenu("TestHost");
 
             uiMenu_Show_Help.IsChecked = UP.CurrUserPrefs.ShowHelp;
 
@@ -475,6 +476,7 @@ namespace NetshG
         {
             CurrArgumentSettings.SetValueList("Level", new List<ArgumentSettingValue>() { new ArgumentSettingValue("normal"), new ArgumentSettingValue("verbose") });
             CurrArgumentSettings.SetValueList("Store", new List<ArgumentSettingValue>() { new ArgumentSettingValue("active"), new ArgumentSettingValue("persistent") });
+            CurrArgumentSettings.SetValueList("TestHost", new List<ArgumentSettingValue>() { new ArgumentSettingValue("connectivity.office.com"), new ArgumentSettingValue("microsoft.com"), new ArgumentSettingValue("testconnectivity.microsoft.com"), new ArgumentSettingValue("www.msftconnecttest.com"), new ArgumentSettingValue("msftncsi.com") });
             CurrArgumentSettings.SetValueList("Protocol", new List<ArgumentSettingValue>() { new ArgumentSettingValue("tcp"), new ArgumentSettingValue("udp") });
             CurrArgumentSettings.SetValueList("Parser", new List<ArgumentSettingValue>() { new ArgumentSettingValue("DashLine"), new ArgumentSettingValue("Indent"), new ArgumentSettingValue("List") });
             CurrArgumentSettings.SetValueList("ITSSTemplate", new List<ArgumentSettingValue>() {

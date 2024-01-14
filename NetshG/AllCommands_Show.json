@@ -1031,6 +1031,24 @@
 		"Cmd": "netsh",
 		"Args": "wlan show wlanreport",
 		"Tags": "#wifi #common"
+	},
+	{
+		"Cmd": "nslookup",
+		"Args": "TestHost",
+		"RequireList": "TestHost",
+		"Tags": "#common"
+	},
+	{
+		"Cmd": "ping",
+		"Args": "-4 -n 1 TestHost",
+		"RequireList": "TestHost",
+		"Tags": "#common"
+	},
+	{
+		"Cmd": "ping",
+		"Args": "-6 -n 1 TestHost",
+		"RequireList": "TestHost",
+		"Tags": "#common"
 	}
 
 ]
