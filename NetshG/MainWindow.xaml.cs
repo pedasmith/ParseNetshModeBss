@@ -40,7 +40,7 @@ namespace NetshG
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, CanDoCommand
+    public partial class MainWindow : Window, CanDoCommand, AddToText
     {
         public MainWindow()
         {
@@ -248,6 +248,11 @@ namespace NetshG
         {
             Console.WriteLine(str);
         }
+
+        public void DoAddToText(string str)
+        {
+            uiOutput.Text += str;
+        }
         public async Task DoCommandAsyncRaw(CommandInfo ci, CommandOptions commandOptions)
         {
             // This method is all about the UX needed to run the command. The command is finally
@@ -328,7 +333,7 @@ namespace NetshG
                 //
                 // Actually run the command!
                 //
-                result = await RunCommandLine.RunNetshGAsync(program, argsWithExtraMore, uiOutput);
+                result = await RunCommandLine.RunNetshGAsync(program, argsWithExtraMore, this as AddToText); 
                 if (false && argsWithExtraMore.Contains("mode=bss")) //Note: this is a great place to set the results to a fixed example string!
                 {
                     result = ParseIndent.Example1; // Set to fixed Example string for debugging problems.

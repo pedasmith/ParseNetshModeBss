@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Shapes;
+
 
 namespace ParseNetshModeBss
 {
+    interface AddToText
+    {
+        void DoAddToText(string text);
+    }
     internal static class RunCommandLine
     {
         public static string RunNetsh(string program = "netsh", string args = "wlan show networks mode=bssid")
@@ -32,7 +35,7 @@ namespace ParseNetshModeBss
         /// Program is e.g., "Netsh" and args is e.g., "wlan show networks mode-bssid"
         /// </summary>
         /// <returns></returns>
-        public static async Task<string> RunNetshGAsync(string program, string args, TextBox? tb = null)
+        public static async Task<string> RunNetshGAsync(string program, string args, AddToText? tb = null)
         {
             string retval = "";
             var start = new ProcessStartInfo()
@@ -66,7 +69,7 @@ namespace ParseNetshModeBss
                         // will cause the UX to stall.
                         if (nline % mod == 0)
                         {
-                            if (tb != null) tb.Text += line + "\n";
+                            if (tb != null) tb.DoAddToText(line + "\n");
                         }
                         switch (nline)
                         {
