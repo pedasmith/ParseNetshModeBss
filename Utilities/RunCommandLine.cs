@@ -70,7 +70,7 @@ namespace ParseNetshModeBss
                         }
                         switch (nline)
                         {
-                            case 10: mod = 2; break;
+                            case 50: mod = 2; break;
                             case 100: mod = 10; break;
                             case 500: mod = 100; break;
                         }
