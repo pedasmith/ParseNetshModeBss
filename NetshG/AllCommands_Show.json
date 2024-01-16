@@ -1029,6 +1029,38 @@
 
 
 	{
+		"Cmd": "netstat",
+		"Args": "-a",
+		"RequireList": "TestHost",
+		"Tags": "#common"
+	},
+	{
+		"Cmd": "netstat",
+		"Args": "-e",
+		"RequireList": "TestHost",
+		"Tags": ""
+	},
+	{
+		"Cmd": "netstat",
+		"Args": "-i",
+		"Tags": ""
+	},
+	{
+		"Cmd": "netstat",
+		"Args": "-r",
+		"Tags": ""
+	},
+	{
+		"Cmd": "netstat",
+		"Args": "-t",
+		"Tags": ""
+	},
+	{
+		"Cmd": "netstat",
+		"Args": "-x",
+		"Tags": ""
+	},
+	{
 		"Cmd": "nslookup",
 		"Args": "TestHost",
 		"RequireList": "TestHost",
