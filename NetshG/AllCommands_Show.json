@@ -60,6 +60,10 @@
 	},
 	{
 		"Cmd": "netsh",
+		"Args": "bridge list"
+	},
+	{
+		"Cmd": "netsh",
 		"Args": "bridge show adapter"
 	},
 	{
