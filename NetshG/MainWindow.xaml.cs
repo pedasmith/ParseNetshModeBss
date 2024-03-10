@@ -41,25 +41,30 @@ namespace NetshG
     public interface UXCommands
     {
         Task OnRepeatAsync(object sender, RoutedEventArgs e);
-        // void OnMenuRepeatStop(object sender, RoutedEventArgs e)
+        void Help_Remove();
         void Log(string str);
         void SetAmDoCommand(bool value);
         void SetCommand(string str);
-        void SetUIIssues(string str);
         void SetCount(string str);
+        void SetUIIssues(string str);
         ArgumentSettings GetCurrArgumentSettings();
-        void Help_Remove();
 
     }
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, CanDoCommand, AddToText, UXCommands
+    public partial class MainWindow : Window, AddToText, UXCommands
     {
+        private CommandOutputControl? CurrCommandControl { get { return uiHistoryControl.GetCurrentControl() as CommandOutputControl; } }
         public MainWindow()
         {
             InitializeComponent();
-            uiCommandControl.UXCommands = this;
+            uiHistoryControl.HistoryPanel = uiCommandPanel;
+
+            // Make the current control
+            var cc = new CommandOutputControl(this);
+            uiHistoryControl.AddCurrentControl(cc);
+
             this.Loaded += MainWindow_Loaded;
 
             // ^C
@@ -98,7 +103,6 @@ namespace NetshG
         /// Internal stuff used to expand out commands -- e.g., "level" might be "verbose"
         /// </summary>
         private ArgumentSettings CurrArgumentSettings = new ArgumentSettings();
-        public ArgumentSettings GetCurrArgumentSettings() {  return CurrArgumentSettings; }
 
         /// <summary>
         /// LastCommand is used by the Repeat command.
@@ -112,6 +116,8 @@ namespace NetshG
         int CurrRepeatTimeInSeconds = 0; // not repeating
 
 
+        #region KEYSTROKE_AND_MENU_METHODS
+
         private void CommandAdd(Key key, ModifierKeys mod, ExecutedRoutedEventHandler handler, string shortcut, string description)
         {
             RoutedCommand cmdOutput = new RoutedCommand();
@@ -120,6 +126,72 @@ namespace NetshG
 
             KeyDescriptions.Add(new HelpDescription(shortcut, description));
         }
+
+        public void OnCopy(object sender, RoutedEventArgs e)
+        {
+            CurrCommandControl?.OnCopy(sender, e);
+        }
+
+        private void OnMenu_File_Exit(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Application.Current.Shutdown();
+        }
+
+        private void OnMenu_Show_Tag(object sender, RoutedEventArgs e)
+        {
+            var tag = (sender as MenuItem)?.Tag as string;
+            if (tag == null) tag = "";
+            DoSetMenuWithTag(tag, AllNetshCommands.CommandType.Show);
+        }
+
+        private void OnMenu_Reset_Tag(object sender, RoutedEventArgs e)
+        {
+            var tag = (sender as MenuItem)?.Tag as string;
+            if (tag == null) tag = "";
+            DoSetMenuWithTag(tag, AllNetshCommands.CommandType.Reset);
+        }
+
+        private void OnMenu_Show_Help_Check(object sender, RoutedEventArgs e)
+        {
+            UP.CurrUserPrefs.ShowHelp = true;
+        }
+
+        private void OnMenu_Show_Help_Uncheck(object sender, RoutedEventArgs e)
+        {
+            UP.CurrUserPrefs.ShowHelp = false;
+        }
+
+        private void OnMenu_Help_Help(object sender, RoutedEventArgs e)
+        {
+            ShowHelp("/Netshg_help.md");
+        }
+
+        public async void OnRepeat(object sender, RoutedEventArgs e)
+        {
+            await OnRepeatAsync(sender, e);
+        }
+
+        private void ToggleOutputOrTable()
+        {
+            CurrCommandControl?.ToggleOutputOrTable();
+        }
+
+        /// <summary>
+        /// Sets up the UX to show either the output or the table. But is a little smart; won't
+        /// show the table unless it's actually possible to see something
+        /// </summary>
+        /// <param helpFileName="value"></param>
+        private void ShowOutputOrTable(CommandOutputControl.ShowWhat value)
+        {
+            CurrCommandControl?.ShowOutputOrTable(value);
+        }
+
+        private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
+        {
+            var searchText = (sender as TextBox)?.Text ?? "";
+            DoSetMenuWithSearch(searchText);
+        }
+        #endregion
 
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -152,6 +224,29 @@ namespace NetshG
         }
 
         AllNetshCommands.CommandType CurrCommandType = AllNetshCommands.CommandType.Show;
+
+        #region UX_SETUP
+        private void DoInitializeCommonArguments()
+        {
+            CurrArgumentSettings.SetValueList("Level", new List<ArgumentSettingValue>() { new ArgumentSettingValue("normal"), new ArgumentSettingValue("verbose") });
+            CurrArgumentSettings.SetValueList("Store", new List<ArgumentSettingValue>() { new ArgumentSettingValue("active"), new ArgumentSettingValue("persistent") });
+            CurrArgumentSettings.SetValueList("TestHost", new List<ArgumentSettingValue>() { new ArgumentSettingValue("connectivity.office.com"), new ArgumentSettingValue("microsoft.com"), new ArgumentSettingValue("testconnectivity.microsoft.com"), new ArgumentSettingValue("www.msftconnecttest.com"), new ArgumentSettingValue("msftncsi.com") });
+            CurrArgumentSettings.SetValueList("Protocol", new List<ArgumentSettingValue>() { new ArgumentSettingValue("tcp"), new ArgumentSettingValue("udp") });
+            CurrArgumentSettings.SetValueList("Parser", new List<ArgumentSettingValue>() { new ArgumentSettingValue("DashLine"), new ArgumentSettingValue("Indent"), new ArgumentSettingValue("List") });
+            CurrArgumentSettings.SetValueList("ITSSTemplate", new List<ArgumentSettingValue>() {
+                new ArgumentSettingValue("automatic"),
+                new ArgumentSettingValue("datacenter"),
+                new ArgumentSettingValue("compat"),
+                new ArgumentSettingValue("internet"),
+                new ArgumentSettingValue("internetcustom"),
+                new ArgumentSettingValue("datacentercustom"),
+                new ArgumentSettingValue("custom"),
+            });
+
+            CurrArgumentSettings.SetCurrent("Level", CurrArgumentSettings.GetValue("Level", "verbose"));
+            CurrArgumentSettings.SetCurrent("ITSSTemplate", CurrArgumentSettings.GetValue("ITSSTemplate", "internet"));
+        }
+
         private void DoSetMenuWithTag(string tags, AllNetshCommands.CommandType menuType = AllNetshCommands.CommandType.Show)
         {
             UP.CurrUserPrefs.Tags = tags;
@@ -195,28 +290,26 @@ namespace NetshG
                 }
             }
             uiIssues.Text = $"{search}: {uiCommandList.Items.Count} commands out of {cmdlist.Count}";
+        }
+        private void DoSetupCommonMenu(string name)
+        {
+            var list = CurrArgumentSettings.GetValueList(name);
+            var mi = new MenuItem() { Header = name, Tag = name };
+            mi.Click += Mi_Click;
+            uiMenu_Parameters_Common.Items.Add(mi);
+        }
+        private void Mi_Click(object sender, RoutedEventArgs e)
+        {
+            var name = ((sender as MenuItem)?.Tag as string) ?? "";
+            var dlg = new ArgumentSettingDialog(CurrArgumentSettings, name);
+            if (!dlg.InitOk) return; // NOTE: show something to user?
+            var result = dlg.ShowDialog();
+        }
 
-        }
-        public void OnCopy(object sender, RoutedEventArgs e)
-        {
-            uiCommandControl.OnCopy(sender, e);
-        }
+        #endregion UX_SETUP
 
-        public async Task OnRepeatAsync(object sender, RoutedEventArgs e)
-        {
-            // ALT-R will either do a single repeat OR will stop a current repeat loop
-            if (AmRepeating())
-            {
-                OnMenuRepeatStop(sender, e);
-                return;
-            }
-            if (LastCommand == null) return;
-            await DoCommandAsync(LastCommand);
-        }
-        public async void OnRepeat(object sender, RoutedEventArgs e)
-        {
-            await OnRepeatAsync(sender, e);
-        }
+
+        #region SELECT_FROM_COMMAND_LIST
         private async void OnSelectCommand(object sender, SelectionChangedEventArgs e)
         {
             OnMenuRepeatStop(sender, e); // If I was repeating, stop it.
@@ -243,162 +336,85 @@ namespace NetshG
 
             await DoCommandAsync(ci);
         }
+        #endregion
 
-        public void DoClearTable()
-        {
-            uiCommandControl.DoClearTable();
-        }
-        bool AmDoCommand = false;
-        public void SetAmDoCommand(bool value)
-        {
-            AmDoCommand = value;
-        }
-        public async Task DoCommandAsync(CommandInfo ci, CommandOptions commandOptions = CommandOptions.None)
-        {
-            // We know we have to use the "Show" commands to get the data. Any other list
-            // will potentially reset some part of the system, and we don't want that.
-            var cmdlist = AllNetshCommands.GetCommands(AllNetshCommands.CommandType.Show);
 
-            var requireList = CommandInfo.GetAllMissingSettersFor(ci, cmdlist, CurrArgumentSettings);
-            foreach (var requireci in requireList)
-            {
-                // Do the commands on the list of missing items. Note that there's a strong assumption that
-                // the list is one level deep; there's no place where A depends on B depends on C.
-                await DoCommandAsyncRaw(requireci, CommandOptions.SuppressFlash); // always suppress the flash for getting these values
-            }
 
-            // Now run the command for real
-            await DoCommandAsyncRaw(ci, commandOptions);
-        }
+        #region UXCOMMANDS_INTERFACE
+
+        // OnRepeatAsync Help_remove Log SetAmDoCommand SetCount SetUIIssues GetCurrArgumentSettings
         public void Log(string str)
         {
             Console.WriteLine(str);
         }
 
+        bool AmDoCommand = false;
+        public void SetAmDoCommand(bool value)
+        {
+            AmDoCommand = value;
+        }
+
+        /// <summary>
+        /// Sets the command string UX as a convenience for the user
+        /// </summary>
+        /// <param name="str"></param>
         public void SetCommand(string str)
         {
             uiCommand.Text = str;
         }
+
+        /// <summary>
+        /// Sets the count string UX
+        /// </summary>
+        /// <param name="str"></param>
         public void SetCount(string str)
         {
             uiCount.Text = str;
         }
+
+        /// <summary>
+        /// Sets the list of issue for the command
+        /// </summary>
+        /// <param name="str"></param>
         public void SetUIIssues(string str)
         {
             uiIssues.Text = str;
         }
+        public ArgumentSettings GetCurrArgumentSettings() { return CurrArgumentSettings; }
+
+        #endregion UXCOMMANDS_INTERFACE
+
+
+
+
+        #region ADDTOTEXT_INTERFACE
 
         public void DoAddToText(string str)
         {
-            uiCommandControl.DoAddToText(str);
-        }
-        public async Task DoCommandAsyncRaw(CommandInfo ci, CommandOptions commandOptions)
-        {
-            uiCommandControl.Visibility = Visibility.Visible;
-            await uiCommandControl.DoCommandAsyncRaw(ci, commandOptions);
+            CurrCommandControl?.DoAddToText(str);
         }
 
-        private void ToggleOutputOrTable()
-        {
-            uiCommandControl?.ToggleOutputOrTable();
-        }
-
-        /// <summary>
-        /// Sets up the UX to show either the output or the table. But is a little smart; won't
-        /// show the table unless it's actually possible to see something
-        /// </summary>
-        /// <param helpFileName="value"></param>
-        private void ShowOutputOrTable(CommandOutputControl.ShowWhat value)
-        {
-            uiCommandControl.ShowOutputOrTable(value);
-        }
-
-
-        private void DoInitializeCommonArguments()
-        {
-            CurrArgumentSettings.SetValueList("Level", new List<ArgumentSettingValue>() { new ArgumentSettingValue("normal"), new ArgumentSettingValue("verbose") });
-            CurrArgumentSettings.SetValueList("Store", new List<ArgumentSettingValue>() { new ArgumentSettingValue("active"), new ArgumentSettingValue("persistent") });
-            CurrArgumentSettings.SetValueList("TestHost", new List<ArgumentSettingValue>() { new ArgumentSettingValue("connectivity.office.com"), new ArgumentSettingValue("microsoft.com"), new ArgumentSettingValue("testconnectivity.microsoft.com"), new ArgumentSettingValue("www.msftconnecttest.com"), new ArgumentSettingValue("msftncsi.com") });
-            CurrArgumentSettings.SetValueList("Protocol", new List<ArgumentSettingValue>() { new ArgumentSettingValue("tcp"), new ArgumentSettingValue("udp") });
-            CurrArgumentSettings.SetValueList("Parser", new List<ArgumentSettingValue>() { new ArgumentSettingValue("DashLine"), new ArgumentSettingValue("Indent"), new ArgumentSettingValue("List") });
-            CurrArgumentSettings.SetValueList("ITSSTemplate", new List<ArgumentSettingValue>() {
-                new ArgumentSettingValue("automatic"),
-                new ArgumentSettingValue("datacenter"),
-                new ArgumentSettingValue("compat"),
-                new ArgumentSettingValue("internet"),
-                new ArgumentSettingValue("internetcustom"),
-                new ArgumentSettingValue("datacentercustom"),
-                new ArgumentSettingValue("custom"),
-            });
-
-            CurrArgumentSettings.SetCurrent("Level", CurrArgumentSettings.GetValue("Level", "verbose"));
-            CurrArgumentSettings.SetCurrent("ITSSTemplate", CurrArgumentSettings.GetValue("ITSSTemplate", "internet"));
-        }
-
-        private void DoSetupCommonMenu(string name)
-        {
-            var list = CurrArgumentSettings.GetValueList(name);
-            var mi = new MenuItem() { Header = name, Tag=name };
-            mi.Click += Mi_Click;
-            uiMenu_Parameters_Common.Items.Add(mi);
-        }
-
-        private void Mi_Click(object sender, RoutedEventArgs e)
-        {
-            var name = ((sender as MenuItem)?.Tag as string) ?? "";
-            var dlg = new ArgumentSettingDialog(CurrArgumentSettings, name);
-            if (!dlg.InitOk) return; // NOTE: show something to user?
-            var result = dlg.ShowDialog();
-        }
+        #endregion ADDTOTEXT_INTERFACE
 
 
 
 
-        private void OnMenu_File_Exit(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Application.Current.Shutdown();
-        }
-
-        private void OnMenu_Show_Tag(object sender, RoutedEventArgs e)
-        {
-            var tag = (sender as MenuItem)?.Tag as string;
-            if (tag == null) tag = "";
-            DoSetMenuWithTag(tag, AllNetshCommands.CommandType.Show);
-        }
-
-        private void OnMenu_Reset_Tag(object sender, RoutedEventArgs e)
-        {
-            var tag = (sender as MenuItem)?.Tag as string;
-            if (tag == null) tag = "";
-            DoSetMenuWithTag(tag, AllNetshCommands.CommandType.Reset);
-        }
-
-        private void OnMenu_Show_Help_Check(object sender, RoutedEventArgs e)
-        {
-            UP.CurrUserPrefs.ShowHelp = true;
-        }
-
-        private void OnMenu_Show_Help_Uncheck(object sender, RoutedEventArgs e)
-        {
-            UP.CurrUserPrefs.ShowHelp = false;
-        }
 
 
 
-
-        private void OnMenu_Help_Help(object sender, RoutedEventArgs e)
-        {
-            ShowHelp("/Netshg_help.md");
-        }
+        #region HELP_UX
 
         MarkdownPipeline? mdpipe = null;
         string lastHelpFile = "";
+
+
         public void Help_Remove()
         {
             uiHelpMD.Visibility = Visibility.Collapsed;
         }
         private void ShowHelp(string helpFileName)
         {
+            if (CurrCommandControl == null) return;
             var isdifferent = helpFileName != lastHelpFile;
             lastHelpFile = helpFileName;
             if (uiHelpMD.Visibility == Visibility.Visible && !isdifferent)
@@ -408,7 +424,7 @@ namespace NetshG
             }
 
             uiHelpMD.Visibility = Visibility.Visible;
-            uiCommandControl.Visibility = Visibility.Collapsed;
+            CurrCommandControl.Visibility = Visibility.Collapsed;
             Uri uri = new Uri(helpFileName, UriKind.Relative);
             StreamResourceInfo commands = Application.GetContentStream(uri);
             var sr = new StreamReader(commands.Stream);
@@ -446,8 +462,30 @@ namespace NetshG
             var w = new HelpKeyboardShortcutWindow();
             w.Show();
         }
+        #endregion HELP_UX
 
+
+        #region REPEAT
         System.Timers.Timer? CurrRepeatTimer = null; // new Timer(OnTimerCallback);
+
+
+        /// <summary>
+        /// Called either from OnRepeat from e.g., key or reflected up from the current CommandOutputControl
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public async Task OnRepeatAsync(object sender, RoutedEventArgs e)
+        {
+            // ALT-R will either do a single repeat OR will stop a current repeat loop
+            if (AmRepeating())
+            {
+                OnMenuRepeatStop(sender, e);
+                return;
+            }
+            if (LastCommand == null) return;
+            await DoCommandAsync(LastCommand);
+        }
         private void OnMenuRepeatStart(object sender, RoutedEventArgs e)
         {
             OnMenuRepeatStop(sender, e); // always stop first.
@@ -490,12 +528,51 @@ namespace NetshG
                 await DoCommandAsync(LastCommand, CommandOptions.SuppressFlash);
             }));
         }
+        #endregion REPEAT
 
-        private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
+
+        #region ACTUALLY_RUN_COMMAND
+        /// <summary>
+        /// Runs a command, first calling all the required setup commands (e.g., a command to show an adapter 
+        /// first needs to have the list of adapters set up)
+        /// </summary>
+        /// <param name="ci"></param>
+        /// <param name="commandOptions"></param>
+        /// <returns></returns>
+        public async Task DoCommandAsync(CommandInfo ci, CommandOptions commandOptions = CommandOptions.None)
         {
-            var searchText = (sender as TextBox)?.Text ?? "";
-            DoSetMenuWithSearch(searchText);
+            // We know we have to use the "Show" commands to get the data. Any other list
+            // will potentially reset some part of the system, and we don't want that.
+            var cmdlist = AllNetshCommands.GetCommands(AllNetshCommands.CommandType.Show);
+
+            var requireList = CommandInfo.GetAllMissingSettersFor(ci, cmdlist, CurrArgumentSettings);
+            var cc = new CommandOutputControl(this);
+            uiHistoryControl.AddCurrentControl(cc);
+
+            foreach (var requireci in requireList)
+            {
+                // Do the commands on the list of missing items. Note that there's a strong assumption that
+                // the list is one level deep; there's no place where A depends on B depends on C.
+                await DoCommandAsyncRaw(requireci, CommandOptions.SuppressFlash, cc); // always suppress the flash for getting these values
+            }
+
+            // Now run the command for real
+            await DoCommandAsyncRaw(ci, commandOptions, cc);
         }
+
+        /// <summary>
+        /// Helpful method is just called by DoCommandAsync
+        /// </summary>
+        /// <param name="ci"></param>
+        /// <param name="commandOptions"></param>
+        /// <returns></returns>
+        private async Task DoCommandAsyncRaw(CommandInfo ci, CommandOptions commandOptions, CommandOutputControl commandOutputControl)
+        {
+            commandOutputControl.Visibility = Visibility.Visible;
+            await commandOutputControl.DoCommandAsyncRaw(ci, commandOptions);
+        }
+
+        #endregion ACTUALLY_RUN_COMMANDS
     }
 
     // See https://github.com/Kryptos-FR/markdig.wpf/blob/develop/src/Markdig.Xaml.SampleApp/MainWindow.xaml.cs

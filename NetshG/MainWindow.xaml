@@ -62,14 +62,16 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*" />
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" MinWidth="375" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             
+            <!-- COLUMN 0 -->
             <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource ResourceKey=rTitle}">Netsh Gui Interface</TextBlock>
-            <Grid Grid.Row="1" Grid.Column="0" >
+            <Grid Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
@@ -86,11 +88,17 @@
                     <!--- Values are set by MainWindow_Loaded from AllNetshCommands.GetCommands() -->
                 </ListView>
             </Grid>
+            
+            <!-- COLUMN 1 -->
             <TextBox x:Name="uiCommand" Grid.Row="0" Grid.Column="1" Style="{StaticResource rCommand}" />
+            <!--
             <local:CommandOutputControl Grid.Row="1" Grid.Column="1" x:Name="uiCommandControl" />
-            <FlowDocumentScrollViewer x:Name="uiHelpMD" Grid.Row="1" Grid.Column="1" Visibility="Collapsed" Background="AntiqueWhite" >
-                
-            </FlowDocumentScrollViewer>
+            -->
+            <Grid Grid.Row="1" Grid.Column="1" x:Name="uiCommandPanel" />
+            <local:HistoryControl Grid.Row="2" Grid.Column="1" x:Name="uiHistoryControl" />
+
+            <!-- HELP IS COLUMN 1 ROW 1 -->
+            <FlowDocumentScrollViewer x:Name="uiHelpMD" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Visibility="Collapsed" Background="AntiqueWhite" />
         </Grid>
         <TextBox Grid.Row="3"  x:Name="uiLog" Style="{StaticResource ResourceKey=rLog}"></TextBox>
         <Border Grid.Row="4" BorderThickness="1" BorderBrush="Black" Margin="2,2,2,2" Padding="2,2,2,2  ">

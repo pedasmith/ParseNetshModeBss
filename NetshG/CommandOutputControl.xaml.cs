@@ -48,6 +48,11 @@ namespace NetshG
         {
             InitializeComponent();
         }
+        public CommandOutputControl(UXCommands commands)
+        {
+            InitializeComponent();
+            UXCommands = commands;
+        }
         public async void OnRepeat(object sender, RoutedEventArgs e)
         {
             if (UXCommands != null)
