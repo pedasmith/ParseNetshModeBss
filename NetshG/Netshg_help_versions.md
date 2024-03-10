@@ -1,5 +1,18 @@
 ﻿# NETSH Version History
 
+
+## Version 1.9 2024-03-09
+
+The app now tracks the history of command outputs and can switch between them.
+
+## Version 1.8 2024-01-16
+
+Update to the parameter user interface: parameters like "InterfaceIndex" are comboboxes now (and the output handles this more gracefully)
+Added support for more commands including PING and NETSTAT and the "dump" commands from Netstat. The output can flow in over time now.
+There's a search for commands now; you can enter e.g., "dns" and get all commands that have "dns" in them (or their tags)
+
+
+
 ## Version 1.7 2024-01-10
 
 - Include Reset commands like "netsh interface ip reset"

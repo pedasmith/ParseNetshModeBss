@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using Windows.ApplicationModel.DataTransfer;
 using ParseNetshModeBss; // to get the utilities classes!
 using Utilities;
-using Clipboard = Windows.ApplicationModel.DataTransfer.Clipboard;
 using System.Windows.Input;
 using System;
 using System.Threading.Tasks;
@@ -26,6 +25,7 @@ using System.Reflection;
 
 
 using XamlReader = System.Windows.Markup.XamlReader;
+using Windows.ApplicationModel.VoiceCommands;
 
 
 namespace NetshG
@@ -37,14 +37,29 @@ namespace NetshG
         Task DoCommandAsync(CommandInfo ci, CommandOptions commandOptions = CommandOptions.None);
         void DoClearTable();
     }
+
+    public interface UXCommands
+    {
+        Task OnRepeatAsync(object sender, RoutedEventArgs e);
+        // void OnMenuRepeatStop(object sender, RoutedEventArgs e)
+        void Log(string str);
+        void SetAmDoCommand(bool value);
+        void SetCommand(string str);
+        void SetUIIssues(string str);
+        void SetCount(string str);
+        ArgumentSettings GetCurrArgumentSettings();
+        void Help_Remove();
+
+    }
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, CanDoCommand, AddToText
+    public partial class MainWindow : Window, CanDoCommand, AddToText, UXCommands
     {
         public MainWindow()
         {
             InitializeComponent();
+            uiCommandControl.UXCommands = this;
             this.Loaded += MainWindow_Loaded;
 
             // ^C
@@ -59,14 +74,14 @@ namespace NetshG
             // Specialized
             CommandAdd(Key.A, ModifierKeys.Alt, (s, e) => { DoSetMenuWithTag("#all"); }, "ALT+A", "Show all commands in command list");
             CommandAdd(Key.C, ModifierKeys.Alt, (s, e) => { DoSetMenuWithTag("#common"); }, "ALT+C", "Show common command in command list");
-            CommandAdd(Key.O, ModifierKeys.Alt, (s, e) => { ShowOutputOrTable(ShowWhat.Output); }, "ALT-O", "Show output as text, not as table");
+            CommandAdd(Key.O, ModifierKeys.Alt, (s, e) => { ShowOutputOrTable(CommandOutputControl.ShowWhat.Output); }, "ALT-O", "Show output as text, not as table");
             //CommandAdd(Key.R, ModifierKeys.Alt, OnRepeat, "ALT+R", "Repeat command"); Removed; it's part of the menu now. But still good to tell user
             KeyDescriptions.Add(new HelpDescription("ALT+R R", "Repeat command"));
             KeyDescriptions.Add(new HelpDescription("ALT+R S", "Repeat command every second"));
             KeyDescriptions.Add(new HelpDescription("ALT+R M", "Repeat command every minute"));
             KeyDescriptions.Add(new HelpDescription("ALT+R H", "Repeat command every hour"));
 
-            CommandAdd(Key.T, ModifierKeys.Alt, (s, e) => { ShowOutputOrTable(ShowWhat.Table); }, "ALT+T", "Show output as table, not as text");
+            CommandAdd(Key.T, ModifierKeys.Alt, (s, e) => { ShowOutputOrTable(CommandOutputControl.ShowWhat.Table); }, "ALT+T", "Show output as table, not as text");
             CommandAdd(Key.V, ModifierKeys.Alt, (s, e) => { ToggleOutputOrTable(); }, "ALT+V", "Toggle between text and table for output");
             CommandAdd(Key.W, ModifierKeys.Alt, (s, e) => { DoSetMenuWithTag("#wifi"); }, "ALT+W", "Show common Wi-Fi commands");
 
@@ -83,28 +98,16 @@ namespace NetshG
         /// Internal stuff used to expand out commands -- e.g., "level" might be "verbose"
         /// </summary>
         private ArgumentSettings CurrArgumentSettings = new ArgumentSettings();
+        public ArgumentSettings GetCurrArgumentSettings() {  return CurrArgumentSettings; }
 
         /// <summary>
         /// LastCommand is used by the Repeat command.
         /// </summary>
         CommandInfo? LastCommand = null;
 
-        /// <summary>
-        /// Used by e.g., copy, and to decide if we can show a table
-        /// </summary>
-        TableParse? CurrTableParser = null;
-        string CurrTableParserName = "";
 
-        /// <summary>
-        /// Used to make the grid actually work -- it's needed for the callback on creating columns
-        /// </summary>
-        DataTable? CurrDataTable = null;
 
-        /// <summary>
-        /// Switch for showing the text output versus the table output.
-        /// </summary>
-        enum ShowWhat { Output, Table };
-        ShowWhat? CurrShowWhat = null;
+
 
         int CurrRepeatTimeInSeconds = 0; // not repeating
 
@@ -194,6 +197,26 @@ namespace NetshG
             uiIssues.Text = $"{search}: {uiCommandList.Items.Count} commands out of {cmdlist.Count}";
 
         }
+        public void OnCopy(object sender, RoutedEventArgs e)
+        {
+            uiCommandControl.OnCopy(sender, e);
+        }
+
+        public async Task OnRepeatAsync(object sender, RoutedEventArgs e)
+        {
+            // ALT-R will either do a single repeat OR will stop a current repeat loop
+            if (AmRepeating())
+            {
+                OnMenuRepeatStop(sender, e);
+                return;
+            }
+            if (LastCommand == null) return;
+            await DoCommandAsync(LastCommand);
+        }
+        public async void OnRepeat(object sender, RoutedEventArgs e)
+        {
+            await OnRepeatAsync(sender, e);
+        }
         private async void OnSelectCommand(object sender, SelectionChangedEventArgs e)
         {
             OnMenuRepeatStop(sender, e); // If I was repeating, stop it.
@@ -223,10 +246,13 @@ namespace NetshG
 
         public void DoClearTable()
         {
-            CurrTableParserName = ""; // blank it out so that the next command clears the table.
-            uiOutput.Text = "";
+            uiCommandControl.DoClearTable();
         }
         bool AmDoCommand = false;
+        public void SetAmDoCommand(bool value)
+        {
+            AmDoCommand = value;
+        }
         public async Task DoCommandAsync(CommandInfo ci, CommandOptions commandOptions = CommandOptions.None)
         {
             // We know we have to use the "Show" commands to get the data. Any other list
@@ -244,272 +270,47 @@ namespace NetshG
             // Now run the command for real
             await DoCommandAsyncRaw(ci, commandOptions);
         }
-        private void Log(string str)
+        public void Log(string str)
         {
             Console.WriteLine(str);
         }
 
+        public void SetCommand(string str)
+        {
+            uiCommand.Text = str;
+        }
+        public void SetCount(string str)
+        {
+            uiCount.Text = str;
+        }
+        public void SetUIIssues(string str)
+        {
+            uiIssues.Text = str;
+        }
+
         public void DoAddToText(string str)
         {
-            uiOutput.Text += str;
+            uiCommandControl.DoAddToText(str);
         }
         public async Task DoCommandAsyncRaw(CommandInfo ci, CommandOptions commandOptions)
         {
-            // This method is all about the UX needed to run the command. The command is finally
-            // run with the RunCommandLine.RunNetshGAsync method
-            //
-
-            AmDoCommand = true;
-            var program = ci.Cmd;
-            var args = ci.Args;
-            var args2 = ci.Args2 == "" ? "" : " " + ci.Args2;
-            var args5 = ci.Args5NoUX == "" ? "" : " " + ci.Args5NoUX;
-            args = CurrArgumentSettings.Replace(args, ci.Requires);
-            var argsWithExtraMore = CurrArgumentSettings.Replace(args + args2 + args5, ci.Requires);
-
-
-            string result = "No results", result_help= "No help results", csv = "";
-            ShowWhat showWhat = CurrShowWhat ?? ShowWhat.Output;
-            bool haveNoPreferenceForShow = CurrShowWhat == null;
-            uiProgress.Visibility = Visibility.Visible;
-            uiCommandOutput.Visibility = Visibility.Visible;
-            Help_Remove(); // make the help go away
-
-            Log($"DoCommand: {program} {args} {args2} {args5}");
-            if (!commandOptions.HasFlag(CommandOptions.SuppressFlash))
-            {
-                uiOutput.Text = $"\n\n\n\n....getting results for {program} {argsWithExtraMore}...";
-                ShowOutputOrTable(ShowWhat.Output);
-                await Task.Delay(50);
-            }
-
-
-            try
-            {
-                bool haveCorrectRequiresUX =
-                    commandOptions.HasFlag(CommandOptions.KeepRepeatButtons)
-                    && uiReplaceList.Children.Count > 0;
-                if (!haveCorrectRequiresUX)
-                {
-                    uiReplaceList.Children.Clear();
-                    foreach (var item in ci.Requires)
-                    {
-                        var rvec = new ReplaceViewEditControl(this, item, ci, CurrArgumentSettings);
-                        uiReplaceList.Children.Add(rvec);
-                    }
-                }
-
-                uiHelpScroll.ScrollToHome();
-                uiOutputScroll.ScrollToHome();
-                uiTableScroll.ScrollToHome();
-
-
-                // Fill in the help text (if appropriate)
-                uiCommand.Text = $"{program} {argsWithExtraMore}";
-                if (ci.Help.Contains("#nohelp"))
-                {
-                    // Example: the explorer.exe ms-availablenetworks
-                    if (!string.IsNullOrEmpty(ci.HelpText))
-                    {
-                        result_help = ci.HelpText;
-                    }
-                    else
-                    {
-                        result_help = "No help is available for this command";
-                    }
-                }
-                else
-                {
-                    result_help = await RunCommandLine.RunNetshGAsync(program, args + " " + ci.Help);
-                    if (!string.IsNullOrEmpty(ci.HelpText))
-                    {
-                        result_help = ci.HelpText + "\n\n" + result_help;
-                    }
-                }
-                // Set this early so that for long-running commands the user has something to look
-                // at (it also helps with reducing the screen flashing)
-                uiHelp.Text = result_help;
-
-                //
-                // Actually run the command!
-                //
-                result = await RunCommandLine.RunNetshGAsync(program, argsWithExtraMore, this as AddToText); 
-                if (false && argsWithExtraMore.Contains("mode=bss")) //Note: this is a great place to set the results to a fixed example string!
-                {
-                    result = ParseIndent.Example1; // Set to fixed Example string for debugging problems.
-                }
-                var rawResult = result; // for the parser
-                if (UP.CurrUserPrefs.ReplaceTabs)
-                {
-                    if (result.Contains('\t'))
-                    {
-                        result = "HAS TABS!!\n" + result.Replace("\t", "\\t");
-                    }
-                }
-
-
-                // Handle the "Set" parsing. E.G., Look at the data from, list of interface and making a
-                // list of all interface names. Those helpFileName get set into macros.
-                if (!string.IsNullOrEmpty(ci.Sets))
-                {
-                    var macroParser = GetParser.GetMacroParser(ci.SetParser);
-                    if (macroParser != null)
-                    {
-                        var setList = macroParser.ParseForValues(rawResult);
-                        CurrArgumentSettings.SetValueList(ci.Sets, setList);
-                    }
-                }
-
-
-                //
-                // Parse the results
-                //
-                var tableParserName = ci.TableParser;
-                if (string.IsNullOrEmpty(tableParserName))
-                {
-                    tableParserName = CurrArgumentSettings.GetCurrent("Parser", "Indent").Value;// Used while the parsers are figured out. 
-                    // Goal is for all output type to have a parser; that will be a challenge given the nature of the output.
-                }
-                else
-                {
-                    if (haveNoPreferenceForShow)
-                    {
-                        showWhat = ShowWhat.Table;
-                    }
-                }
-                csv = "";
-                if (!string.IsNullOrEmpty(tableParserName))
-                {
-                    if (!commandOptions.HasFlag(CommandOptions.AppendToTable) 
-                        || CurrTableParserName != tableParserName)
-                    {
-                        CurrTableParser = GetParser.GetTableParser(tableParserName);
-                        CurrTableParserName = tableParserName;
-                    }
-
-                    if (CurrTableParser != null)
-                    {
-                        CurrTableParser.Parse(rawResult);
-                        csv = CurrTableParser.AsCsv();
-                    }
-                }
-            }
-            catch (Exception)
-            {
-
-            }
-
-            uiProgress.Visibility = Visibility.Collapsed;
-            uiHelpGrid.Visibility = UP.CurrUserPrefs.ShowHelp ? Visibility.Visible : Visibility.Collapsed;
-            if (result.Trim() == "") result = "\n\n\n\nNo data returned by the command";
-            if (commandOptions.HasFlag(CommandOptions.AppendToTable) && !string.IsNullOrEmpty(uiOutput.Text))
-            {
-                uiOutput.Text = uiOutput.Text + "\n\n\n" + result;
-            }
-            else
-            {
-                uiOutput.Text = result;
-            }
-            uiTable.Text = csv;
-            if (CurrTableParser != null)
-            {
-                CurrDataTable = CurrTableParser.GetDataTable();
-                uiTableDataGrid.AutoGenerateColumns = true;
-                uiTableDataGrid.DataContext = CurrDataTable;
-
-                if (CurrTableParser.Rows.Count ==  0)
-                {
-                    // It doesn't matter what your preference was, we can't show a table
-                    showWhat = ShowWhat.Output;
-                }
-            }
-            else
-            {
-                CurrDataTable = null;
-                uiTableDataGrid.DataContext = null;
-            }
-
-            ShowOutputOrTable(showWhat);
-
-            // Update the status
-            uiIssues.Text = ci.Issues;
-            if (CurrDataTable != null && CurrTableParser?.Rows.Count > 0)
-            {
-                uiCount.Text = $"{CurrDataTable.Rows.Count} rows {CurrDataTable.Columns.Count} cols {result.Length} chars";
-            }
-            else
-            {
-                uiCount.Text = $"{result.Length} chars";
-            }
-            AmDoCommand = false;
-        }
-        private void OnAutogeneratedColumn(object sender, System.EventArgs e)
-        {
-            if (CurrDataTable == null) return;
-            if (CurrDataTable.Columns.Count != uiTableDataGrid.Columns.Count)
-            {
-                return;  // Should not happen -- the visible data grid should match the underlying data table
-            }
-
-            for (int i = 0; i < uiTableDataGrid.Columns.Count; i++)
-            {
-                var caption = CurrDataTable.Columns[i].Caption;
-                var col = uiTableDataGrid.Columns[i];
-                col.Header = caption;
-            }
+            uiCommandControl.Visibility = Visibility.Visible;
+            await uiCommandControl.DoCommandAsyncRaw(ci, commandOptions);
         }
 
         private void ToggleOutputOrTable()
         {
-            if (CurrShowWhat == null) return;
-            switch (CurrShowWhat)
-            {
-                case ShowWhat.Output: ShowOutputOrTable(ShowWhat.Table); break;
-                case ShowWhat.Table: ShowOutputOrTable(ShowWhat.Output); break;
-            }
+            uiCommandControl?.ToggleOutputOrTable();
         }
+
         /// <summary>
         /// Sets up the UX to show either the output or the table. But is a little smart; won't
         /// show the table unless it's actually possible to see something
         /// </summary>
         /// <param helpFileName="value"></param>
-        private void ShowOutputOrTable(ShowWhat value)
+        private void ShowOutputOrTable(CommandOutputControl.ShowWhat value)
         {
-            //
-            // Smarts: decide if the table can be shown or not.
-            //
-            var allowShowTable = CurrTableParser != null && CurrTableParser.Rows.Count > 0;
-            if (value == ShowWhat.Table && !allowShowTable)
-            {
-                value = ShowWhat.Output;
-            }
-            CurrShowWhat = value;
-
-            // 
-            // Now display the output or table
-            //
-            uiOutputScroll.Visibility = value==ShowWhat.Output ? Visibility.Visible: Visibility.Collapsed;
-            uiTableDataGrid.Visibility = value == ShowWhat.Table ? Visibility.Visible : Visibility.Collapsed;
-            foreach (var item in uiOutputButtons.Children)
-            {
-                var button = item as Button;
-                if (button == null) continue;
-                var tag = button.Tag as string;
-                if (string.IsNullOrEmpty (tag)) continue;
-                var visibility = Visibility.Collapsed;
-                switch (value)
-                {
-                    case ShowWhat.Output:
-                        if (tag.Contains("output")) visibility = Visibility.Visible;
-                        if (tag.Contains("allowTable") && allowShowTable == true) visibility = Visibility.Visible;
-                        button.Visibility = visibility;
-                        break;
-                    case ShowWhat.Table:
-                        if (tag.Contains("table")) visibility = Visibility.Visible;
-                        button.Visibility = visibility;
-                        break;
-                }
-            }
+            uiCommandControl.ShowOutputOrTable(value);
         }
 
 
@@ -584,68 +385,6 @@ namespace NetshG
 
 
 
-        private async void OnRepeat(object sender, RoutedEventArgs e)
-        {
-            // ALT-R will either do a single repeat OR will stop a current repeat loop
-            if (AmRepeating())
-            {
-                OnMenuRepeatStop(sender, e);
-                return;
-            }
-            if (LastCommand == null) return;
-            await DoCommandAsync(LastCommand);
-        }
-
-        private void OnCopy(object sender, RoutedEventArgs e)
-        {
-            if (uiTableDataGrid.Visibility == Visibility.Visible)
-            {
-                OnCopyForExcel(sender, e);
-                return;
-            }
-            OnCopyText(sender, e);
-        }
-
-        private void OnCopyForExcel(object sender, RoutedEventArgs e)
-        {
-            if (CurrTableParser == null) return;
-            var txt = CurrTableParser.AsHtml();
-            var htmlFormat = HtmlFormatHelper.CreateHtmlFormat(txt);
-            var dp = new DataPackage();
-            dp.SetText(txt);
-            dp.SetHtmlFormat(htmlFormat);
-            dp.Properties.Title = "Netsh Data";
-            Clipboard.SetContent(dp);
-        }
-
-        private void OnCopyCSV(object sender, RoutedEventArgs e)
-        {
-            if (CurrTableParser == null) return;
-            var txt = CurrTableParser.AsCsv();
-            var dp = new DataPackage();
-            dp.SetText(txt);
-            dp.Properties.Title = "Netsh Data";
-            Clipboard.SetContent(dp);
-        }
-
-        private void OnCopyText(object sender, RoutedEventArgs e)
-        {
-            var dp = new DataPackage();
-            dp.SetText(uiOutput.Text);
-            dp.Properties.Title = "Netsh Data";
-            Clipboard.SetContent(dp);
-        }
-
-        private void OnShowTable(object sender, RoutedEventArgs e)
-        {
-            ShowOutputOrTable(ShowWhat.Table);
-        }
-
-        private void OnShowOutput(object sender, RoutedEventArgs e)
-        {
-            ShowOutputOrTable(ShowWhat.Output);
-        }
-
 
         private void OnMenu_Help_Help(object sender, RoutedEventArgs e)
         {
@@ -654,7 +393,7 @@ namespace NetshG
 
         MarkdownPipeline? mdpipe = null;
         string lastHelpFile = "";
-        private void Help_Remove()
+        public void Help_Remove()
         {
             uiHelpMD.Visibility = Visibility.Collapsed;
         }
@@ -669,7 +408,7 @@ namespace NetshG
             }
 
             uiHelpMD.Visibility = Visibility.Visible;
-            uiCommandOutput.Visibility = Visibility.Collapsed;
+            uiCommandControl.Visibility = Visibility.Collapsed;
             Uri uri = new Uri(helpFileName, UriKind.Relative);
             StreamResourceInfo commands = Application.GetContentStream(uri);
             var sr = new StreamReader(commands.Stream);
@@ -733,8 +472,7 @@ namespace NetshG
             var retval = (CurrRepeatTimer != null && CurrRepeatTimer.Enabled == true);
             return retval;
         }
-
-        private void OnMenuRepeatStop(object sender, RoutedEventArgs e)
+        public void OnMenuRepeatStop(object sender, RoutedEventArgs e)
         {
             if (CurrRepeatTimer == null) return; // can't be more stopped than this!
             CurrRepeatTimer.Stop(); // Sets enabled to false
