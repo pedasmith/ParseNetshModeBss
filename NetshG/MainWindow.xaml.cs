@@ -56,14 +56,13 @@ namespace NetshG
     public partial class MainWindow : Window, AddToText, UXCommands
     {
         private CommandOutputControl? CurrCommandControl { get { return uiHistoryControl.GetCurrentControl() as CommandOutputControl; } }
+        DisplayOptions CurrDisplayOptions { get; } = new DisplayOptions();
+
         public MainWindow()
         {
             InitializeComponent();
             uiHistoryControl.HistoryPanel = uiCommandPanel;
-
-            // Make the current control
-            var cc = new CommandOutputControl(this);
-            uiHistoryControl.AddCurrentControl(cc);
+            DisplayOptions CurrDisplayOptions = new DisplayOptions();
 
             this.Loaded += MainWindow_Loaded;
 
@@ -79,14 +78,14 @@ namespace NetshG
             // Specialized
             CommandAdd(Key.A, ModifierKeys.Alt, (s, e) => { DoSetMenuWithTag("#all"); }, "ALT+A", "Show all commands in command list");
             CommandAdd(Key.C, ModifierKeys.Alt, (s, e) => { DoSetMenuWithTag("#common"); }, "ALT+C", "Show common command in command list");
-            CommandAdd(Key.O, ModifierKeys.Alt, (s, e) => { ShowOutputOrTable(CommandOutputControl.ShowWhat.Output); }, "ALT-O", "Show output as text, not as table");
+            CommandAdd(Key.O, ModifierKeys.Alt, (s, e) => { ShowOutputOrTable(DisplayOptions.ShowWhat.Output); }, "ALT-O", "Show output as text, not as table");
             //CommandAdd(Key.R, ModifierKeys.Alt, OnRepeat, "ALT+R", "Repeat command"); Removed; it's part of the menu now. But still good to tell user
             KeyDescriptions.Add(new HelpDescription("ALT+R R", "Repeat command"));
             KeyDescriptions.Add(new HelpDescription("ALT+R S", "Repeat command every second"));
             KeyDescriptions.Add(new HelpDescription("ALT+R M", "Repeat command every minute"));
             KeyDescriptions.Add(new HelpDescription("ALT+R H", "Repeat command every hour"));
 
-            CommandAdd(Key.T, ModifierKeys.Alt, (s, e) => { ShowOutputOrTable(CommandOutputControl.ShowWhat.Table); }, "ALT+T", "Show output as table, not as text");
+            CommandAdd(Key.T, ModifierKeys.Alt, (s, e) => { ShowOutputOrTable(DisplayOptions.ShowWhat.Table); }, "ALT+T", "Show output as table, not as text");
             CommandAdd(Key.V, ModifierKeys.Alt, (s, e) => { ToggleOutputOrTable(); }, "ALT+V", "Toggle between text and table for output");
             CommandAdd(Key.W, ModifierKeys.Alt, (s, e) => { DoSetMenuWithTag("#wifi"); }, "ALT+W", "Show common Wi-Fi commands");
 
@@ -173,7 +172,11 @@ namespace NetshG
 
         private void ToggleOutputOrTable()
         {
-            CurrCommandControl?.ToggleOutputOrTable();
+            var newvalue = CurrCommandControl?.ToggleOutputOrTable();
+            if (newvalue != null)
+            {
+                CurrDisplayOptions.CurrShowWhat = newvalue;
+            }
         }
 
         /// <summary>
@@ -181,7 +184,7 @@ namespace NetshG
         /// show the table unless it's actually possible to see something
         /// </summary>
         /// <param helpFileName="value"></param>
-        private void ShowOutputOrTable(CommandOutputControl.ShowWhat value)
+        private void ShowOutputOrTable(DisplayOptions.ShowWhat value)
         {
             CurrCommandControl?.ShowOutputOrTable(value);
         }
@@ -546,7 +549,7 @@ namespace NetshG
             var cmdlist = AllNetshCommands.GetCommands(AllNetshCommands.CommandType.Show);
 
             var requireList = CommandInfo.GetAllMissingSettersFor(ci, cmdlist, CurrArgumentSettings);
-            var cc = new CommandOutputControl(this);
+            var cc = new CommandOutputControl(this, CurrDisplayOptions);
             uiHistoryControl.AddCurrentControl(cc);
 
             foreach (var requireci in requireList)

@@ -8,15 +8,15 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <StackPanel Orientation="Horizontal">
-            <TextBlock>
+            <TextBlock VerticalAlignment="Center">
                 <Run>HISTORY</Run>
                 <Run x:Name="uiPrev" MouseUp="OnPrev">PREV</Run>
             </TextBlock>
 
-            <TextBlock x:Name="uiHistoryRuns">
+            <TextBlock x:Name="uiHistoryRuns" FontSize="20" VerticalAlignment="Center" Margin="0,0,0,3">
             </TextBlock>
             
-            <TextBlock>
+            <TextBlock VerticalAlignment="Center">
                 <Run x:Name="uiNext" MouseUp="OnNext">NEXT</Run>
             </TextBlock>
         </StackPanel>
