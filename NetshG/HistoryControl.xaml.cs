@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,14 @@ namespace NetshG
     /// </summary>
     public partial class HistoryControl : UserControl
     {
-        private List<UserControl> HistoryItems {  get;  }  = new List<UserControl>();
+        class ControlData
+        {
+            public ControlData(UserControl control) { Control = control; Time = DateTime.Now; } 
+            public UserControl Control;
+            public DateTime Time;
+        }
+
+        private List<ControlData> HistoryItems {  get;  }  = new List<ControlData>();
         private int CurrIndex = -1;
 
         public Panel? HistoryPanel;
@@ -33,19 +41,25 @@ namespace NetshG
         /// <param name="item"></param>
         public void AddCurrentControl(UserControl item)
         {
-            HistoryItems.Add(item);
+            var cd = new ControlData(item);
+            HistoryItems.Add(cd);
             CurrIndex = HistoryItems.Count - 1;
             if (HistoryPanel != null)
             {
                 HistoryPanel.Children.Clear();
                 HistoryPanel.Children.Add(item);
             }
+            SetTime(cd.Time);
             // Add in a little tag  
             // ◦ WHITE BULLET U+25E6
             // • BULLET U+2022
             var tag = new Run() { Text = BULLET_SELECTED };
             uiHistoryRuns.Inlines.Add(tag);
             SetBullet(CurrIndex);
+        }
+        private void SetTime(DateTime time)
+        {
+            uiTime.Text = time.ToString("hh:mm:ss");
         }
 
         const string BULLET_NOT_SELECTED = " ◦ ";
@@ -70,7 +84,7 @@ namespace NetshG
         {
             if (CurrIndex < 0) return null;
             var retval = HistoryItems[CurrIndex];
-            return retval;
+            return retval.Control;
         }
         public HistoryControl()
         {
@@ -90,11 +104,12 @@ namespace NetshG
         {
             if (CurrIndex < 0) return;
             var item = HistoryItems[CurrIndex];
-            if (HistoryPanel != null && item != null)
+            if (HistoryPanel != null && item.Control != null)
             {
                 HistoryPanel.Children.Clear();
-                HistoryPanel.Children.Add(item);
+                HistoryPanel.Children.Add(item.Control);
             }
+            SetTime(item.Time);
             SetBullet(CurrIndex);
         }
         private void OnPrev(object sender, MouseButtonEventArgs e)
