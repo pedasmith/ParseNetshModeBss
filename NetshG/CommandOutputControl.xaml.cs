@@ -169,7 +169,7 @@ namespace NetshG
             args = UXCommands.GetCurrArgumentSettings().Replace(args, ci.Requires);
             var argsWithExtraMore = UXCommands.GetCurrArgumentSettings().Replace(args + args2 + args5, ci.Requires);
 
-
+            ci.Title = $"{program} {argsWithExtraMore}";
             string result = "No results", result_help = "No help results", csv = "";
             DisplayOptions.ShowWhat showWhat = DisplayOptions.ShowWhat.Output;
             if (CurrDisplayOptions != null && CurrDisplayOptions.CurrShowWhat != null)
@@ -214,7 +214,7 @@ namespace NetshG
 
 
                 // Fill in the help text (if appropriate)
-                UXCommands?.SetCommand($"{program} {argsWithExtraMore}");
+                UXCommands?.SetCommand(ci.Title);
                 if (ci.Help.Contains("#nohelp"))
                 {
                     // Example: the explorer.exe ms-availablenetworks

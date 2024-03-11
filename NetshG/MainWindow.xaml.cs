@@ -550,7 +550,7 @@ namespace NetshG
 
             var requireList = CommandInfo.GetAllMissingSettersFor(ci, cmdlist, CurrArgumentSettings);
             var cc = new CommandOutputControl(this, CurrDisplayOptions);
-            uiHistoryControl.AddCurrentControl(cc);
+            uiHistoryControl.AddCurrentControl(cc, ci.Title);
 
             foreach (var requireci in requireList)
             {

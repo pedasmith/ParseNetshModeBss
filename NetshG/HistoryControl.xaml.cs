@@ -25,9 +25,11 @@ namespace NetshG
     {
         class ControlData
         {
-            public ControlData(UserControl control) { Control = control; Time = DateTime.Now; } 
+            public ControlData(UserControl control, string title) { Control = control; Time = DateTimeOffset.Now; Title = title;  } 
             public UserControl Control;
-            public DateTime Time;
+            public DateTimeOffset Time;
+            public string TimeStr {  get {  return Time.ToString("HH:mm:ss"); } }
+            public string Title { get; set; }
         }
 
         private List<ControlData> HistoryItems {  get;  }  = new List<ControlData>();
@@ -39,9 +41,9 @@ namespace NetshG
         /// the HistoryPanel with the new control, removing the old entry.
         /// </summary>
         /// <param name="item"></param>
-        public void AddCurrentControl(UserControl item)
+        public void AddCurrentControl(UserControl item, string title)
         {
-            var cd = new ControlData(item);
+            var cd = new ControlData(item, title);
             HistoryItems.Add(cd);
             CurrIndex = HistoryItems.Count - 1;
             if (HistoryPanel != null)
@@ -49,17 +51,33 @@ namespace NetshG
                 HistoryPanel.Children.Clear();
                 HistoryPanel.Children.Add(item);
             }
-            SetTime(cd.Time);
+            SetTime(cd.TimeStr);
             // Add in a little tag  
             // ◦ WHITE BULLET U+25E6
             // • BULLET U+2022
-            var tag = new Run() { Text = BULLET_SELECTED };
+            var tt = cd.Title + " " + cd.TimeStr;
+            var tag = new Run() { Text = BULLET_SELECTED, ToolTip = tt };
+            tag.Tag = cd;
+            tag.MouseUp += Tag_MouseUp;
             uiHistoryRuns.Inlines.Add(tag);
             SetBullet(CurrIndex);
         }
-        private void SetTime(DateTime time)
+
+        private void Tag_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            uiTime.Text = time.ToString("hh:mm:ss");
+            var run = sender as Run;
+            if (run == null) return;
+            var item = run.Tag as ControlData;
+            if (item == null) return;
+            var index = GetIndexOf(item);
+            if (index < 0) return;
+            CurrIndex = index;
+            ShowCurrIndex();
+        }
+
+        private void SetTime(string time)
+        {
+            uiTime.Text = time;
         }
 
         const string BULLET_NOT_SELECTED = " ◦ ";
@@ -104,13 +122,24 @@ namespace NetshG
         {
             if (CurrIndex < 0) return;
             var item = HistoryItems[CurrIndex];
+            if (item == null) return;
             if (HistoryPanel != null && item.Control != null)
             {
                 HistoryPanel.Children.Clear();
                 HistoryPanel.Children.Add(item.Control);
             }
-            SetTime(item.Time);
+            SetTime(item.TimeStr);
             SetBullet(CurrIndex);
+        }
+
+        private int GetIndexOf(ControlData searchFor)
+        {
+            for (int i=0; i<HistoryItems.Count; i++)
+            {
+                var item = (ControlData)HistoryItems[i];
+                if (item == searchFor) return i;
+            }
+            return -1;
         }
         private void OnPrev(object sender, MouseButtonEventArgs e)
         {
