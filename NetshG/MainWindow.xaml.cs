@@ -338,12 +338,17 @@ namespace NetshG
 
 
         #region SELECT_FROM_COMMAND_LIST
-        private async void OnSelectCommand(object sender, SelectionChangedEventArgs e)
+        private void OnSelectCommand(object sender, SelectionChangedEventArgs e) // Old way to run commands; now I use MouseUp
+        {
+        }
+
+        private async void OnMouseUp(object sender, MouseButtonEventArgs e)
         {
             OnMenuRepeatStop(sender, e); // If I was repeating, stop it.
 
-            if (e.AddedItems.Count != 1) return; // only one item selected
-            var fe = e.AddedItems[0] as ContentControl;
+            //if (e.AddedItems.Count != 1) return; // only one item selected
+            //var fe = e.AddedItems[0] as ContentControl;
+            var fe = uiCommandList.SelectedItem as ContentControl;
             if (fe == null) return; // seriously, it's always a framework element.
 
             var nsc = fe as NetshCommandControl; // not all command are the command control??
@@ -363,6 +368,7 @@ namespace NetshG
             LastCommand = ci;
 
             await DoCommandAsync(ci);
+
         }
         #endregion
 
@@ -601,6 +607,8 @@ namespace NetshG
         }
 
         #endregion ACTUALLY_RUN_COMMANDS
+
+
     }
 
     // See https://github.com/Kryptos-FR/markdig.wpf/blob/develop/src/Markdig.Xaml.SampleApp/MainWindow.xaml.cs

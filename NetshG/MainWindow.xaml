@@ -84,7 +84,7 @@
                     <TextBox Grid.Column="0" x:Name="uiSearch" TextChanged="OnSearchTextChanged"  />
                     <TextBlock Grid.Column="0" Text="🔎" HorizontalAlignment="Right"/>
                 </Grid>
-                <ListView Grid.Row="1" x:Name="uiCommandList" SelectionChanged="OnSelectCommand" VerticalAlignment="Stretch">
+                <ListView Grid.Row="1" x:Name="uiCommandList" MouseUp="OnMouseUp" SelectionChanged="OnSelectCommand" VerticalAlignment="Stretch">
                     <!--- Values are set by MainWindow_Loaded from AllNetshCommands.GetCommands() -->
                 </ListView>
             </Grid>

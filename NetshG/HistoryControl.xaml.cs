@@ -18,18 +18,18 @@ namespace NetshG
     {
         class ControlData
         {
-            public ControlData(UserControl control, string title) { Control = control; Time = DateTimeOffset.Now; Title = title;  } 
+            public ControlData(UserControl control, string title) { Control = control; Time = DateTimeOffset.Now; CDTitle = title;  } 
 
             // Fields
             public UserControl Control;
             public DateTimeOffset Time;
             public string TimeStr {  get {  return Time.ToString("HH:mm:ss"); } }
-            public string Title { get; set; }
+            public string CDTitle { get; set; }
         }
 
 
         /// <summary>
-        /// List of the items to display. A ControlData has the UserControl plus a "Time" and a Title. The time is time
+        /// List of the items to display. A ControlData has the UserControl plus a "Time" and a CDTitle. The time is time
         /// that the item was added to the list.
         /// </summary>
         private List<ControlData> HistoryItems {  get;  }  = new List<ControlData>();
@@ -64,10 +64,20 @@ namespace NetshG
             // Add in a little tag  
             // ◦ WHITE BULLET U+25E6
             // • BULLET U+2022
-            var tt = cd.Title + " " + cd.TimeStr;
+            var tt = cd.CDTitle + " " + cd.TimeStr;
             var tag = new Run() { Text = selectNew ? BULLET_SELECTED : BULLET_NOT_SELECTED, ToolTip = tt };
             tag.Tag = cd;
-            tag.MouseUp += Tag_MouseUp;
+            tag.MouseLeftButtonUp += Tag_MouseLeftButtonUp;
+            //tag.MouseRightButtonUp += Tag_MouseRightButtonUp;
+
+            // Context menu
+            var cm = new ContextMenu();
+            cm.Items.Add(new MenuItem() { Header = cd.CDTitle });
+            var dmi = new MenuItem() { Header = "Delete", Tag=cd };
+            dmi.Click += OnDelete_Click;
+            cm.Items.Add(dmi);
+            tag.ContextMenu = cm;
+
             uiHistoryRuns.Inlines.Add(tag);
             if (selectNew)
             {
@@ -76,7 +86,36 @@ namespace NetshG
             SetHistoryMargin("AD");
         }
 
-        private void Tag_MouseUp(object sender, MouseButtonEventArgs e)
+        private void OnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            var cd = (sender as FrameworkElement)?.Tag as ControlData;
+            if (cd == null) return;
+
+            var index = GetIndexOf(cd);
+            if (index < 0) return;
+            var inline = uiHistoryRuns.Inlines.ElementAt(index);
+            if (inline == null) return;
+
+            // Remove Stuff
+            uiHistoryRuns.Inlines.Remove(inline);
+            HistoryItems.Remove(cd);
+
+            // Update the UX. If the index is >= CurrIndex, must decrement
+            if (index >= CurrIndex) CurrIndex--;
+            IncIndex(0); // Ensures that the CurrIndex is set correctly.
+            ShowCurrIndex();
+        }
+
+        private void Tag_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var run = sender as Run;
+            if (run == null) return;
+            var item = run.Tag as ControlData;
+            if (item == null) return;
+
+        }
+
+        private void Tag_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             var run = sender as Run;
             if (run == null) return;
@@ -101,8 +140,8 @@ namespace NetshG
             uiTime.Text = str;
         }
 
-        const string BULLET_NOT_SELECTED = " ◦ ";
-        const string BULLET_SELECTED = " • ";
+        const string BULLET_NOT_SELECTED = " ◦ "; // Uses " " THIN SPACE U+2009
+        const string BULLET_SELECTED = " • ";
 
         private void SetBullet(int selected = 0)
         {
@@ -238,7 +277,7 @@ namespace NetshG
             if (idealLeft > 0) { idealLeft = 0; tp = "L"; }
 
             //Log($"{CurrIndex} src={src} tp={tp} {(int)areaWidth}");
-            tb.Margin = new Thickness(idealLeft, 0, 0, 0);
+            tb.Margin = new Thickness(idealLeft, tb.Margin.Top, tb.Margin.Right, tb.Margin.Bottom);
         }
     }
 }

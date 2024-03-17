@@ -169,7 +169,7 @@ namespace NetshG
             args = UXCommands.GetCurrArgumentSettings().Replace(args, ci.Requires);
             var argsWithExtraMore = UXCommands.GetCurrArgumentSettings().Replace(args + args2 + args5, ci.Requires);
 
-            ci.Title = $"{program} {argsWithExtraMore}";
+            ci.Title = $"{program} {args}"; // make it short and sweet.
             string result = "No results", result_help = "No help results", csv = "";
             DisplayOptions.ShowWhat showWhat = DisplayOptions.ShowWhat.Output;
             if (CurrDisplayOptions != null && CurrDisplayOptions.CurrShowWhat != null)

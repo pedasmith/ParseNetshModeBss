@@ -41,7 +41,14 @@ namespace NetshG
         public string SetParser { get; set; } = "";
         public string TableParser { get; set; } = "";
 
-        public string Title { get; set; } = ""; // set when the command is run
+        private string _Title = "";
+        public string Title { get
+            {
+                if (_Title == "") _Title = $"{Cmd} {Args}";
+                return _Title;
+            }
+            set { _Title = value; }  
+        } // set when the command is run
         public string AllUserText {  get 
             {
                 var retval = $"{Cmd} {Args} {Args2} {Args5NoUX} {Tags}";
