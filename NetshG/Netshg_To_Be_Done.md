@@ -13,11 +13,13 @@ Did in this version :-)
 - Selection works better: on mouse up, do the command. This lets a command be run multiple times.
 - Update UX of history control to use icons instead of words; include tooltips for accessability.
 - right-click to delete and show information (title and time).
-
-Still to be done
 - When moving in the history, must update the title! 
 - When deleting in the history, when the last item is deleted, clear the screen.
+
+Still to be done
 - Handle a huge amount of data.
+- Create a user preferences
+- Add favorite commands and auto-run commands?
 - "Fix" in case the user picked "output" and now wants everything to be "table" or vice-versa.
 
 UX improvements that would be awesome

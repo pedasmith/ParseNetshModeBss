@@ -1,31 +1,22 @@
-﻿using System.Collections.Generic;
-using System.Data;
+﻿using Markdig;
+using Markdig.Wpf;
+using ParseNetshModeBss; // to get the utilities classes!
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using Newtonsoft.Json;
-using Windows.ApplicationModel.DataTransfer;
-using ParseNetshModeBss; // to get the utilities classes!
-using Utilities;
-using System.Windows.Input;
-using System;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Timers;
-using static NetshG.CanDoCommand;
-using System.IO;
-using System.Windows.Resources;
-using System.Xml.Linq;
-using Markdig;
-using Markdig.Wpf;
-using System.Text;
 using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Resources;
 using System.Xaml;
-using System.Reflection;
-
-
-
+using Utilities;
+using static NetshG.CanDoCommand;
 using XamlReader = System.Windows.Markup.XamlReader;
-using Windows.ApplicationModel.VoiceCommands;
 
 
 namespace NetshG
@@ -44,7 +35,10 @@ namespace NetshG
         void Help_Remove();
         void Log(string str);
         void SetAmDoCommand(bool value);
-        void SetCommand(string str);
+        /// <summary>
+        /// Sets the command string UX as a convenience for the user
+        /// </summary>
+        void SetCommandTitle(string str);
         void SetCount(string str);
         void SetUIIssues(string str);
         ArgumentSettings GetCurrArgumentSettings();
@@ -81,6 +75,7 @@ namespace NetshG
             CommandAdd(Key.Right, ModifierKeys.None, OnHistoryRight, "Right Arrow", "See next item");
             CommandAdd(Key.Home, ModifierKeys.None, OnHistoryStart, "Home", "Go to first item");
             CommandAdd(Key.End, ModifierKeys.None, OnHistoryEnd, "End", "Go to last item");
+            CommandAdd(Key.Delete, ModifierKeys.None, OnHistoryDelete, "Delete", "Delete current item");
 
             // Specialized
             CommandAdd(Key.A, ModifierKeys.Alt, (s, e) => { DoSetMenuWithTag("#all"); }, "ALT+A", "Show all commands in command list");
@@ -185,6 +180,10 @@ namespace NetshG
         {
             uiHistoryControl.MoveTo(int.MaxValue);
         }
+        public void OnHistoryDelete(object sender, RoutedEventArgs e)
+        {
+            uiHistoryControl.DeleteCurrIndex();
+        }
         public void OnHistoryStart(object sender, RoutedEventArgs e)
         {
             uiHistoryControl.MoveTo(0);
@@ -245,6 +244,8 @@ namespace NetshG
                     menu.IsChecked = true;
                 }
             }
+
+            uiHistoryControl.UXCommands = this; // to set the title
 
             // Just for testing
             var cmdlist = AllNetshCommands.GetCommands(AllNetshCommands.CommandType.Show);
@@ -392,7 +393,7 @@ namespace NetshG
         /// Sets the command string UX as a convenience for the user
         /// </summary>
         /// <param name="str"></param>
-        public void SetCommand(string str)
+        public void SetCommandTitle(string str)
         {
             uiCommand.Text = str;
         }
@@ -575,35 +576,29 @@ namespace NetshG
         /// <returns></returns>
         public async Task DoCommandAsync(CommandInfo ci, CommandOptions commandOptions = CommandOptions.None)
         {
+
+
             // We know we have to use the "Show" commands to get the data. Any other list
             // will potentially reset some part of the system, and we don't want that.
             var cmdlist = AllNetshCommands.GetCommands(AllNetshCommands.CommandType.Show);
 
             var requireList = CommandInfo.GetAllMissingSettersFor(ci, cmdlist, CurrArgumentSettings);
             var cc = new CommandOutputControl(this, CurrDisplayOptions);
-            uiHistoryControl.AddCurrentControl(cc, ci.Title);
 
+            // Add the history early; it looks nicer that way.
+            uiHistoryControl.AddCurrentControl(cc, ci.Title);
+            cc.Visibility = Visibility.Visible;
+
+            // Do the commands on the list of missing items. Note that there's a strong assumption that
+            // the list is one level deep; there's no place where A depends on B depends on C.
             foreach (var requireci in requireList)
             {
-                // Do the commands on the list of missing items. Note that there's a strong assumption that
-                // the list is one level deep; there's no place where A depends on B depends on C.
-                await DoCommandAsyncRaw(requireci, CommandOptions.SuppressFlash, cc); // always suppress the flash for getting these values
+                // always suppress the flash for getting these values
+                await cc.DoCommandAsyncRaw(ci, CommandOptions.SuppressFlash);
             }
 
             // Now run the command for real
-            await DoCommandAsyncRaw(ci, commandOptions, cc);
-        }
-
-        /// <summary>
-        /// Helpful method is just called by DoCommandAsync
-        /// </summary>
-        /// <param name="ci"></param>
-        /// <param name="commandOptions"></param>
-        /// <returns></returns>
-        private async Task DoCommandAsyncRaw(CommandInfo ci, CommandOptions commandOptions, CommandOutputControl commandOutputControl)
-        {
-            commandOutputControl.Visibility = Visibility.Visible;
-            await commandOutputControl.DoCommandAsyncRaw(ci, commandOptions);
+            await cc.DoCommandAsyncRaw(ci, commandOptions);
         }
 
         #endregion ACTUALLY_RUN_COMMANDS

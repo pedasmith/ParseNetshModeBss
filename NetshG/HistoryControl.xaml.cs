@@ -36,6 +36,8 @@ namespace NetshG
         private int CurrIndex = -1;
 
         public Panel? HistoryPanel;
+        public UXCommands? UXCommands { get; set; } = null;
+
         /// <summary>
         /// Adds a UserControl (in practice, always a CommandOutputControl) to the history list. Will also update
         /// the HistoryPanel with the new control, removing the old entry (but only if the current index is the last
@@ -92,7 +94,18 @@ namespace NetshG
             if (cd == null) return;
 
             var index = GetIndexOf(cd);
+            DoDeleteAt(index);
+        }
+        public void DeleteCurrIndex()
+        {
+            DoDeleteAt(CurrIndex);
+        }
+
+        private void DoDeleteAt(int index)
+        {
             if (index < 0) return;
+            var cd = HistoryItems[index];
+            if (cd == null) return; // can never happen.
             var inline = uiHistoryRuns.Inlines.ElementAt(index);
             if (inline == null) return;
 
@@ -104,6 +117,7 @@ namespace NetshG
             if (index >= CurrIndex) CurrIndex--;
             IncIndex(0); // Ensures that the CurrIndex is set correctly.
             ShowCurrIndex();
+
         }
 
         private void Tag_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
@@ -181,7 +195,13 @@ namespace NetshG
             IncIndex(0); // Makes sure CurrIndex is in the proper range
             ShowCurrIndex();
         }
-
+        /// <summary>
+        /// Increments (or decrements) the CurrIndex, carefully making sure it stays in range.
+        /// If given 0 for the step, just resets to be in range. 
+        /// If -1, resets to be in range, unless the range having no values.
+        /// Will set to -1 only in the case of the range having no values.
+        /// </summary>
+        /// <param name="step"></param>
         private void IncIndex(int step)
         {
             CurrIndex += step;
@@ -193,7 +213,14 @@ namespace NetshG
         }
         private void ShowCurrIndex()
         {
-            if (CurrIndex < 0) return;
+            if (CurrIndex < 0)
+            {
+                if (HistoryPanel != null)
+                {
+                    HistoryPanel.Children.Clear();
+                }
+                return;
+            }
             var item = HistoryItems[CurrIndex];
             if (item == null) return;
             if (HistoryPanel != null && item.Control != null)
@@ -201,6 +228,7 @@ namespace NetshG
                 HistoryPanel.Children.Clear();
                 HistoryPanel.Children.Add(item.Control);
             }
+            UXCommands?.SetCommandTitle(item.CDTitle);
             SetTime(item.TimeStr);
             SetBullet(CurrIndex);
             SetHistoryMargin("curr");

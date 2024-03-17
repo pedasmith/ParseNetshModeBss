@@ -91,9 +91,6 @@
             
             <!-- COLUMN 1 -->
             <TextBox x:Name="uiCommand" Grid.Row="0" Grid.Column="1" Style="{StaticResource rCommand}" />
-            <!--
-            <local:CommandOutputControl Grid.Row="1" Grid.Column="1" x:Name="uiCommandControl" />
-            -->
             <Grid Grid.Row="1" Grid.Column="1" x:Name="uiCommandPanel" />
             <local:HistoryControl Grid.Row="2" Grid.Column="1" x:Name="uiHistoryControl" />
 
