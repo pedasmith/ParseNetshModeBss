@@ -66,14 +66,21 @@ namespace NetshG
 
             this.Loaded += MainWindow_Loaded;
 
-            // ^C
             KeyDescriptions.Clear();
+
+            // ^C
             CommandAdd(Key.C, ModifierKeys.Control, OnCopy, "^C", "Copy data from output or table");
 
             // Alt-F4 for Exit
             CommandAdd(Key.F1, ModifierKeys.None, OnMenu_Help_Help, "F1", "Show help file");
             CommandAdd(Key.F4, ModifierKeys.Alt, OnMenu_File_Exit, "ALT+F4", "Exit program");
             CommandAdd(Key.F5, ModifierKeys.None, OnRepeat, "F5", "Repeat command");
+
+            // Arrows HOME and END for history
+            CommandAdd(Key.Left, ModifierKeys.None, OnHistoryLeft, "Left Arrow", "See previous item");
+            CommandAdd(Key.Right, ModifierKeys.None, OnHistoryRight, "Right Arrow", "See next item");
+            CommandAdd(Key.Home, ModifierKeys.None, OnHistoryStart, "Home", "Go to first item");
+            CommandAdd(Key.End, ModifierKeys.None, OnHistoryEnd, "End", "Go to last item");
 
             // Specialized
             CommandAdd(Key.A, ModifierKeys.Alt, (s, e) => { DoSetMenuWithTag("#all"); }, "ALT+A", "Show all commands in command list");
@@ -163,6 +170,24 @@ namespace NetshG
         private void OnMenu_Help_Help(object sender, RoutedEventArgs e)
         {
             ShowHelp("/Netshg_help.md");
+        }
+
+        public void OnHistoryLeft(object sender, RoutedEventArgs e)
+        {
+            uiHistoryControl.Move(-1);
+        }
+
+        public void OnHistoryRight(object sender, RoutedEventArgs e)
+        {
+            uiHistoryControl.Move(1);
+        }
+        public void OnHistoryEnd(object sender, RoutedEventArgs e)
+        {
+            uiHistoryControl.MoveTo(int.MaxValue);
+        }
+        public void OnHistoryStart(object sender, RoutedEventArgs e)
+        {
+            uiHistoryControl.MoveTo(0);
         }
 
         public async void OnRepeat(object sender, RoutedEventArgs e)

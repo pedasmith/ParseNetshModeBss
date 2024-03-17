@@ -6,26 +6,26 @@
              xmlns:local="clr-namespace:NetshG"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid >
+    <Grid x:Name="uiGrid" SizeChanged="OnSizeChanged">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" MinWidth="120" />
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Column="0" VerticalAlignment="Center">
             <Run>HISTORY</Run>
             <Run x:Name="uiPrev" MouseUp="OnPrev">PREV</Run>
         </TextBlock>
 
-        <TextBlock Grid.Column="1" x:Name="uiHistoryRuns" FontSize="20" VerticalAlignment="Center" Margin="0,0,0,3">
+        <TextBlock Grid.Column="1" x:Name="uiHistoryRuns" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,0,3" >
         </TextBlock>
 
-        <TextBlock Grid.Column="2" VerticalAlignment="Center">
+        <TextBlock Grid.Column="2" VerticalAlignment="Center" >
             <Run x:Name="uiNext" MouseUp="OnNext">NEXT</Run>
         </TextBlock>
         <TextBlock Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="20,0,40,0">
-            <Run x:Name="uiTime" >ddd</Run>
+            <Run x:Name="uiTime" ></Run>
         </TextBlock>
     </Grid>
 </UserControl>
