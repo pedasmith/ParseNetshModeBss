@@ -25,8 +25,11 @@ namespace NetshG
             public DateTimeOffset Time;
             public string TimeStr {  get {  return Time.ToString("HH:mm:ss"); } }
             public string CDTitle { get; set; }
+            public string Selected { get; set; } = HistoryControl.BULLET_SELECTED;
+            public string NotSelected { get; set; } = HistoryControl.BULLET_NOT_SELECTED;
         }
 
+        public const int MAX_HISTORY_ITEMS = 5;
 
         /// <summary>
         /// List of the items to display. A ControlData has the UserControl plus a "Time" and a CDTitle. The time is time
@@ -34,10 +37,12 @@ namespace NetshG
         /// </summary>
         private List<ControlData> HistoryItems {  get;  }  = new List<ControlData>();
         private int CurrIndex = -1;
+        private int NItemsAdded = 0;
 
         public Panel? HistoryPanel;
         public UXCommands? UXCommands { get; set; } = null;
 
+        private Random rnd = new Random();
         /// <summary>
         /// Adds a UserControl (in practice, always a CommandOutputControl) to the history list. Will also update
         /// the HistoryPanel with the new control, removing the old entry (but only if the current index is the last
@@ -47,9 +52,63 @@ namespace NetshG
         public void AddCurrentControl(UserControl item, string title)
         {
             var cd = new ControlData(item, title);
+            NItemsAdded++; // total number ever added
+
+            cd.Selected = BULLET_SELECTED; //  + NItemsAdded.ToString() + " ";
+            cd.NotSelected = BULLET_NOT_SELECTED; //  + NItemsAdded.ToString() + " ";
+
+            // Figure out what to do when the history list is "too full"
+            // Exponentially weighted moving average (EWMA) for the win (FTW)!
+            // Note that unlike a classic EWMA, we always add the item as the last index;
+            // the code will only decide whether to save old last item as one of the
+            // historical items
+
+            var idx = rnd.NextInt64(NItemsAdded);
+            if (HistoryItems.Count < MAX_HISTORY_ITEMS)
+            {
+                // Easy case: This happens at start-up and also every time the user deletes
+                // an item. Note that we aren't deleting old things, so there's no weird swappng
+                // of the CurrIndex item.
+            }
+            else
+            {
+                // Default case: get rid of the last entry. We always want to
+                // add the item, possibly just this one time, to the UX
+                var lastIndex = HistoryItems.Count - 1;
+                var indexToDelete = lastIndex;
+
+
+                if (idx < MAX_HISTORY_ITEMS-1)
+                {
+                    // Winner! remove an old item. By default remove the 'idx' item. If 
+                    // 
+                    indexToDelete = (int)idx;
+                    if (CurrIndex == idx)
+                    {
+                        // delete an earlier item if possible
+                        if (indexToDelete > 0) indexToDelete--;
+                        else indexToDelete++;
+                    }
+                }
+
+                // delete correct items + fix up the CurrIndex
+                HistoryItems.RemoveAt((int)indexToDelete);
+                if (CurrIndex > indexToDelete)
+                {
+                    CurrIndex--;
+                }
+
+                // For whatever reason, can't do RemoveAt on an Inlines?
+                var uxdot = uiHistoryRuns.Inlines.ToArray()[CurrIndex];
+                uiHistoryRuns.Inlines.Remove(uxdot); 
+            }
+
+
             HistoryItems.Add(cd);
+
+
             var newIndex = HistoryItems.Count - 1;
-            bool selectNew = CurrIndex == -1 || CurrIndex == newIndex -1;
+            bool selectNew = CurrIndex == -1 || CurrIndex >= newIndex -1;
             if (selectNew)
             {
                 CurrIndex = newIndex;
@@ -67,7 +126,8 @@ namespace NetshG
             // ◦ WHITE BULLET U+25E6
             // • BULLET U+2022
             var tt = cd.CDTitle + " " + cd.TimeStr;
-            var tag = new Run() { Text = selectNew ? BULLET_SELECTED : BULLET_NOT_SELECTED, ToolTip = tt };
+            var bulletText = selectNew ? cd.Selected: cd.NotSelected;
+            var tag = new Run() { Text = bulletText, ToolTip = tt };
             tag.Tag = cd;
             tag.MouseLeftButtonUp += Tag_MouseLeftButtonUp;
             //tag.MouseRightButtonUp += Tag_MouseRightButtonUp;
@@ -166,7 +226,7 @@ namespace NetshG
                 var run = item as Run;
                 if (run != null)
                 {
-                    var txt = (index == selected) ? BULLET_SELECTED : BULLET_NOT_SELECTED;
+                    var txt = (index == selected) ? HistoryItems[index].Selected : HistoryItems[index].NotSelected;
                     run.Text = txt;
                 }
                 index++;
