@@ -9,6 +9,7 @@
     <Grid x:Name="uiGrid" SizeChanged="OnSizeChanged">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" MinWidth="120" />
@@ -18,20 +19,22 @@
                 <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
         </Grid.Resources>
-        <StackPanel Grid.Column="0" Orientation="Horizontal">
+        <TextBlock x:Name="uiIndex" Grid.Column="0" Style="{StaticResource rtPrevNext}" FontSize="10" 
+                       Margin="5,10,10,0" HorizontalAlignment="Center" Text="22" />
+        <StackPanel Grid.Column="1" Orientation="Horizontal">
             <TextBlock x:Name="uiPrev" MouseUp="OnPrev" 
                        Style="{StaticResource rtPrevNext}" 
                        Text="" ToolTip="Go back one" />
         </StackPanel>
-
-        <TextBlock Grid.Column="1" x:Name="uiHistoryRuns"  
+        <Canvas x:Name="uiHistoryRunPanel" Grid.Column="2" ClipToBounds="True">
+            <TextBlock x:Name="uiHistoryRuns"  ClipToBounds="True" 
                    Margin="0,0,0,3" Style="{StaticResource rtHistoryDots}" />
-
-        <TextBlock Grid.Column="2" x:Name="uiNext" 
+        </Canvas>
+        <TextBlock Grid.Column="3" x:Name="uiNext" 
                    MouseUp="OnNext" Style="{StaticResource rtPrevNext}" 
                    Text="" ToolTip="Go forward one"/>
         
-        <TextBlock Grid.Column="3" 
+        <TextBlock Grid.Column="4" 
                    HorizontalAlignment="Right" Margin="20,0,40,0">
             <Run x:Name="uiTime" ></Run>
         </TextBlock>

@@ -18,7 +18,7 @@ namespace NetshG
     {
         class ControlData
         {
-            public ControlData(UserControl control, string title) { Control = control; Time = DateTimeOffset.Now; CDTitle = title;  } 
+            public ControlData(UserControl control, string title, int index) { Control = control; Time = DateTimeOffset.Now; CDTitle = title; HistoryIndex = index; } 
 
             // Fields
             public UserControl Control;
@@ -27,13 +27,14 @@ namespace NetshG
             public string CDTitle { get; set; }
             public string Selected { get; set; } = HistoryControl.BULLET_SELECTED;
             public string NotSelected { get; set; } = HistoryControl.BULLET_NOT_SELECTED;
+            public int HistoryIndex { get; set; } = 0;
         }
 
-        public const int MAX_HISTORY_ITEMS = 5;
+        public const int MAX_HISTORY_ITEMS = 50;
 
         /// <summary>
         /// List of the items to display. A ControlData has the UserControl plus a "Time" and a CDTitle. The time is time
-        /// that the item was added to the list.
+        /// that the cd was added to the list.
         /// </summary>
         private List<ControlData> HistoryItems {  get;  }  = new List<ControlData>();
         private int CurrIndex = -1;
@@ -46,46 +47,46 @@ namespace NetshG
         /// <summary>
         /// Adds a UserControl (in practice, always a CommandOutputControl) to the history list. Will also update
         /// the HistoryPanel with the new control, removing the old entry (but only if the current index is the last
-        /// index; if the user asked to show a specific item, that item stays up)
+        /// index; if the user asked to show a specific cd, that cd stays up)
         /// </summary>
         /// <param name="item"></param>
         public void AddCurrentControl(UserControl item, string title)
         {
-            var cd = new ControlData(item, title);
             NItemsAdded++; // total number ever added
+            var cd = new ControlData(item, title, NItemsAdded);
 
-            cd.Selected = BULLET_SELECTED; //  + NItemsAdded.ToString() + " ";
-            cd.NotSelected = BULLET_NOT_SELECTED; //  + NItemsAdded.ToString() + " ";
+            cd.Selected = BULLET_SELECTED; // + NItemsAdded.ToString() + " "; // Handy extra bits for debugging
+            cd.NotSelected = BULLET_NOT_SELECTED; // + NItemsAdded.ToString() + " ";
 
             // Figure out what to do when the history list is "too full"
             // Exponentially weighted moving average (EWMA) for the win (FTW)!
-            // Note that unlike a classic EWMA, we always add the item as the last index;
-            // the code will only decide whether to save old last item as one of the
+            // Note that unlike a classic EWMA, we always add the cd as the last index;
+            // the code will only decide whether to save old last cd as one of the
             // historical items
 
             var idx = rnd.NextInt64(NItemsAdded);
             if (HistoryItems.Count < MAX_HISTORY_ITEMS)
             {
                 // Easy case: This happens at start-up and also every time the user deletes
-                // an item. Note that we aren't deleting old things, so there's no weird swappng
-                // of the CurrIndex item.
+                // an cd. Note that we aren't deleting old things, so there's no weird swappng
+                // of the CurrIndex cd.
             }
             else
             {
                 // Default case: get rid of the last entry. We always want to
-                // add the item, possibly just this one time, to the UX
+                // add the cd, possibly just this one time, to the UX
                 var lastIndex = HistoryItems.Count - 1;
                 var indexToDelete = lastIndex;
 
 
                 if (idx < MAX_HISTORY_ITEMS-1)
                 {
-                    // Winner! remove an old item. By default remove the 'idx' item. If 
+                    // Winner! remove an old cd. By default remove the 'idx' cd. If 
                     // 
                     indexToDelete = (int)idx;
                     if (CurrIndex == idx)
                     {
-                        // delete an earlier item if possible
+                        // delete an earlier cd if possible
                         if (indexToDelete > 0) indexToDelete--;
                         else indexToDelete++;
                     }
@@ -120,14 +121,14 @@ namespace NetshG
             }
             if (selectNew)
             {
-                SetTime(cd.TimeStr);
+                SetTimeAndIndex(cd.TimeStr, cd.HistoryIndex);
             }
             // Add in a little tag  
             // ◦ WHITE BULLET U+25E6
             // • BULLET U+2022
             var tt = cd.CDTitle + " " + cd.TimeStr;
             var bulletText = selectNew ? cd.Selected: cd.NotSelected;
-            var tag = new Run() { Text = bulletText, ToolTip = tt };
+            var tag = new Run() { Text = bulletText, ToolTip = tt,  };
             tag.Tag = cd;
             tag.MouseLeftButtonUp += Tag_MouseLeftButtonUp;
             //tag.MouseRightButtonUp += Tag_MouseRightButtonUp;
@@ -201,11 +202,14 @@ namespace NetshG
             ShowCurrIndex();
         }
 
-        private void SetTime(string time)
+        private void SetTimeAndIndex(string time, int index)
         {
             if (_log != "") return; // It's also the logging area :-)
             uiTime.Text = time;
+            uiIndex.Text = index.ToString();
         }
+
+
 
         private string _log = "";
         private void Log(string str)
@@ -281,15 +285,15 @@ namespace NetshG
                 }
                 return;
             }
-            var item = HistoryItems[CurrIndex];
-            if (item == null) return;
-            if (HistoryPanel != null && item.Control != null)
+            var cd = HistoryItems[CurrIndex];
+            if (cd == null) return;
+            if (HistoryPanel != null && cd.Control != null)
             {
                 HistoryPanel.Children.Clear();
-                HistoryPanel.Children.Add(item.Control);
+                HistoryPanel.Children.Add(cd.Control);
             }
-            UXCommands?.SetCommandTitle(item.CDTitle);
-            SetTime(item.TimeStr);
+            UXCommands?.SetCommandTitle(cd.CDTitle);
+            SetTimeAndIndex(cd.TimeStr, cd.HistoryIndex);
             SetBullet(CurrIndex);
             SetHistoryMargin("curr");
         }
@@ -325,8 +329,7 @@ namespace NetshG
             var candidate = uiHistoryRuns.Text;
             var tb = uiHistoryRuns;
 
-            var areaWidth = uiGrid.ColumnDefinitions[1].ActualWidth;
-            //var areaWidth = tb.ActualWidth + tb.Margin.Left;
+            var areaWidth = uiHistoryRunPanel.ActualWidth; 
             var nitems = tb.Inlines.Count();
 
             if (areaWidth <= 0) return;
@@ -364,8 +367,7 @@ namespace NetshG
             // Goal #3: but don't have any gap on the left
             if (idealLeft > 0) { idealLeft = 0; tp = "L"; }
 
-            //Log($"{CurrIndex} src={src} tp={tp} {(int)areaWidth}");
-            tb.Margin = new Thickness(idealLeft, tb.Margin.Top, tb.Margin.Right, tb.Margin.Bottom);
+            Canvas.SetLeft(tb, idealLeft);
         }
     }
 }
