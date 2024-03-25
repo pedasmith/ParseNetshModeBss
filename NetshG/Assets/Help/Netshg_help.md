@@ -1,5 +1,7 @@
 ﻿# About NetshG
 
+![NETSHG Gui shell for NETSH](Assets/HelpImages/Netshg_interface_example.png)
+
 ## Quickstart
 NetshG version {VERSION} is a graphical interface for Netsh. It turns different Netsh commands, and displays the results in a scrolling text area. Some commands can be parsed as a table; for those commands the table will be displayed.
 

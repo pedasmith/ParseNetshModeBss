@@ -164,7 +164,7 @@ namespace NetshG
 
         private void OnMenu_Help_Help(object sender, RoutedEventArgs e)
         {
-            ShowHelp("/Netshg_help.md");
+            ShowHelp("/Assets/Help/Netshg_help.md");
         }
 
         public void OnHistoryLeft(object sender, RoutedEventArgs e)
@@ -449,7 +449,7 @@ namespace NetshG
         }
         private void ShowHelp(string helpFileName)
         {
-            if (CurrCommandControl == null) return;
+            var ccc = CurrCommandControl;
             var isdifferent = helpFileName != lastHelpFile;
             lastHelpFile = helpFileName;
             if (uiHelpMD.Visibility == Visibility.Visible && !isdifferent)
@@ -459,7 +459,12 @@ namespace NetshG
             }
 
             uiHelpMD.Visibility = Visibility.Visible;
-            CurrCommandControl.Visibility = Visibility.Collapsed;
+            if (ccc != null)
+            {
+                ccc.Visibility = Visibility.Collapsed;
+            }
+            uiHistoryControl.Visibility = Visibility.Collapsed;
+
             Uri uri = new Uri(helpFileName, UriKind.Relative);
             StreamResourceInfo commands = Application.GetContentStream(uri);
             var sr = new StreamReader(commands.Stream);
@@ -490,7 +495,7 @@ namespace NetshG
         }
         private void OnMenu_Help_Versions(object sender, RoutedEventArgs e)
         {
-            ShowHelp("/Netshg_help_versions.md");
+            ShowHelp("/Assets/Help/Netshg_help_versions.md");
         }
         private void OnMenu_Help_Shortcuts(object sender, RoutedEventArgs e)
         {
@@ -583,22 +588,23 @@ namespace NetshG
             var cmdlist = AllNetshCommands.GetCommands(AllNetshCommands.CommandType.Show);
 
             var requireList = CommandInfo.GetAllMissingSettersFor(ci, cmdlist, CurrArgumentSettings);
-            var cc = new CommandOutputControl(this, CurrDisplayOptions);
+            var ccc = new CommandOutputControl(this, CurrDisplayOptions);
 
             // Add the history early; it looks nicer that way.
-            uiHistoryControl.AddCurrentControl(cc, ci.Title);
-            cc.Visibility = Visibility.Visible;
+            uiHistoryControl.AddCurrentControl(ccc, ci.Title);
+            ccc.Visibility = Visibility.Visible;
+            uiHistoryControl.Visibility = Visibility.Visible;
 
             // Do the commands on the list of missing items. Note that there's a strong assumption that
             // the list is one level deep; there's no place where A depends on B depends on C.
             foreach (var requireci in requireList)
             {
                 // always suppress the flash for getting these values
-                await cc.DoCommandAsyncRaw(ci, CommandOptions.SuppressFlash);
+                await ccc.DoCommandAsyncRaw(ci, CommandOptions.SuppressFlash);
             }
 
             // Now run the command for real
-            await cc.DoCommandAsyncRaw(ci, commandOptions);
+            await ccc.DoCommandAsyncRaw(ci, commandOptions);
         }
 
         #endregion ACTUALLY_RUN_COMMANDS
