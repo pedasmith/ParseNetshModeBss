@@ -159,7 +159,6 @@
 	{
 		"Cmd": "netsh",
 		"Args": "interface ipv4 dump",
-		"Tags": "#common"
 	},
 	{
 		"Cmd": "netsh",
@@ -172,7 +171,7 @@
 		"Args": "interface ipv4 show addresses",
 		"Args2": "InterfaceIndex",
 		"TableParser": "Indent",
-		"Tags": "#common",
+		"Tags": "",
 		"RequireList": "InterfaceIndex"
 	},
 	{
@@ -382,7 +381,6 @@
 	{
 		"Cmd": "netsh",
 		"Args": "interface ipv6 dump",
-		"Tags": "#common"
 	},
 	{
 		"Cmd": "netsh",
@@ -563,13 +561,13 @@
 		"Args": "interface tcp show global",
 		"Args5NoUX": "store=Store",
 		"RequireList": "Store",
-		"Tags": "#common",
+		"Tags": "",
 		"Issues": "The Query active state message is difficult to parse."
 	},
 	{
 		"Cmd": "netsh",
 		"Args": "interface tcp show heuristics",
-		"Tags": "#common"
+		"Tags": ""
 	},
 	{
 		"Cmd": "netsh",
@@ -577,7 +575,8 @@
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "interface tcp show rscstats InterfaceIndex",
+		"Args": "interface tcp show rscstats",
+		"Args2": "InterfaceIndex",
 		"Tags": "#common ",
 		"TableParser": "List",
 		"RequireList": "InterfaceIndex"
@@ -628,7 +627,7 @@
 		"Args": "interface udp show global",
 		"Args5NoUX": "store=Store",
 		"RequireList": "Store",
-		"Tags": "#common"
+		"Tags": ""
 	},
 	{
 		"Cmd": "netsh",
@@ -1027,7 +1026,7 @@
 	{
 		"Cmd": "netsh",
 		"Args": "wlan show wlanreport",
-		"Tags": "#wifi #common"
+		"Tags": "#wifi"
 	},
 
 

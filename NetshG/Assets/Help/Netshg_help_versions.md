@@ -1,9 +1,13 @@
 ﻿# NETSH Version History
 
 
-## Version 1.9 2024-03-09
+## Version 1.9 2024-03-25
 
-The app now tracks the history of command outputs and can switch between them.
+The app now tracks the history of command outputs and can switch between them. In the example, the history bar is highlighted. Every command is added to the history. Click on a history dot to switch to that command output or use the arrow keys. After too many commands are run (e.g., when you're repeating a lot of commands), the history kept uses a statistically valid sampling algorithm (expoentially weighted moving average, or EWMA) to keep a summary of commands.
+
+![Highlighted area shows history bar](Assets/HelpImages/Netshg_show_history.png)
+
+The set of common commands has been trimmed down a bit to make the list more manageable. The installer is now an MSIX bundle, not an MSI file, so the app can theoretically be placed in the store.
 
 ## Version 1.8 2024-01-16
 

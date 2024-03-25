@@ -1,5 +1,5 @@
 ﻿using Markdig;
-using Markdig.Wpf;
+//using Markdig.Wpf;
 using Neo.Markdig.Xaml;
 using ParseNetshModeBss; // to get the utilities classes!
 using System;
@@ -488,7 +488,7 @@ namespace NetshG
             if (mdpipe == null)
             {
                 mdpipe = new MarkdownPipelineBuilder()
-                    .UseSupportedExtensions()
+                    // old renderer used this: .UseSupportedExtensions()
                     .Build();
             }
             if (mdpipe == null) return;
@@ -622,7 +622,7 @@ namespace NetshG
             foreach (var requireci in requireList)
             {
                 // always suppress the flash for getting these values
-                await ccc.DoCommandAsyncRaw(ci, CommandOptions.SuppressFlash);
+                await ccc.DoCommandAsyncRaw(requireci, CommandOptions.SuppressFlash);
             }
 
             // Now run the command for real
@@ -635,6 +635,8 @@ namespace NetshG
     }
 
     // See https://github.com/Kryptos-FR/markdig.wpf/blob/develop/src/Markdig.Xaml.SampleApp/MainWindow.xaml.cs
+#if NEVER_EVER_DEFINED
+// Removed 2024-03-25 when switching from the old Markdown renderer to the new one.
     class MyXamlSchemaContext : XamlSchemaContext
     {
         public override bool TryGetCompatibleXamlNamespace(string xamlNamespace, out string compatibleNamespace)
@@ -647,4 +649,5 @@ namespace NetshG
             return base.TryGetCompatibleXamlNamespace(xamlNamespace, out compatibleNamespace);
         }
     }
+#endif
 }

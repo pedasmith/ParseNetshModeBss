@@ -34,3 +34,14 @@ Other improvements
 Bugs
 - UX text focus? I shifted away from the app and then back on, and now keys don't work?
 - There's a flicker when the user prefers output, but the output prefers table. It shows up as table briefly, then switches to output.
+
+## MAKING A RELEASE: 
+Bump the version, build as release, update Github. 
+
+To bump the version, you must set the VersionPrefix in the NetshG project file.
+
+### *Obsolete*
+As of 2024-03-35, the project is published with the MSIX packaging project.
+Also set the Version in the NetshG-Setup project properties (this also changes the ProductCode). 
+
+The final "standalone" .MSI file that's generated in the NetshG\bin\Publish-Setup should then be added as a new release in the Github directory. The two "Publish" items in the NETSHG project are useless, BTW.

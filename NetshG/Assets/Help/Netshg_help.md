@@ -49,10 +49,4 @@ Shows a list of keyboard shortcuts.
 ## Where is the data from?
 The NetshG program gets its information by running the Netsh and similar commands. It's not a re-implementation of NETSH at all.
 
-## MAKING A RELEASE: 
-Bump the version, build as release, update Github. 
-
-To bump the version, you must set the VersionPrefix in the NetshG project file AND the Version in the NetshG-Setup project properties (this also changes the ProductCode). 
-
-The final "standalone" .MSI file that's generated in the NetshG\bin\Publish-Setup should then be added as a new release in the Github directory. The two "Publish" items in the NETSHG project are useless, BTW.
 

@@ -169,6 +169,11 @@ namespace NetshG
             return retval;
         }
 
+        public override string ToString()
+        {
+            return $"{Cmd} {Args} {Args2}";
+        }
+
     }
 
     public class CommandRequire
@@ -185,6 +190,11 @@ namespace NetshG
             }
 
             set { _replace = value; }
+        }
+
+        public override string ToString()
+        {
+            return $"{Name} from={From} replace={_replace}";
         }
     }
 
