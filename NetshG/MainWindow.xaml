@@ -22,7 +22,7 @@
             <MenuItem Header="_File" >
                 <MenuItem Header="E_xit" Click="OnMenu_File_Exit" />
             </MenuItem>
-            <MenuItem Header="_Show" x:Name="uiMenuShow">
+            <MenuItem Header="_Show Configuration" x:Name="uiMenuShow">
                 <MenuItem Header="_Common" Tag="#common" Click="OnMenu_Show_Tag" />
                 <MenuItem Header="_All" Tag="#all" Click="OnMenu_Show_Tag" />
                 <MenuItem Header="All (verbose)" Tag="#allverbose" Click="OnMenu_Show_Tag" />
@@ -30,13 +30,17 @@
                 <!--
                 <MenuItem Header="_Debug" Tag="List" Click="OnMenu_Show_Tag" />\
                 -->
+                <Separator />
                 <MenuItem Header="Show Help" x:Name="uiMenu_Show_Help" IsCheckable="True" Checked="OnMenu_Show_Help_Check" Unchecked="OnMenu_Show_Help_Uncheck" />
             </MenuItem>
             <MenuItem Header="_Clear and Reset" x:Name="uiMenuReset">
                 <MenuItem Header="_Common" Tag="#common" Click="OnMenu_Reset_Tag" />
                 <MenuItem Header="_All" Tag="#all" Click="OnMenu_Reset_Tag" />
+                <!-- nothing for these for Clear and Reset
                 <MenuItem Header="All (verbose)" Tag="#allverbose" Click="OnMenu_Reset_Tag" />
+                
                 <MenuItem Header="_Wi-Fi" Tag="#wifi" Click="OnMenu_Reset_Tag" />
+                -->
             </MenuItem>
             <MenuItem Header="_Repeat">
                 <MenuItem Header="_Repeat Once" Click="OnRepeat"/>

@@ -142,16 +142,34 @@ namespace NetshG
 
         private void OnMenu_Show_Tag(object sender, RoutedEventArgs e)
         {
-            var tag = (sender as MenuItem)?.Tag as string;
-            if (tag == null) tag = "";
-            DoSetMenuWithTag(tag, AllNetshCommands.CommandType.Show);
+            // Part of the "Show" menu.
+            var commandType = AllNetshCommands.CommandType.Show;
+            OnMenu_Tag(sender, commandType);
         }
+
 
         private void OnMenu_Reset_Tag(object sender, RoutedEventArgs e)
         {
-            var tag = (sender as MenuItem)?.Tag as string;
-            if (tag == null) tag = "";
-            DoSetMenuWithTag(tag, AllNetshCommands.CommandType.Reset);
+            // Part of the "Show" menu.
+            var commandType = AllNetshCommands.CommandType.Reset;
+            OnMenu_Tag(sender, commandType);
+        }
+        private void OnMenu_Tag(object sender, AllNetshCommands.CommandType commandType)
+        {
+            var mi = sender as MenuItem;
+            var menu = mi?.Parent as MenuItem;
+            var tag = mi?.Tag as string;
+            if (mi == null || menu == null || tag == null) return;
+            foreach (var child in menu.Items)
+            {
+                if (child is Separator) break; // only uncheck the first items
+                var mm = child as MenuItem;
+                if (mm == null) continue;
+                var ch = ((mm.Tag as string) == tag);
+                mm.IsChecked = ch;
+            }
+
+            DoSetMenuWithTag(tag, commandType);
         }
 
         private void OnMenu_Show_Help_Check(object sender, RoutedEventArgs e)

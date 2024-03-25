@@ -1,22 +1,12 @@
 ﻿# Items to be done
 
-## For version 1.9
+## For version 1.10
 
-The history control is the first big new item for 1.9. Currently implemented
-- there's a history control
-- new output get placed in it
-- the user can pick a different item 
-- Must be able to use arrows to go back and forth and home and end
-- The current selected item must be visible. In the middle, but with no blank space on the left or right.
+Bugs fixed:
+- the menus get the right checkmarks now when clicked + Reset menu only has things that make sense.
+- Reduced the 
 
-Did in this version :-)
-- Selection works better: on mouse up, do the command. This lets a command be run multiple times.
-- Update UX of history control to use icons instead of words; include tooltips for accessability.
-- right-click to delete and show information (title and time).
-- When moving in the history, must update the title! 
-- When deleting in the history, when the last item is deleted, clear the screen.
-- Handle a huge amount of data.
-- Help includes images with new renderer
+In progress right now:
 
 Still to be done
 - Create a user preferences
@@ -41,7 +31,8 @@ Bump the version, build as release, update Github.
 To bump the version, you must set the VersionPrefix in the NetshG project file.
 
 ### *Obsolete*
-As of 2024-03-35, the project is published with the MSIX packaging project.
-Also set the Version in the NetshG-Setup project properties (this also changes the ProductCode). 
+As of 2024-03-35, the old NetshG-Setup and the Click to run settings are obsolete. Instead, the project is 
+published with the MSIX packaging project. Old instructions included "Also set the Version in the NetshG-Setup project properties 
+(this also changes the ProductCode).""
 
-The final "standalone" .MSI file that's generated in the NetshG\bin\Publish-Setup should then be added as a new release in the Github directory. The two "Publish" items in the NETSHG project are useless, BTW.
+Also obsolete: the final "standalone" .MSI file that's generated in the NetshG\bin\Publish-Setup should then be added as a new release in the Github directory. The two "Publish" items in the NETSHG project are useless, BTW.

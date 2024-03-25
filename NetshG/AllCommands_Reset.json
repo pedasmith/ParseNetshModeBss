@@ -14,7 +14,7 @@
   {
     "Cmd": "ipconfig",
     "Args2": "/registerdns",
-    "Tags": "#common"
+    "Tags": "#all"
   },
   {
     "Cmd": "ipconfig",
@@ -35,7 +35,7 @@
   {
     "Cmd": "netsh",
     "Args": "interface ipv6 reset",
-    "Tags": "#common",
+    "Tags": "#all",
     "Issues": "Help has grammar issues 'Restarting computer is required before the default settings to be effect'"
   },
   {
