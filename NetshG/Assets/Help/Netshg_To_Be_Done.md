@@ -15,12 +15,14 @@ Did in this version :-)
 - right-click to delete and show information (title and time).
 - When moving in the history, must update the title! 
 - When deleting in the history, when the last item is deleted, clear the screen.
+- Handle a huge amount of data.
+- Help includes images with new renderer
 
 Still to be done
-- Handle a huge amount of data.
 - Create a user preferences
 - Add favorite commands and auto-run commands?
 - "Fix" in case the user picked "output" and now wants everything to be "table" or vice-versa.
+- Clear the history? Which deletes all but the most recent item?
 
 UX improvements that would be awesome
 - Support more teams' commands.

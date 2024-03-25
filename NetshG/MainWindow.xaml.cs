@@ -1,10 +1,12 @@
 ﻿using Markdig;
 using Markdig.Wpf;
+using Neo.Markdig.Xaml;
 using ParseNetshModeBss; // to get the utilities classes!
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
@@ -449,6 +451,11 @@ namespace NetshG
         }
         private void ShowHelp(string helpFileName)
         {
+            // Help files are all in Markdown and use the https://github.com/xoofx/markdig toolkit
+            // plus the https://github.com/neolithos/NeoMarkdigXaml renderer
+            //     via the NUGET package (https://www.nuget.org/packages/Neo.Markdig.Xaml/)
+            // It used to use the now-obsolete https://github.com/Kryptos-FR/markdig.wpf renderer
+
             var ccc = CurrCommandControl;
             var isdifferent = helpFileName != lastHelpFile;
             lastHelpFile = helpFileName;
@@ -465,13 +472,19 @@ namespace NetshG
             }
             uiHistoryControl.Visibility = Visibility.Collapsed;
 
+            //
+            // Read in the markdown files
+            //
             Uri uri = new Uri(helpFileName, UriKind.Relative);
             StreamResourceInfo commands = Application.GetContentStream(uri);
             var sr = new StreamReader(commands.Stream);
             var markdown = sr.ReadToEnd();
             var version = Assembly.GetExecutingAssembly()?.GetName()?.Version?.ToString();
-            markdown = markdown.Replace("{VERSION}", version);
+            var content = markdown.Replace("{VERSION}", version);
 
+            //
+            // Ensure we have the MarkdownPipeline
+            //
             if (mdpipe == null)
             {
                 mdpipe = new MarkdownPipelineBuilder()
@@ -480,6 +493,13 @@ namespace NetshG
             }
             if (mdpipe == null) return;
 
+            var doc = MarkdownXaml.ToFlowDocument(content, mdpipe);
+            uiHelpMD.Document = doc;
+
+#if OBSOLETE_CODE_2024_03_24
+            // This is for the older XAML renderer https://github.com/Kryptos-FR/markdig.wpf
+            // That renderer is marked as archived. It's being replaced because it was
+            // throwing exceptions when images are rendered.
             var xaml = Markdig.Wpf.Markdown.ToXaml(markdown, mdpipe);
             using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(xaml)))
             {
@@ -492,6 +512,8 @@ namespace NetshG
                 }
             }
 
+#endif
+
         }
         private void OnMenu_Help_Versions(object sender, RoutedEventArgs e)
         {
@@ -502,7 +524,7 @@ namespace NetshG
             var w = new HelpKeyboardShortcutWindow();
             w.Show();
         }
-        #endregion HELP_UX
+#endregion HELP_UX
 
 
         #region REPEAT
