@@ -4,21 +4,17 @@ using Neo.Markdig.Xaml;
 using ParseNetshModeBss; // to get the utilities classes!
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Reflection;
-using System.Reflection.Metadata;
-using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Resources;
-using System.Xaml;
 using Utilities;
 using static NetshG.CanDoCommand;
-using XamlReader = System.Windows.Markup.XamlReader;
 
 
 namespace NetshG
@@ -62,6 +58,9 @@ namespace NetshG
 
             this.Loaded += MainWindow_Loaded;
 
+            UP.Restore();
+            CheckAllMenuCorrectly(UP.CurrUserPrefs.CmdType, UP.CurrUserPrefs.Tags);
+
             KeyDescriptions.Clear();
 
             // ^C
@@ -83,7 +82,7 @@ namespace NetshG
             CommandAdd(Key.A, ModifierKeys.Alt, (s, e) => { DoSetMenuWithTag("#all"); }, "ALT+A", "Show all commands in command list");
             CommandAdd(Key.C, ModifierKeys.Alt, (s, e) => { DoSetMenuWithTag("#common"); }, "ALT+C", "Show common command in command list");
             CommandAdd(Key.O, ModifierKeys.Alt, (s, e) => { ShowOutputOrTable(DisplayOptions.ShowWhat.Output); }, "ALT-O", "Show output as text, not as table");
-            //CommandAdd(Key.R, ModifierKeys.Alt, OnRepeat, "ALT+R", "Repeat command"); Removed; it's part of the menu now. But still good to tell user
+            //CommandAdd(Key.R, ModifierKeys.Alt, OnRepeat, "ALT+R", "Repeat command"); Removed; it's part of the targetMenu now. But still good to tell user
             KeyDescriptions.Add(new HelpDescription("ALT+R R", "Repeat command"));
             KeyDescriptions.Add(new HelpDescription("ALT+R S", "Repeat command every second"));
             KeyDescriptions.Add(new HelpDescription("ALT+R M", "Repeat command every minute"));
@@ -116,6 +115,7 @@ namespace NetshG
 
 
 
+
         int CurrRepeatTimeInSeconds = 0; // not repeating
 
 
@@ -142,44 +142,67 @@ namespace NetshG
 
         private void OnMenu_Show_Tag(object sender, RoutedEventArgs e)
         {
-            // Part of the "Show" menu.
-            var commandType = AllNetshCommands.CommandType.Show;
-            OnMenu_Tag(sender, commandType);
+            // Part of the "Show" targetMenu.
+            var commandType = AllNetshCommands.CmdType.Show;
+
+            var mi = sender as MenuItem;
+            var tag = mi?.Tag as string;
+            if (mi == null || tag == null) return;
+            CheckAllMenuCorrectly(commandType, tag);
+            DoSetMenuWithTag(tag, commandType);
         }
 
 
         private void OnMenu_Reset_Tag(object sender, RoutedEventArgs e)
         {
-            // Part of the "Show" menu.
-            var commandType = AllNetshCommands.CommandType.Reset;
-            OnMenu_Tag(sender, commandType);
-        }
-        private void OnMenu_Tag(object sender, AllNetshCommands.CommandType commandType)
-        {
-            var mi = sender as MenuItem;
-            var menu = mi?.Parent as MenuItem;
-            var tag = mi?.Tag as string;
-            if (mi == null || menu == null || tag == null) return;
-            foreach (var child in menu.Items)
-            {
-                if (child is Separator) break; // only uncheck the first items
-                var mm = child as MenuItem;
-                if (mm == null) continue;
-                var ch = ((mm.Tag as string) == tag);
-                mm.IsChecked = ch;
-            }
+            // Part of the "Show" targetMenu.
+            var commandType = AllNetshCommands.CmdType.Reset;
 
+            var mi = sender as MenuItem;
+            var tag = mi?.Tag as string;
+            if (mi == null || tag == null) return;
+            CheckAllMenuCorrectly(commandType, tag);
             DoSetMenuWithTag(tag, commandType);
         }
+
+
+        private void CheckAllMenuCorrectly(AllNetshCommands.CmdType commandType, string tag)
+        {
+            var targetMenu = uiMenuShow;
+            var menuList = new List<MenuItem>() { uiMenuReset, uiMenuShow };
+            switch (commandType)
+            {
+                case AllNetshCommands.CmdType.Reset: targetMenu = uiMenuReset; break;
+                case AllNetshCommands.CmdType.Show: targetMenu = uiMenuShow; break;
+            }
+            if (tag == null) return;
+
+
+            foreach (var menu in menuList)
+            {
+                foreach (var child in menu.Items)
+                {
+                    if (child is Separator) break; // only uncheck the first items
+                    var mm = child as MenuItem;
+                    if (mm == null) continue;
+                    var ch = (menu == targetMenu) && ((mm.Tag as string) == tag);
+                    mm.IsChecked = ch;
+                }
+            }
+
+        }
+
 
         private void OnMenu_Show_Help_Check(object sender, RoutedEventArgs e)
         {
             UP.CurrUserPrefs.ShowHelp = true;
+            UP.Save();
         }
 
         private void OnMenu_Show_Help_Uncheck(object sender, RoutedEventArgs e)
         {
             UP.CurrUserPrefs.ShowHelp = false;
+            UP.Save();
         }
 
         private void OnMenu_Help_Help(object sender, RoutedEventArgs e)
@@ -268,11 +291,11 @@ namespace NetshG
             uiHistoryControl.UXCommands = this; // to set the title
 
             // Just for testing
-            var cmdlist = AllNetshCommands.GetCommands(AllNetshCommands.CommandType.Show);
+            var cmdlist = AllNetshCommands.GetCommands(AllNetshCommands.CmdType.Show);
             CommandInfo.VerifyAllSetters(cmdlist, CurrArgumentSettings);
         }
 
-        AllNetshCommands.CommandType CurrCommandType = AllNetshCommands.CommandType.Show;
+        AllNetshCommands.CmdType CurrCommandType = AllNetshCommands.CmdType.Show;
 
         #region UX_SETUP
         private void DoInitializeCommonArguments()
@@ -296,9 +319,10 @@ namespace NetshG
             CurrArgumentSettings.SetCurrent("ITSSTemplate", CurrArgumentSettings.GetValue("ITSSTemplate", "internet"));
         }
 
-        private void DoSetMenuWithTag(string tags, AllNetshCommands.CommandType menuType = AllNetshCommands.CommandType.Show)
+        private void DoSetMenuWithTag(string tags, AllNetshCommands.CmdType menuType = AllNetshCommands.CmdType.Show)
         {
             UP.CurrUserPrefs.Tags = tags;
+            UP.Save();
             CurrCommandType = menuType;
             var cmdlist = AllNetshCommands.GetCommands(CurrCommandType);
 
@@ -625,7 +649,7 @@ namespace NetshG
 
             // We know we have to use the "Show" commands to get the data. Any other list
             // will potentially reset some part of the system, and we don't want that.
-            var cmdlist = AllNetshCommands.GetCommands(AllNetshCommands.CommandType.Show);
+            var cmdlist = AllNetshCommands.GetCommands(AllNetshCommands.CmdType.Show);
 
             var requireList = CommandInfo.GetAllMissingSettersFor(ci, cmdlist, CurrArgumentSettings);
             var ccc = new CommandOutputControl(this, CurrDisplayOptions);

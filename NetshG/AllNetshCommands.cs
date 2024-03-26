@@ -7,23 +7,23 @@ using System.Windows.Resources;
 
 namespace NetshG
 {
-    class AllNetshCommands
+    public class AllNetshCommands
     {
-        public enum CommandType {  Show, Reset };
+        public enum CmdType {  Show, Reset };
         private static List<CommandInfo> CommandsShow = new List<CommandInfo>();
         private static List<CommandInfo> CommandsReset = new List<CommandInfo>();
-        public static List<CommandInfo> GetCommands(CommandType menuType)
+        public static List<CommandInfo> GetCommands(CmdType menuType)
         {
             switch (menuType)
             {
-                case CommandType.Reset:
+                case CmdType.Reset:
                     if (CommandsReset.Count == 0)
                     {
                         CommandsReset = ReadFile("/AllCommands_Reset.json"); ;
                     }
                     return CommandsReset;
                 default:
-                case CommandType.Show:
+                case CmdType.Show:
                     if (CommandsShow.Count == 0)
                     {
                         CommandsShow = ReadFile("/AllCommands_Show.json"); ;

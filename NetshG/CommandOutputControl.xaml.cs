@@ -139,7 +139,7 @@ namespace NetshG
 
             // We know we have to use the "Show" commands to get the data. Any other list
             // will potentially reset some part of the system, and we don't want that.
-            var cmdlist = AllNetshCommands.GetCommands(AllNetshCommands.CommandType.Show);
+            var cmdlist = AllNetshCommands.GetCommands(AllNetshCommands.CmdType.Show);
 
             var requireList = CommandInfo.GetAllMissingSettersFor(ci, cmdlist, UXCommands.GetCurrArgumentSettings());
             foreach (var requireci in requireList)

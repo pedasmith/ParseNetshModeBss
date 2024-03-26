@@ -9,7 +9,7 @@ Bugs fixed:
 In progress right now:
 
 Still to be done
-- Create a user preferences
+- Create a user preferences that gets saved and restored
 - Add favorite commands and auto-run commands?
 - "Fix" in case the user picked "output" and now wants everything to be "table" or vice-versa.
 - Clear the history? Which deletes all but the most recent item?
