@@ -15,6 +15,7 @@ namespace Utilities
             Logger = this;
         }
 
+
         public List<ArgumentSettingValue> ParseForValues(string value)
         {
             var retval = new List<ArgumentSettingValue>();

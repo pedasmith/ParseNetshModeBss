@@ -14,6 +14,9 @@ namespace Utilities
                 case "DashLine":
                     retval = null; // new ParseDashLineTab() {  };
                     break;
+                case "IndentAllowSpaces":
+                    retval = new ParseIndent() { AllowSpacesInName = true };
+                    break;
                 case "Interfaces":
                     retval = new ParseList() { ColumnToReturn = "IfIndex" };
                     break;
@@ -37,6 +40,9 @@ namespace Utilities
                     break;
                 case "Indent":
                     retval = new ParseIndent();
+                    break;
+                case "IndentAllowSpaces":
+                    retval = new ParseIndent() { AllowSpacesInName = true };
                     break;
                 case "List":
                     retval = new ParseList();

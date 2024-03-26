@@ -4,9 +4,10 @@ using System.Text;
 
 namespace Utilities
 {
-    internal class ParseIndent : TableParse
+    internal class ParseIndent : TableParse, IMacroParse
     {
         List<string>[] savedRows = new List<string>[5]; // 5 is kind of arbitrary...
+        public bool AllowSpacesInName = false;
 
         public override void Parse(string file)
         {
@@ -48,7 +49,11 @@ namespace Utilities
                         {
                             // colname="SSID" index="1" value="MyHouseWiFi"
                             (l0linename, l0namevalue) = line.SplitColon();
-                            (l0colname, l0index) = l0linename.SplitSpace();
+                            l0colname = l0linename;
+                            if (!AllowSpacesInName) // this is the common case
+                            {
+                                (l0colname, l0index) = l0linename.SplitSpace();
+                            }
                             l0colname = l0colname.Trim();
                             l0namevalue = l0namevalue.Trim();
 
@@ -127,6 +132,15 @@ namespace Utilities
                 currRowHasData = false;
                 currRow = new List<string>();
             }
+        }
+
+
+        public string ColumnToReturn = "Name";
+        public List<ArgumentSettingValue> ParseForValues(string value)
+        {
+            Parse(value);
+            var retval = GetColumn(ColumnToReturn, "Name");
+            return retval;
         }
 
         /// <summary>
@@ -620,6 +634,29 @@ SSID 1 : XFINITY
 SSID 2 : xfinitywifi
     Network type            : Infrastructure
     Authentication          : Open
+""";
+
+        public static string ExampleMBN = """
+
+There is 1 interface on the system:
+
+Name                   : Cellular
+Description            : SDX55 5G Modem NetAdapter
+GUID                   : {3B78BA46-E595-4E2D-A1A4-7602330D97A4}
+Physical Address       : 00:a0:c6:00:00:01
+Additional PDP Context : No (Physical interface)
+Parent Interface Guid  : No parent
+State                  : Connected
+Device type            : Mobile Broadband device is embedded in the system
+Cellular class         : GSM
+Device Id              : 004403150997916
+Manufacturer           : Qualcomm
+Model                  : SDX55 5G Modem NetAdapter
+Firmware Version       : 230209-AR-2bde3fc-01136-1
+Provider Name          : 822 722
+Roaming                : Not roaming
+Signal                 : 48%
+RSSI / RSCP            : 15 (-83 dBm)
 """;
     } // end internal class ParseIndent : TableParse
 } // end namespace utilities

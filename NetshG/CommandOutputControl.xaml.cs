@@ -244,6 +244,14 @@ namespace NetshG
                 {
                     result = ParseIndent.Example1; // Set to fixed Example string for debugging problems.
                 }
+                if (program == "netsh" && argsWithExtraMore.StartsWith("mbn show interfaces"))
+                {
+                    if (result.Length < 80)
+                    {
+                        result = "Faked result " + ParseIndent.ExampleMBN; // Set to fixed example string for debugging.
+                    }
+                    ;
+                }
                 var rawResult = result; // for the parser
                 if (UP.CurrUserPrefs.ReplaceTabs)
                 {

@@ -158,7 +158,7 @@
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "interface ipv4 dump",
+		"Args": "interface ipv4 dump"
 	},
 	{
 		"Cmd": "netsh",
@@ -648,111 +648,167 @@
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show acstate"
+		"Args": "mbn show acstate",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show capability"
+		"Args": "mbn show capability",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show connection"
+		"Args": "mbn show connection",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show d3cold"
+		"Args": "mbn show d3cold",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show dataenablement"
+		"Args": "mbn show dataenablement",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show dataroamcontrol"
+		"Args": "mbn show dataroamcontrol",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show dmprofiles"
+		"Args": "mbn show dmprofiles",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show enterpriseapnparams"
+		"Args": "mbn show enterpriseapnparams",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show highestconncategory"
+		"Args": "mbn show highestconncategory",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show homeprovider"
+		"Args": "mbn show homeprovider",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show interfaces"
+		"Args": "mbn show interfaces",
+		"Tags": "#common",
+		"Sets": "MbnInterface",
+		"SetParser": "IndentAllowSpaces",
+		"TableParser": "IndentAllowSpaces"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show netlteattachinfo"
+		"Args": "mbn show netlteattachinfo",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show pin"
+		"Args": "mbn show pin",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show pinlist"
+		"Args": "mbn show pinlist",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show preferredproviders"
+		"Args": "mbn show preferredproviders",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show profiles"
+		"Args": "mbn show profiles",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show profilestate"
+		"Args": "mbn show profilestate",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show provisionedcontexts"
+		"Args": "mbn show provisionedcontexts",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show purpose"
+		"Args": "mbn show purpose",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show radio"
+		"Args": "mbn show radio",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show readyinfo"
+		"Args": "mbn show readyinfo",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show signal"
+		"Args": "mbn show signal",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show slotmapping"
+		"Args": "mbn show slotmapping",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show slotstatus"
+		"Args": "mbn show slotstatus",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show smsconfig"
+		"Args": "mbn show smsconfig",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show tracing"
+		"Args": "mbn show tracing",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "mbn show visibleproviders"
+		"Args": "mbn show visibleproviders",
+		"Args2": "MbnInterface",
+		"RequireList": "MbnInterface"
 	},
 	{
 		"Cmd": "netsh",
