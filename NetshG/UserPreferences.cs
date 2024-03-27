@@ -11,9 +11,10 @@ namespace NetshG
         public string Tags = "#common"; // CHECK: reset to common: "#common" when shipping;
         public AllNetshCommands.CmdType CmdType { get; set; } = AllNetshCommands.CmdType.Show;
 
+        public DisplayOptions CurrDisplayOptions { get; } = new DisplayOptions();
         public override string ToString()
         {
-            return $"ShowHelp={ShowHelp} CmdType={CmdType} Tags={Tags}";
+            return $"ShowHelp={ShowHelp} CmdType={CmdType} Tags={Tags} Display={CurrDisplayOptions.CurrShowWhat}";
         }
 
     }

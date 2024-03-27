@@ -2,28 +2,26 @@
 
 ## For version 1.10
 
+UX Updates:
+- Create a user preferences that gets saved and restored
+- MSIX installer and put into store
+- Shorter list of "common" netshg commands.
+
 Bugs fixed:
 - the menus get the right checkmarks now when clicked + Reset menu only has things that make sense.
-- Reduced the 
 
 In progress right now:
 
 Still to be done
-- Create a user preferences that gets saved and restored
 - Add favorite commands and auto-run commands?
-- "Fix" in case the user picked "output" and now wants everything to be "table" or vice-versa.
 - Clear the history? Which deletes all but the most recent item?
 
 UX improvements that would be awesome
 - Support more teams' commands.
-- Shorter list of "common" netshg commands.
 
 Other improvements
-- MSIX installer and put into store
 
 Bugs
-- UX text focus? I shifted away from the app and then back on, and now keys don't work?
-- There's a flicker when the user prefers output, but the output prefers table. It shows up as table briefly, then switches to output.
 
 ## MAKING A RELEASE: 
 Bump the version, build as release, update Github. 

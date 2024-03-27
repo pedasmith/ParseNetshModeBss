@@ -355,6 +355,7 @@ namespace NetshG
                 case DisplayOptions.ShowWhat.Output: retval = DisplayOptions.ShowWhat.Table; break;
                 case DisplayOptions.ShowWhat.Table: retval = DisplayOptions.ShowWhat.Output; break;
             }
+            UP.Save();
             ShowOutputOrTable(retval);
             return retval;
         }

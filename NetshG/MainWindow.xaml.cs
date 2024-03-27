@@ -47,13 +47,13 @@ namespace NetshG
     public partial class MainWindow : Window, AddToText, UXCommands
     {
         private CommandOutputControl? CurrCommandControl { get { return uiHistoryControl.GetCurrentControl() as CommandOutputControl; } }
-        DisplayOptions CurrDisplayOptions { get; } = new DisplayOptions();
+        // DisplayOptions CurrDisplayOptions { get; } = new DisplayOptions();
 
         public MainWindow()
         {
             InitializeComponent();
             uiHistoryControl.HistoryPanel = uiCommandPanel;
-            DisplayOptions CurrDisplayOptions = new DisplayOptions();
+            // DisplayOptions CurrDisplayOptions = new DisplayOptions();
 
             this.Loaded += MainWindow_Loaded;
 
@@ -241,7 +241,7 @@ namespace NetshG
             var newvalue = CurrCommandControl?.ToggleOutputOrTable();
             if (newvalue != null)
             {
-                CurrDisplayOptions.CurrShowWhat = newvalue;
+                UP.CurrUserPrefs.CurrDisplayOptions.CurrShowWhat = newvalue;
             }
         }
 
@@ -651,7 +651,7 @@ namespace NetshG
             var cmdlist = AllNetshCommands.GetCommands(AllNetshCommands.CmdType.Show);
 
             var requireList = CommandInfo.GetAllMissingSettersFor(ci, cmdlist, CurrArgumentSettings);
-            var ccc = new CommandOutputControl(this, CurrDisplayOptions);
+            var ccc = new CommandOutputControl(this, UP.CurrUserPrefs.CurrDisplayOptions);
 
             // Add the history early; it looks nicer that way.
             uiHistoryControl.AddCurrentControl(ccc, ci.Title);
