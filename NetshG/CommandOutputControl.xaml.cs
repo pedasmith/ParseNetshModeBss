@@ -237,7 +237,7 @@ namespace NetshG
                 {
                     if (result.Length < 80)
                     {
-                        result = "Faked result " + ParseIndent.ExampleMBN; // Set to fixed example string for debugging.
+                        result = "Pre-made (not real) result " + ParseIndent.ExampleMBN; // Set to fixed example string for debugging.
                     }
                     ;
                 }

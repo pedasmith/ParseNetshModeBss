@@ -1,4 +1,8 @@
-﻿# NETSH Version History
+﻿# NETSHG Version History
+
+## Version 1.10 2024-03-26 
+
+Minor bugs fixed, and preferences remembers whether the user last picked text output or a table. Default is text output, mostly because the table output isn't quite reliable enough.
 
 
 ## Version 1.9 2024-03-25
@@ -9,12 +13,12 @@ The app now tracks the history of command outputs and can switch between them. I
 
 The set of common commands has been trimmed down a bit to make the list more manageable. The installer is now an MSIX bundle, not an MSI file, so the app can theoretically be placed in the store.
 
+
 ## Version 1.8 2024-01-16
 
 Update to the parameter user interface: parameters like "InterfaceIndex" are comboboxes now (and the output handles this more gracefully)
 Added support for more commands including PING and NETSTAT and the "dump" commands from Netstat. The output can flow in over time now.
 There's a search for commands now; you can enter e.g., "dns" and get all commands that have "dns" in them (or their tags)
-
 
 
 ## Version 1.7 2024-01-10
@@ -23,6 +27,7 @@ There's a search for commands now; you can enter e.g., "dns" and get all command
 - User can automatically repeat a command for all variables (for example, to get information on all adapters)
 - The help sytem is nicer
 
+- 
 ## Version 1.6 2024-01-03
 Will automatically call the right command when a previously-unseen argument is needed. For example,
 if an InterfaceIndex is needed, will so a show interfaces to get a list of interfaces, and will then pick one to show.
