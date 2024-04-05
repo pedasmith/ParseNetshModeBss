@@ -51,8 +51,9 @@
                 <MenuItem Header=" 1 _hour" Tag="3600" Click="OnMenuRepeatStart"/>
                 <MenuItem  x:Name="uiMenuRepeatStop" Header="Stop" Tag="1" Click="OnMenuRepeatStop" IsEnabled="False" />
             </MenuItem>
-            <MenuItem Header="_Parameters">
-                <MenuItem Header="Common" x:Name="uiMenu_Parameters_Common">
+            <MenuItem Header="_Settings">
+                <MenuItem Header="Toggle Favorite" Click="OnMenu_Settings_Toggle_Favorite" />
+                <MenuItem Header="Common Parameters" x:Name="uiMenu_Parameters_Common">
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Help">
@@ -88,7 +89,7 @@
                     <TextBox Grid.Column="0" x:Name="uiSearch" TextChanged="OnSearchTextChanged"  />
                     <TextBlock Grid.Column="0" Text="🔎" HorizontalAlignment="Right"/>
                 </Grid>
-                <ListView Grid.Row="1" x:Name="uiCommandList" MouseUp="OnMouseUp" SelectionChanged="OnSelectCommand" VerticalAlignment="Stretch">
+                <ListView Grid.Row="1" x:Name="uiCommandList" MouseLeftButtonUp="OnMouseLeftUp" SelectionChanged="OnSelectCommand" VerticalAlignment="Stretch">
                     <!--- Values are set by MainWindow_Loaded from AllNetshCommands.GetCommands() -->
                 </ListView>
             </Grid>

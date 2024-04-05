@@ -1,19 +1,20 @@
 ﻿# Items to be done
 
-## For version 1.10
+## For version 1.11
 
 UX Updates:
-- Create a user preferences that gets saved and restored
-- MSIX installer and put into store
-- Shorter list of "common" netshg commands.
+- favorite commands. Have favorites in userpref. Added right-click menu for NetshCommandControl
 
 Bugs fixed:
-- the menus get the right checkmarks now when clicked + Reset menu only has things that make sense.
+- seperate left and right mouse button clicks now
 
 In progress right now:
 
+
+
 Still to be done
-- Add favorite commands and auto-run commands?
+- URL to run the app + commands
+- Add auto-run commands?
 - Clear the history? Which deletes all but the most recent item?
 
 UX improvements that would be awesome

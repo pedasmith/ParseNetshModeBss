@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
+using System.Windows.Documents;
 
 namespace NetshG
 {
@@ -11,6 +13,15 @@ namespace NetshG
         public string Tags = "#common"; // CHECK: reset to common: "#common" when shipping;
         public AllNetshCommands.CmdType CmdType { get; set; } = AllNetshCommands.CmdType.Show;
 
+        public List<string> Favorites = new List<string>() {
+            "netsh wlan show interfaces "
+        };
+        public bool IsFavorite(CommandInfo ci)
+        {
+            var test = ci.FavoriteMatch;
+            var retval = Favorites.Contains(test);
+            return retval;
+        }
         public DisplayOptions CurrDisplayOptions { get; } = new DisplayOptions();
         public override string ToString()
         {

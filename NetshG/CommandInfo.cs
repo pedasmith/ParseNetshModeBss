@@ -42,6 +42,7 @@ namespace NetshG
         public string TableParser { get; set; } = "";
 
         public string Title { get { return $"{Cmd} {Args}"; } } 
+        public string FavoriteMatch {  get { return $"{Cmd} {Args} {Args2}"; } }
         public string AllUserText {  get 
             {
                 var retval = $"{Cmd} {Args} {Args2} {Args5NoUX} {Tags}";

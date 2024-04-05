@@ -191,6 +191,35 @@ namespace NetshG
 
         }
 
+        private void OnMenu_Settings_Toggle_Favorite(object sender, RoutedEventArgs e)
+        {
+            if (LastCommand == null) return;
+            DoToggleFavorite(LastCommand);
+        }
+
+        private void DoToggleFavorite(CommandInfo cmd)
+        {
+            var list = UP.CurrUserPrefs.Favorites;
+            var favorite = cmd.FavoriteMatch;
+
+            var setFavorite = !list.Contains(favorite); // what should we set this to?
+            if (setFavorite) list.Add(favorite);
+            else list.Remove(favorite);
+
+            UP.Save();
+
+            foreach (var item in uiCommandList.Items)
+            {
+                var cc = item as NetshCommandControl;
+                if (cc == null) continue;
+                if (cc.CommandInfo == null) continue; // can never happen
+                if (cc.CommandInfo.FavoriteMatch == favorite)
+                {
+                    cc.SetFavorite(setFavorite);
+                }
+            }
+        }
+
 
         private void OnMenu_Show_Help_Check(object sender, RoutedEventArgs e)
         {
@@ -335,12 +364,31 @@ namespace NetshG
             {
                 if (cmd.HasTag(tags))
                 {
-                    var ctrl = new NetshCommandControl(cmd);
+                    var isFavorite = UP.CurrUserPrefs.IsFavorite(cmd);
+                    var ctrl = new NetshCommandControl(cmd, isFavorite);
+                    ctrl.ContextMenu = MakeContextMenu(cmd);
                     uiCommandList.Items.Add(ctrl);
                 }
             }
             uiIssues.Text = $"{tags}: {uiCommandList.Items.Count} commands out of {cmdlist.Count}";
         }
+
+        private ContextMenu MakeContextMenu(CommandInfo cmd)
+        {
+            var retval = new ContextMenu();
+            var toggle = new MenuItem() { Header = "Toggle Favorite", Tag=cmd };
+            toggle.Click += Toggle_Click;
+            retval.Items.Add(toggle);
+            return retval;
+        }
+
+        private void Toggle_Click(object sender, RoutedEventArgs e)
+        {
+            var cmd = (sender as MenuItem)?.Tag as CommandInfo;
+            if (cmd == null) return;
+            DoToggleFavorite(cmd);
+        }
+
 
         private void DoSetMenuWithSearch (string search)
         {
@@ -357,7 +405,9 @@ namespace NetshG
             {
                 if (cmd.AllUserText.ToLower().Contains(search))
                 {
-                    var ctrl = new NetshCommandControl(cmd);
+                    var isFavorite = UP.CurrUserPrefs.IsFavorite(cmd);
+                    var ctrl = new NetshCommandControl(cmd, isFavorite);
+                    ctrl.ContextMenu = MakeContextMenu(cmd);
                     uiCommandList.Items.Add(ctrl);
                 }
             }
@@ -386,7 +436,7 @@ namespace NetshG
         {
         }
 
-        private async void OnMouseUp(object sender, MouseButtonEventArgs e)
+        private async void OnMouseLeftUp(object sender, MouseButtonEventArgs e)
         {
             OnMenuRepeatStop(sender, e); // If I was repeating, stop it.
 
@@ -412,16 +462,17 @@ namespace NetshG
             LastCommand = ci;
 
             await DoCommandAsync(ci);
-
         }
-        #endregion
+
+
+         #endregion
 
 
 
-        #region UXCOMMANDS_INTERFACE
+            #region UXCOMMANDS_INTERFACE
 
-        // OnRepeatAsync Help_remove Log SetAmDoCommand SetCount SetUIIssues GetCurrArgumentSettings
-        public void Log(string str)
+            // OnRepeatAsync Help_remove Log SetAmDoCommand SetCount SetUIIssues GetCurrArgumentSettings
+            public void Log(string str)
         {
             Console.WriteLine(str);
         }
@@ -473,11 +524,6 @@ namespace NetshG
         }
 
         #endregion ADDTOTEXT_INTERFACE
-
-
-
-
-
 
 
         #region HELP_UX
@@ -669,6 +715,8 @@ namespace NetshG
             // Now run the command for real
             await ccc.DoCommandAsyncRaw(ci, commandOptions);
         }
+
+
 
         #endregion ACTUALLY_RUN_COMMANDS
 
