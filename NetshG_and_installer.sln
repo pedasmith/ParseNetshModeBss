@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetshG", "NetshG\NetshG.csp
 EndProject
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "MSIX_Packaging_2024", "MSIX_Packaing_2024\MSIX_Packaging_2024.wapproj", "{B4ABA4EE-388E-4ECA-B55D-2EAB4261245E}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SharedMeCardParser", "SharedMECard\SharedMeCardParser.shproj", "{6ED5347F-81BD-48AD-838F-A0BE1FE39CFA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,7 +83,9 @@ Global
 		SolutionGuid = {B6AC3EBF-6576-4B9F-9969-7E45893C818B}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		SharedMECard\SharedMECard.projitems*{6a8ae6d0-0017-49ea-ae17-1e85710b439a}*SharedItemsImports = 5
 		Utilities\Utilities.projitems*{6a8ae6d0-0017-49ea-ae17-1e85710b439a}*SharedItemsImports = 5
+		SharedMECard\SharedMECard.projitems*{6ed5347f-81bd-48ad-838f-a0be1fe39cfa}*SharedItemsImports = 13
 		Utilities\Utilities.projitems*{f05b4f38-6a74-40fd-b8e1-4be8488d4a3a}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

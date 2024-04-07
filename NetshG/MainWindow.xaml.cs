@@ -292,7 +292,7 @@ namespace NetshG
         #endregion
 
 
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             DoInitializeCommonArguments();
             DoSetMenuWithTag(UP.CurrUserPrefs.Tags);
@@ -318,9 +318,31 @@ namespace NetshG
 
             uiHistoryControl.UXCommands = this; // to set the title
 
+
+            // Do the automation. 
+            var automationlist = UP.StartupCommands;
+            var searchlist = AllNetshCommands.GetCommands(AllNetshCommands.CmdType.Show);
+            foreach (var automation in automationlist)
+            {
+                switch (automation.Automation)
+                {
+                    case AutomationCommand.AutomationType.RunCommand:
+                        var ci = GetCommand(searchlist, automation.CommandToRun);
+                        if (ci != null)
+                        {
+                            await DoCommandAsync(ci, CommandOptions.None);
+                        }
+                        break;
+                }
+            }
+
+
             // Just for testing
-            var cmdlist = AllNetshCommands.GetCommands(AllNetshCommands.CmdType.Show);
-            CommandInfo.VerifyAllSetters(cmdlist, CurrArgumentSettings);
+            var testlist = AllNetshCommands.GetCommands(AllNetshCommands.CmdType.Show);
+            var errstr = "";
+            errstr += CommandInfo.VerifyAllSetters(testlist, CurrArgumentSettings);
+            testlist = AllNetshCommands.GetCommands(AllNetshCommands.CmdType.Reset);
+            errstr += CommandInfo.VerifyAllSetters(testlist, CurrArgumentSettings);
         }
 
         AllNetshCommands.CmdType CurrCommandType = AllNetshCommands.CmdType.Show;
@@ -679,6 +701,22 @@ namespace NetshG
         }
         #endregion REPEAT
 
+        #region AUTOMATION
+
+        private CommandInfo? GetCommand(List<CommandInfo> searchlist, string automation)
+        {
+
+            foreach (var item in searchlist)
+            {
+                if (item.AutomationVersion == automation)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        #endregion
 
         #region ACTUALLY_RUN_COMMAND
         /// <summary>

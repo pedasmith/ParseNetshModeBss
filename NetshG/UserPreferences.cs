@@ -14,7 +14,6 @@ namespace NetshG
         public AllNetshCommands.CmdType CmdType { get; set; } = AllNetshCommands.CmdType.Show;
 
         public List<string> Favorites = new List<string>() {
-            "netsh wlan show interfaces "
         };
         public bool IsFavorite(CommandInfo ci)
         {
@@ -30,6 +29,19 @@ namespace NetshG
 
     }
 
+    public class AutomationCommand
+    {
+        public enum AutomationType {  RunCommand, Search };
+        public AutomationType Automation { get; set;  } = AutomationType.RunCommand;
+        // AllNetshCommands.CmdType CmdType = AllNetshCommands.CmdType.Show; // Will always be show, nothing else is allowed.
+
+        // RunCommand fields
+        public string CommandToRun = "netshinterfaceipv4showaddressesInterfaceIndex";
+    }
+
+    /// <summary>
+    /// Global for saving/restoring user preferences + command line arguments for MainWindow
+    /// </summary>
     public static class UP
     {
         public static UserPreferences CurrUserPrefs = new UserPreferences();
@@ -64,5 +76,10 @@ namespace NetshG
         {
             Console.WriteLine(str);
         }
+
+        /// <summary>
+        /// Startup commands parsed out from 
+        /// </summary>
+        public static List<AutomationCommand> StartupCommands = new List<AutomationCommand>();
     }
 }

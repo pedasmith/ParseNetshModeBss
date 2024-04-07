@@ -4,6 +4,8 @@
 
 Added favorites: your preferred commands can be shown in **boldface**. Right-click a command and select toggle favorite, or after you run a command, select the menu Settings > Toggle Favorite
 
+Supports automation with the **netshg** protocol (scheme). When a URL with the scheme "netshg" is seen, NetshG will be run and the command embedded in the URL will be run.
+
 ## Version 1.10 2024-03-26 
 
 Minor bugs fixed, and preferences remembers whether the user last picked text output or a table. Default is text output, mostly because the table output isn't quite reliable enough.

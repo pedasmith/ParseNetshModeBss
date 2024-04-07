@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using NetshG.Properties;
 using Utilities.ConfigurableParser;
+using Newtonsoft.Json.Bson;
 
 namespace NetshG
 {
@@ -47,6 +48,61 @@ namespace NetshG
                 // * When the first application session
                 // * When file has been deleted
             }
+
+            SystemTest();
+
+            // Parse out the netshg: call
+            var netshurl = (e.Args.Length == 1 && e.Args[0].ToUpperInvariant().StartsWith("netshg:")) ? e.Args[0] : "";
+            // netshurl = "netshg:action:run;cmd:netshinterfaceipv4showaddressesInterfaceIndex;;action:run;cmd:netshwlanshowdrivers;;";
+            if (netshurl != "")
+            {
+                var list = MeCardParser.MeCardParser.ParseList(netshurl);
+                foreach (var mecard in list)
+                {
+                    if (mecard.IsValid != MeCardParser.MeCardRaw.Validity.Valid)
+                    {
+                        // invalid means don't any any command at all. 
+                        UP.StartupCommands.Clear();
+                        break;
+                    }
+                    var action = mecard.GetField("action");
+                    var cmd = mecard.GetField("cmd");
+                    if (action == null || action.Value == "")
+                    {
+                        // invalid means don't any any command at all. 
+                        UP.StartupCommands.Clear();
+                        break;
+                    }
+                    switch (action.Value)
+                    {
+                        case "run":
+                            if (cmd == null || cmd.Value == "")
+                            {
+                                // invalid means don't any any command at all. 
+                                UP.StartupCommands.Clear();
+                                break;
+                            }
+                            var automation = new AutomationCommand()
+                            {
+                                Automation = AutomationCommand.AutomationType.RunCommand,
+                                CommandToRun = cmd.Value,
+                            };
+                            UP.StartupCommands.Add(automation);
+                            break;
+                        default:
+                            // invalid means don't any any command at all. 
+                            UP.StartupCommands.Clear();
+                            break;
+                    }
+                }
+            }
+        }
+
+        private int SystemTest()
+        {
+            int nerror = 0;
+            nerror += MeCardParser.MeCardTest.TestMeCard();
+            return nerror;
         }
 
         private void App_Exit(object sender, ExitEventArgs e)
@@ -62,11 +118,11 @@ namespace NetshG
                     writer.Write(json);
                 }
             }
-                // Persist each application-scope property individually
-                //foreach (string key in this.Properties.Keys)
-                //{
-                //    writer.WriteLine("{0},{1}", key, this.Properties[key]);
-                //}
+            // Persist each application-scope property individually
+            //foreach (string key in this.Properties.Keys)
+            //{
+            //    writer.WriteLine("{0},{1}", key, this.Properties[key]);
+            //}
         }
     }
 }

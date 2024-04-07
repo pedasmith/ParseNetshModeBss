@@ -50,6 +50,15 @@ namespace NetshG
             } 
         }
 
+        public string AutomationVersion
+        {
+            get
+            {
+                string retval = (Cmd+Args+Args2).Replace(" ", "");
+                return retval;
+            }
+        }
+
         public string Tags { get; set; } = "";
         private List<string>? _taglist = null;
         public List<string> TagList

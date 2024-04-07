@@ -45,6 +45,15 @@ Shows a history of the program.
 ### Help Keyboard Shortcuts
 Shows a list of keyboard shortcuts.
 
+# Automation with the **netshg** protocol
+
+Example: in a command window, type ```"start netshg:action:run;cmd:netshwlanshowdriver;;```. The Netshg program will start and the netsh wlan show driver command will be run.
+
+You can run multiple commands, seperated with double-semicolons.
+
+Only commands listed in the "Show" menu can be run; no other command is permitted. The commands are abbreviated from what is listed in the command list: spaces are removed
+
+
 # Technical Details
 ## Where is the data from?
 The NetshG program gets its information by running the Netsh and similar commands. It's not a re-implementation of NETSH at all.

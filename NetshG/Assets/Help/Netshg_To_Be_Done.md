@@ -3,17 +3,14 @@
 ## For version 1.11
 
 UX Updates:
-- favorite commands. Have favorites in userpref. Added right-click menu for NetshCommandControl
 
 Bugs fixed:
-- seperate left and right mouse button clicks now
 
 In progress right now:
 
 
 
 Still to be done
-- URL to run the app + commands
 - Add auto-run commands?
 - Clear the history? Which deletes all but the most recent item?
 
@@ -23,6 +20,25 @@ UX improvements that would be awesome
 Other improvements
 
 Bugs
+
+## netshg: URI scheme
+
+When installed, Netshg will be called when the user selects a netshg: URL. The URL might be embedded in an email, or via a command line.
+
+The syntax is similar to the MECARD format used by the wifi: protocol. Unlike that protocol, the commands are more explicit, and you can have multiple commands.
+
+Example: ```netsh:action:run;cmd:netshinterfaceipv4showaddressesInterfaceIndex;;action:run;cmd:netshwlanshowdrivers;;```
+
+List of actions
+Action|Meaning
+-----|-----
+run|Runs one of the "show" commands. No other command lists can be run (this helps make the feature less prone to misuse). Requires the "cmd" value to specify the command to be run.
+
+Field|Used In|Meaning
+-----|-----|-----
+cmd|run|Selects a command to run. Only commands in the "show" list can be run. The cmd field is a shortened version of the command: it does not include spaces. For example, the command 
+
+
 
 ## MAKING A RELEASE: 
 Bump the version, build as release, update Github. 
