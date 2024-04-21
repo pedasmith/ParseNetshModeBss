@@ -41,9 +41,12 @@ cmd|run|Selects a command to run. Only commands in the "show" list can be run. T
 
 
 ## MAKING A RELEASE: 
-Bump the version, build as release, update Github. 
+Bump the version, build as release, package, update the store. 
 
-To bump the version, you must set the VersionPrefix in the NetshG project file.
+- To bump the version, you must set the VersionPrefix in the NetshG project file.
+- To build as release, set type to release and arch as x86 and do build clean build rebuild
+- To package, right-click MSIX_Packaging and "Publish" > "Create app packages"
+
 
 ### *Obsolete*
 As of 2024-03-35, the old NetshG-Setup and the Click to run settings are obsolete. Instead, the project is 

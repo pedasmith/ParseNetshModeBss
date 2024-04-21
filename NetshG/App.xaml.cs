@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using NetshG.Properties;
 using Utilities.ConfigurableParser;
 using Newtonsoft.Json.Bson;
+using System.Linq;
 
 namespace NetshG
 {
@@ -56,44 +57,58 @@ namespace NetshG
             // netshurl = "netshg:action:run;cmd:netshinterfaceipv4showaddressesInterfaceIndex;;action:run;cmd:netshwlanshowdrivers;;";
             if (netshurl != "")
             {
-                var list = MeCardParser.MeCardParser.ParseList(netshurl);
-                foreach (var mecard in list)
+                ParseNetshgUrl(netshurl);
+            }
+            else if (e.Args.Length > 1)
+            {
+                ParseArgs(e.Args);
+            }
+        }
+
+        private void ParseArgs(string[] args)
+        {
+            UP.DoThisExactCommand = args.ToList();
+        }
+
+        private void ParseNetshgUrl(string netshurl)
+        {
+            var list = MeCardParser.MeCardParser.ParseList(netshurl);
+            foreach (var mecard in list)
+            {
+                if (mecard.IsValid != MeCardParser.MeCardRaw.Validity.Valid)
                 {
-                    if (mecard.IsValid != MeCardParser.MeCardRaw.Validity.Valid)
-                    {
-                        // invalid means don't any any command at all. 
-                        UP.StartupCommands.Clear();
-                        break;
-                    }
-                    var action = mecard.GetField("action");
-                    var cmd = mecard.GetField("cmd");
-                    if (action == null || action.Value == "")
-                    {
-                        // invalid means don't any any command at all. 
-                        UP.StartupCommands.Clear();
-                        break;
-                    }
-                    switch (action.Value)
-                    {
-                        case "run":
-                            if (cmd == null || cmd.Value == "")
-                            {
-                                // invalid means don't any any command at all. 
-                                UP.StartupCommands.Clear();
-                                break;
-                            }
-                            var automation = new AutomationCommand()
-                            {
-                                Automation = AutomationCommand.AutomationType.RunCommand,
-                                CommandToRun = cmd.Value,
-                            };
-                            UP.StartupCommands.Add(automation);
-                            break;
-                        default:
+                    // invalid means don't any any command at all. 
+                    UP.StartupCommands.Clear();
+                    break;
+                }
+                var action = mecard.GetField("action");
+                var cmd = mecard.GetField("cmd");
+                if (action == null || action.Value == "")
+                {
+                    // invalid means don't any any command at all. 
+                    UP.StartupCommands.Clear();
+                    break;
+                }
+                switch (action.Value)
+                {
+                    case "run":
+                        if (cmd == null || cmd.Value == "")
+                        {
                             // invalid means don't any any command at all. 
                             UP.StartupCommands.Clear();
                             break;
-                    }
+                        }
+                        var automation = new AutomationCommand()
+                        {
+                            Automation = AutomationCommand.AutomationType.RunCommand,
+                            CommandToRun = cmd.Value,
+                        };
+                        UP.StartupCommands.Add(automation);
+                        break;
+                    default:
+                        // invalid means don't any any command at all. 
+                        UP.StartupCommands.Clear();
+                        break;
                 }
             }
         }

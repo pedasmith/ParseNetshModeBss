@@ -51,8 +51,11 @@ Example: in a command window, type ```"start netshg:action:run;cmd:netshwlanshow
 
 You can run multiple commands, seperated with double-semicolons.
 
-Only commands listed in the "Show" menu can be run; no other command is permitted. The commands are abbreviated from what is listed in the command list: spaces are removed
+Only commands listed in the "Show" menu can be run; no other command is permitted. The commands are abbreviated from what is listed in the command list: spaces are removed.
 
+# Replacement for NETSH
+
+You can replace any command-line "netsh" command with "netshg". The netshg program will take all your arguments and will run that command as a netsh command. Want to run a different command? Just start it with an exclamation point: ```netshg !ping microsoft.com``` will run the **ping microsoft.com** command using the NETSHG shell.
 
 # Technical Details
 ## Where is the data from?

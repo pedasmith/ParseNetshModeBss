@@ -1,5 +1,10 @@
 ﻿# NETSHG Version History
 
+## Version 1.12
+
+From feedback: netshg is now a complete replacement for netsh. For any netsh command, you can replace the netsh with netshg and the command will be run. Note that it doesn't do any quotes or anything: whatever you type will just be converted to a string and run. You can run other comands by starting them with an exclamation point: ```netshg !ping microsoft.com``` will run the **ping microsoft.com** command.
+
+
 ## Version 1.11
 
 Added favorites: your preferred commands can be shown in **boldface**. Right-click a command and select toggle favorite, or after you run a command, select the menu Settings > Toggle Favorite

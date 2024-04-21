@@ -5,6 +5,7 @@ using ParseNetshModeBss; // to get the utilities classes!
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Timers;
@@ -334,6 +335,37 @@ namespace NetshG
                         }
                         break;
                 }
+            }
+
+            // Per recommendation: allow netshg to exactly replace netsh!
+            if (UP.DoThisExactCommand.Count > 1)
+            {
+                var str = "";
+                var ci = new CommandInfo();
+
+                // Examples:
+                // netshg wlan show driver
+                // netsh !ping microsoft.com
+
+                int argstart = 0;
+                if (UP.DoThisExactCommand[0].StartsWith("!"))
+                {
+                    ci.Cmd = UP.DoThisExactCommand[0].Substring(1);
+                    argstart = 1;
+                }
+                else
+                {
+                    ci.Cmd = "netsh";
+                }
+
+                for (int i = argstart; i < UP.DoThisExactCommand.Count; i++)
+                {
+                    var cmd = UP.DoThisExactCommand[i];
+                    if (str != "") str = str + " ";
+                    str += cmd;
+                }
+                ci.Args = str;
+                await DoCommandAsync(ci, CommandOptions.None);
             }
 
 

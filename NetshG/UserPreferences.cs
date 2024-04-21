@@ -81,5 +81,6 @@ namespace NetshG
         /// Startup commands parsed out from 
         /// </summary>
         public static List<AutomationCommand> StartupCommands = new List<AutomationCommand>();
+        public static List<string> DoThisExactCommand = new List<string>();
     }
 }
