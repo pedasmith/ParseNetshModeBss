@@ -380,7 +380,7 @@
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "interface ipv6 dump",
+		"Args": "interface ipv6 dump"
 	},
 	{
 		"Cmd": "netsh",
@@ -929,6 +929,101 @@
 	{
 		"Cmd": "netsh",
 		"Args": "trace show status"
+	},
+	{
+		"Cmd": "netsh",
+		"Args": "wfp show boottimepolicy",
+		"Args5NoUX": "file=-"
+	},
+	{
+		"Cmd": "netsh",
+		"Args": "wfp show filters",
+		"Args5NoUX": "file=-"
+	},
+	{
+		"Cmd": "netsh",
+		"Args": "wfp show ikeevents",
+		"Args5NoUX": "file=-"
+	},
+	{
+		"Cmd": "netsh",
+		"Args": "wfp show netevents",
+		"Args5NoUX": "file=-"
+	},
+	{
+		"Cmd": "netsh",
+		"Args": "wfp show options",
+		"Args2": "NETEVENTS"
+	},
+	{
+		"Cmd": "netsh",
+		"Args": "wfp show options",
+		"Args2": "KEYWORDS"
+	},
+	{
+		"Cmd": "netsh",
+		"Args": "wfp show options",
+		"Args2": "TXNWATCHDOG"
+	},
+	{
+		"Cmd": "netsh",
+		"Args": "wfp show security",
+		"Args2": "CALLOUT"
+	},
+	{
+		"Cmd": "netsh",
+		"Args": "wfp show security",
+		"Args2": "ENGINE"
+	},
+	{
+		"Cmd": "netsh",
+		"Args": "wfp show security",
+		"Args2": "FILTER"
+	},
+	{
+		"Cmd": "netsh",
+		"Args": "wfp show security",
+		"Args2": "IKESADB"
+	},
+	{
+		"Cmd": "netsh",
+		"Args": "wfp show security",
+		"Args2": "IPSECSADB"
+	},
+	{
+		"Cmd": "netsh",
+		"Args": "wfp show security",
+		"Args2": "LAYER"
+	},
+	{
+		"Cmd": "netsh",
+		"Args": "wfp show security",
+		"Args2": "NETEVENTS"
+	},
+	{
+		"Cmd": "netsh",
+		"Args": "wfp show security",
+		"Args2": "PROVIDER"
+	},
+	{
+		"Cmd": "netsh",
+		"Args": "wfp show security",
+		"Args2": "PROVIDERCONTEXT"
+	},
+	{
+		"Cmd": "netsh",
+		"Args": "wfp show security",
+		"Args2": "SUBLAYER"
+	},
+	{
+		"Cmd": "netsh",
+		"Args": "wfp show state",
+		"Args5NoUX": "file=-"
+	},
+	{
+		"Cmd": "netsh",
+		"Args": "wfp show sysports",
+		"Args5NoUX": "file=-"
 	},
 	{
 		"Cmd": "netsh",
