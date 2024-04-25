@@ -20,7 +20,7 @@
             </Style>
         </Grid.Resources>
         <TextBlock x:Name="uiIndex" Grid.Column="0" Style="{StaticResource rtPrevNext}" FontSize="10" 
-                       Margin="5,10,10,0" HorizontalAlignment="Center" Text="22" />
+                       Margin="5,10,10,0" HorizontalAlignment="Center" Text="--" />
         <StackPanel Grid.Column="1" Orientation="Horizontal">
             <TextBlock x:Name="uiPrev" MouseUp="OnPrev" 
                        Style="{StaticResource rtPrevNext}" 
