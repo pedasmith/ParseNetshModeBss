@@ -1143,7 +1143,8 @@
 	},
 	{
 		"Cmd": "systeminfo",
-		"Args2": "/fo list"
+		"Args2": "/fo list",
+		"Tags": "#common #menu"
 	},
 	{
 		"Cmd": "systeminfo",

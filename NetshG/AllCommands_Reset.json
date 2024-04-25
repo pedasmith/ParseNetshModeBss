@@ -7,6 +7,18 @@
     "Tags": "#common #menu"
   },
   {
+    "Cmd": "fsquirt",
+    "Help": "#nohelp",
+    "HelpText": "Quick way to transfer files via Bluetooth",
+    "Tags": "#common #menu"
+  },
+  {
+    "Cmd": "winver",
+    "Help": "#nohelp",
+    "HelpText": "Shows the current Windows version",
+    "Tags": "#common #menu"
+  },
+  {
     "Cmd": "ipconfig",
     "Args2": "/flushdns",
     "Tags": "#common #menu"
@@ -24,12 +36,12 @@
   {
     "Cmd": "ipconfig",
     "Args2": "/renew",
-    "Tags": "#common"
+    "Tags": "#common #menu"
   },
   {
     "Cmd": "netsh",
     "Args": "interface ipv4 reset",
-    "Tags": "#common",
+    "Tags": "#common #menu",
     "Issues": "Help has grammar issues 'Restarting computer is required before the default settings to be effect'"
   },
   {

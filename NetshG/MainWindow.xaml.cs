@@ -318,14 +318,31 @@ namespace NetshG
             }
 
             var cmdlist = AllNetshCommands.GetCommands(AllNetshCommands.CmdType.Reset);
+            var menuParent = uiMenuReset;
             int menuIndex = 0;
+
             foreach (var cmd in cmdlist)
             {
                 if (cmd.HasTag("#menu"))
                 {
-                    var mi = new MenuItem() { Header = $"{cmd.Cmd} {cmd.Args} {cmd.Args2}", Tag=cmd };
+                    var mi = new MenuItem() { Header = $"{cmd.Cmd} {cmd.Args} {cmd.Args2}", Tag = cmd };
                     mi.Click += OnMenuCommandClick;
-                    uiMenuReset.Items.Insert(menuIndex, mi);
+                    menuParent.Items.Insert(menuIndex, mi);
+                    menuIndex++;
+                }
+            }
+
+            cmdlist = AllNetshCommands.GetCommands(AllNetshCommands.CmdType.Show);
+            menuParent = uiMenuShow;
+            menuIndex = 0;
+
+            foreach (var cmd in cmdlist)
+            {
+                if (cmd.HasTag("#menu"))
+                {
+                    var mi = new MenuItem() { Header = $"{cmd.Cmd} {cmd.Args} {cmd.Args2}", Tag = cmd };
+                    mi.Click += OnMenuCommandClick;
+                    menuParent.Items.Insert(menuIndex, mi);
                     menuIndex++;
                 }
             }
