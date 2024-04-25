@@ -317,6 +317,19 @@ namespace NetshG
                 }
             }
 
+            var cmdlist = AllNetshCommands.GetCommands(AllNetshCommands.CmdType.Reset);
+            int menuIndex = 0;
+            foreach (var cmd in cmdlist)
+            {
+                if (cmd.HasTag("#menu"))
+                {
+                    var mi = new MenuItem() { Header = $"{cmd.Cmd} {cmd.Args} {cmd.Args2}", Tag=cmd };
+                    mi.Click += OnMenuCommandClick;
+                    uiMenuReset.Items.Insert(menuIndex, mi);
+                    menuIndex++;
+                }
+            }
+
             uiHistoryControl.UXCommands = this; // to set the title
 
 
@@ -375,6 +388,13 @@ namespace NetshG
             errstr += CommandInfo.VerifyAllSetters(testlist, CurrArgumentSettings);
             testlist = AllNetshCommands.GetCommands(AllNetshCommands.CmdType.Reset);
             errstr += CommandInfo.VerifyAllSetters(testlist, CurrArgumentSettings);
+        }
+
+        private async void OnMenuCommandClick(object sender, RoutedEventArgs e)
+        {
+            var ci = (sender as MenuItem)?.Tag as CommandInfo;
+            if (ci == null) return;
+            await DoCommandAsync(ci);
         }
 
         AllNetshCommands.CmdType CurrCommandType = AllNetshCommands.CmdType.Show;

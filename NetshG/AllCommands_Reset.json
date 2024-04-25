@@ -4,12 +4,12 @@
     "Args2": "ms-availablenetworks:",
     "Help": "#nohelp",
     "HelpText": "Refreshes the list of potentially available Wi-Fi networks. This is useful before the netsh wlan show networks mode=bssid",
-    "Tags": "#common"
+    "Tags": "#common #menu"
   },
   {
     "Cmd": "ipconfig",
     "Args2": "/flushdns",
-    "Tags": "#common"
+    "Tags": "#common #menu"
   },
   {
     "Cmd": "ipconfig",
