@@ -22,7 +22,7 @@ namespace NetshG
     public interface CanDoCommand
     {
         [Flags]
-        enum CommandOptions {  None, SuppressFlash=0x01, AppendToTable=0x02, KeepRepeatButtons=0x04, AppendToOutput = 0x08 }
+        enum CommandOptions {  None, SuppressFlash=0x01, AppendToTable=0x02, KeepRepeatButtons=0x04, AppendToOutput = 0x08, AddCommandText = 0x10 }
         Task DoCommandAsync(CommandInfo ci, CommandOptions commandOptions = CommandOptions.None, string overrideTitle = "");
         void DoClearTable();
     }
@@ -440,6 +440,7 @@ namespace NetshG
             foreach (var ci in macro.Commands)
             {
                 var options = isFirst ? CommandOptions.None : CommandOptions.AppendToOutput;
+                options |= CommandOptions.AddCommandText; // add the full command to the output area
                 await DoCommandAsync(ci, options); // first output gets a new output area; second and higher are just appended.
                 isFirst = false;
             }

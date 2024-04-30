@@ -319,6 +319,10 @@ namespace NetshG
             uiHelpGrid.Visibility = UP.CurrUserPrefs.ShowHelp ? Visibility.Visible : Visibility.Collapsed;
             if (result.Trim() == "") result = "\n\n\n\nNo data returned by the command";
             var shouldAppendText = commandOptions.HasFlag(CommandOptions.AppendToTable) || commandOptions.HasFlag(CommandOptions.AppendToOutput);
+            if (commandOptions.HasFlag(CommandOptions.AddCommandText))
+            {
+                result = "# " + program  + " " + argsWithExtraMore + "\n" + result;
+            }
             if (shouldAppendText && !string.IsNullOrEmpty(uiOutput.Text))
             {
                 uiOutput.Text += "\n\n\n" + result;
