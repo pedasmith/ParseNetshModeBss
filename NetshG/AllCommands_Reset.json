@@ -59,5 +59,26 @@
     "Cmd": "netsh",
     "Args": "wlan disconnect",
     "Tags": "#common"
+  },
+  {
+    "Cmd": "netsh",
+    "Args": "trace start",
+    "Args2": "scenario=InternetClient_dbg",
+    "Tags": "#trace"
+  },
+  {
+    "Cmd": "netsh",
+    "Args": "wfp cap start",
+    "Tags": "#trace"
+  },
+  {
+    "Cmd": "netsh",
+    "Args": "wfp cap stop",
+    "Tags": "#trace"
+  },
+  {
+    "Cmd": "netsh",
+    "Args": "trace stop",
+    "Tags": "#trace"
   }
 ]

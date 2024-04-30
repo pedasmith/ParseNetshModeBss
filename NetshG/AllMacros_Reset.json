@@ -1,0 +1,34 @@
+[
+  {
+    "Name": "WFP Trace Start",
+    "Commands": [
+      {
+        "Cmd": "netsh",
+        "Args": "trace start",
+        "Args2": "scenario=InternetClient_dbg",
+        "Tags": "#trace"
+      },
+      {
+        "Cmd": "netsh",
+        "Args": "wfp cap start",
+        "Tags": "#trace"
+      }
+    ]
+  },
+  {
+    "Name": "WFP Trace Stop",
+    "Commands": [
+      {
+        "Cmd": "netsh",
+        "Args": "wfp cap stop",
+        "Tags": "#trace"
+      },
+      {
+        "Cmd": "netsh",
+        "Args": "trace stop",
+        "Tags": "#trace"
+      }
+    ]
+  }
+
+]

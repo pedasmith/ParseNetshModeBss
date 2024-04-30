@@ -122,7 +122,7 @@ namespace NetshG
                 col.Header = caption;
             }
         }
-        public async Task DoCommandAsync(CommandInfo ci, CommandOptions commandOptions = CommandOptions.None)
+        public async Task DoCommandAsync(CommandInfo ci, CommandOptions commandOptions = CommandOptions.None, string overrideTitle = "")
         {
             if (UXCommands == null) return;
 
@@ -135,13 +135,13 @@ namespace NetshG
             {
                 // Do the commands on the list of missing items. Note that there's a strong assumption that
                 // the list is one level deep; there's no place where A depends on B depends on C.
-                await DoCommandAsyncRaw(requireci, CommandOptions.SuppressFlash); // always suppress the flash for getting these values
+                await DoCommandAsyncRaw(requireci, CommandOptions.SuppressFlash, overrideTitle); // always suppress the flash for getting these values
             }
 
             // Now run the command for real
-            await DoCommandAsyncRaw(ci, commandOptions);
+            await DoCommandAsyncRaw(ci, commandOptions, overrideTitle);
         }
-        public async Task DoCommandAsyncRaw(CommandInfo ci, CommandOptions commandOptions)
+        public async Task DoCommandAsyncRaw(CommandInfo ci, CommandOptions commandOptions, string overrideTitle)
         {
             // This method is all about the UX needed to run the command. The command is finally
             // run with the RunCommandLine.RunNetshGAsync method
@@ -161,6 +161,11 @@ namespace NetshG
             if (CurrDisplayOptions != null && CurrDisplayOptions.CurrShowWhat != null)
             {
                 showWhat = (DisplayOptions.ShowWhat)CurrDisplayOptions.CurrShowWhat;
+            }
+            if (commandOptions.HasFlag(CommandOptions.AppendToOutput))
+            {
+                showWhat = DisplayOptions.ShowWhat.Output;
+                commandOptions |= CommandOptions.SuppressFlash;
             }
             bool haveNoPreferenceForShow = CurrDisplayOptions == null || CurrDisplayOptions.CurrShowWhat == null;
             uiProgress.Visibility = Visibility.Visible;
@@ -200,7 +205,8 @@ namespace NetshG
 
 
                 // Fill in the help text (if appropriate)
-                UXCommands?.SetCommandTitle(ci.Title);
+                var title = !string.IsNullOrEmpty(overrideTitle) ? overrideTitle : ci.Title;
+                UXCommands?.SetCommandTitle(title);
                 if (ci.Help.Contains("#nohelp"))
                 {
                     // Example: the explorer.exe ms-availablenetworks
@@ -223,7 +229,14 @@ namespace NetshG
                 }
                 // Set this early so that for long-running commands the user has something to look
                 // at (it also helps with reducing the screen flashing)
-                uiHelp.Text = result_help;
+                if (commandOptions.HasFlag(CommandOptions.AppendToOutput))
+                {
+                    uiHelp.Text += "\n\n\n" + result_help;
+                }
+                else
+                {
+                    uiHelp.Text = result_help;
+                }
 
                 //
                 // Actually run the command!
@@ -305,9 +318,10 @@ namespace NetshG
             uiProgress.Visibility = Visibility.Collapsed;
             uiHelpGrid.Visibility = UP.CurrUserPrefs.ShowHelp ? Visibility.Visible : Visibility.Collapsed;
             if (result.Trim() == "") result = "\n\n\n\nNo data returned by the command";
-            if (commandOptions.HasFlag(CommandOptions.AppendToTable) && !string.IsNullOrEmpty(uiOutput.Text))
+            var shouldAppendText = commandOptions.HasFlag(CommandOptions.AppendToTable) || commandOptions.HasFlag(CommandOptions.AppendToOutput);
+            if (shouldAppendText && !string.IsNullOrEmpty(uiOutput.Text))
             {
-                uiOutput.Text = uiOutput.Text + "\n\n\n" + result;
+                uiOutput.Text += "\n\n\n" + result;
             }
             else
             {

@@ -4,6 +4,8 @@
 
 Some commands are so common (e.g., SystemInfo) that they deserve to be at the top of the menu areas. 
 
+Add common macros for tracing.
+
 ## Version 1.12
 
 From feedback: netshg is now a complete replacement for netsh. For any netsh command, you can replace the netsh with netshg and the command will be run. Note that it doesn't do any quotes or anything: whatever you type will just be converted to a string and run. You can run other comands by starting them with an exclamation point: ```netshg !ping microsoft.com``` will run the **ping microsoft.com** command.
