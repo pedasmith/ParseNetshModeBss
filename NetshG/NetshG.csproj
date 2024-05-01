@@ -8,7 +8,7 @@
     <ApplicationIcon>Grumpster_Icon_256.ico</ApplicationIcon>
     <AssemblyVersion></AssemblyVersion>
     <Title>NetshG GUI shell for the Netsh command line program</Title>
-    <VersionPrefix>1.12.120</VersionPrefix>
+    <VersionPrefix>1.13.130</VersionPrefix>
     <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
