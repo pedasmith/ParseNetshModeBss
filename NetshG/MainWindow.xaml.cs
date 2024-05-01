@@ -22,8 +22,8 @@ namespace NetshG
     public interface CanDoCommand
     {
         [Flags]
-        enum CommandOptions {  None, SuppressFlash=0x01, AppendToTable=0x02, KeepRepeatButtons=0x04 }
-        Task DoCommandAsync(CommandInfo ci, CommandOptions commandOptions = CommandOptions.None);
+        enum CommandOptions {  None, SuppressFlash=0x01, AppendToTable=0x02, KeepRepeatButtons=0x04, AppendToOutput = 0x08, AddCommandText = 0x10 }
+        Task DoCommandAsync(CommandInfo ci, CommandOptions commandOptions = CommandOptions.None, string overrideTitle = "");
         void DoClearTable();
     }
 
@@ -347,6 +347,24 @@ namespace NetshG
                 }
             }
 
+            menuParent = uiMenuMacro;
+            menuIndex = 0;
+            var macrolist = AllNetshCommands.GetMacros(AllNetshCommands.CmdType.Macro);
+            foreach (var macro in macrolist)
+            {
+                var mi = new MenuItem() { Header = $"{macro.Name}", Tag = macro};
+                mi.Click += OnMenuMacroCommandClick;
+                if (menuParent.Items.Count == 0)
+                {
+                    menuParent.Items.Add(mi);
+                }
+                else
+                {
+                    menuParent.Items.Insert(menuIndex, mi);
+                }
+                menuIndex++;
+            }
+
             uiHistoryControl.UXCommands = this; // to set the title
 
 
@@ -412,6 +430,20 @@ namespace NetshG
             var ci = (sender as MenuItem)?.Tag as CommandInfo;
             if (ci == null) return;
             await DoCommandAsync(ci);
+        }
+
+        private async void OnMenuMacroCommandClick(object sender, RoutedEventArgs e)
+        {
+            var macro = (sender as MenuItem)?.Tag as CommandMacro;
+            if (macro == null) return;
+            bool isFirst = true;
+            foreach (var ci in macro.Commands)
+            {
+                var options = isFirst ? CommandOptions.None : CommandOptions.AppendToOutput;
+                options |= CommandOptions.AddCommandText; // add the full command to the output area
+                await DoCommandAsync(ci, options); // first output gets a new output area; second and higher are just appended.
+                isFirst = false;
+            }
         }
 
         AllNetshCommands.CmdType CurrCommandType = AllNetshCommands.CmdType.Show;
@@ -795,32 +827,40 @@ namespace NetshG
         /// <param name="ci"></param>
         /// <param name="commandOptions"></param>
         /// <returns></returns>
-        public async Task DoCommandAsync(CommandInfo ci, CommandOptions commandOptions = CommandOptions.None)
+        public async Task DoCommandAsync(CommandInfo ci, CommandOptions commandOptions = CommandOptions.None, string overrideTitle = "")
         {
-
+            bool addNewOutput = !commandOptions.HasFlag(CommandOptions.AppendToOutput) || uiHistoryControl.IsEmpty;
 
             // We know we have to use the "Show" commands to get the data. Any other list
             // will potentially reset some part of the system, and we don't want that.
             var cmdlist = AllNetshCommands.GetCommands(AllNetshCommands.CmdType.Show);
 
             var requireList = CommandInfo.GetAllMissingSettersFor(ci, cmdlist, CurrArgumentSettings);
-            var ccc = new CommandOutputControl(this, UP.CurrUserPrefs.CurrDisplayOptions);
+            CommandOutputControl? ccc = uiHistoryControl.LastControlAdded as CommandOutputControl;
+            if (addNewOutput || ccc == null)
+            {
+                ccc = new CommandOutputControl(this, UP.CurrUserPrefs.CurrDisplayOptions);
+            }
 
             // Add the history early; it looks nicer that way.
-            uiHistoryControl.AddCurrentControl(ccc, ci.Title);
-            ccc.Visibility = Visibility.Visible;
-            uiHistoryControl.Visibility = Visibility.Visible;
+            if (addNewOutput) // this is the common case
+            {
+                var title = !string.IsNullOrEmpty(overrideTitle) ? overrideTitle : ci.Title;
+                uiHistoryControl.AddCurrentControl(ccc, title);
+                ccc.Visibility = Visibility.Visible;
+                uiHistoryControl.Visibility = Visibility.Visible;
+            }
 
             // Do the commands on the list of missing items. Note that there's a strong assumption that
             // the list is one level deep; there's no place where A depends on B depends on C.
             foreach (var requireci in requireList)
             {
                 // always suppress the flash for getting these values
-                await ccc.DoCommandAsyncRaw(requireci, CommandOptions.SuppressFlash);
+                await ccc.DoCommandAsyncRaw(requireci, CommandOptions.SuppressFlash, "");
             }
 
             // Now run the command for real
-            await ccc.DoCommandAsyncRaw(ci, commandOptions);
+            await ccc.DoCommandAsyncRaw(ci, commandOptions, overrideTitle);
         }
 
 

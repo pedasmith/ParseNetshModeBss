@@ -39,9 +39,11 @@ namespace NetshG
         private List<ControlData> HistoryItems {  get;  }  = new List<ControlData>();
         private int CurrIndex = -1;
         private int NItemsAdded = 0;
+        public bool IsEmpty {  get { return CurrIndex == -1; } }
 
         public Panel? HistoryPanel;
         public UXCommands? UXCommands { get; set; } = null;
+        public UserControl? LastControlAdded { get; private set; } = null;
 
         private Random rnd = new Random();
         /// <summary>
@@ -53,6 +55,7 @@ namespace NetshG
         public void AddCurrentControl(UserControl item, string title)
         {
             NItemsAdded++; // total number ever added
+            LastControlAdded = item;
             var cd = new ControlData(item, title, NItemsAdded);
 
             cd.Selected = BULLET_SELECTED; // + NItemsAdded.ToString() + " "; // Handy extra bits for debugging

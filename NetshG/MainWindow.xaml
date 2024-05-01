@@ -42,6 +42,8 @@
                 <MenuItem Header="_Wi-Fi" Tag="#wifi" Click="OnMenu_Reset_Tag" />
                 -->
             </MenuItem>
+            <MenuItem Header="_Macro" x:Name="uiMenuMacro">
+            </MenuItem>
             <MenuItem Header="_Repeat">
                 <MenuItem Header="_Repeat Once" Click="OnRepeat"/>
                 <MenuItem Header=" 1 _second" Tag=" 1" Click="OnMenuRepeatStart"/>
