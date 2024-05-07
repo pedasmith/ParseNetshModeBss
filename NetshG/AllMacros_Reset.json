@@ -1,17 +1,11 @@
 [
   {
-    "Name": "WFP Trace Start",
+    "Name": "Get MS Office SARA Support and Recovery",
     "Commands": [
       {
-        "Cmd": "netsh",
-        "Args": "trace start",
-        "Args2": "scenario=InternetClient_dbg",
-        "Tags": "#trace"
-      },
-      {
-        "Cmd": "netsh",
-        "Args": "wfp cap start",
-        "Tags": "#trace"
+        "CmdRun": "OpenUrl",
+        "Args": "https://support.microsoft.com/en-us/office/about-the-microsoft-support-and-recovery-assistant-e90bb691-c2a7-4697-a94f-88836856c72f",
+        "HelpText":  "Use this program to fix Office programs. Example: can re-add the Teams integration into Outlook."
       }
     ]
   },
