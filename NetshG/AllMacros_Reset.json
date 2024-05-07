@@ -5,7 +5,36 @@
       {
         "CmdRun": "OpenUrl",
         "Args": "https://support.microsoft.com/en-us/office/about-the-microsoft-support-and-recovery-assistant-e90bb691-c2a7-4697-a94f-88836856c72f",
-        "HelpText":  "Use this program to fix Office programs. Example: can re-add the Teams integration into Outlook."
+        "HelpText": "Use this program to fix Office programs. Example: can re-add the Teams integration into Outlook."
+      }
+    ]
+  },
+  {
+    "Name": "curl -v for NCSI enpoints",
+    "Commands": [
+      {
+        "Cmd": "curl",
+        "Args": "-vs http://www.msftconnecttest.com/connecttest.txt",
+        "ZZArgs2": "2>&1",
+        "HelpText": "Modern internet detection"
+      },
+      {
+        "Cmd": "curl",
+        "Args": "-vs http://www.msftconnecttest.com/connecttest.txt",
+        "ZZArgs2": "2>&1",
+        "HelpText": "HTTPS Modern internet detection"
+      },
+      {
+        "Cmd": "curl",
+        "Args": "-vs http://www.msftncsi.com/ncsi.txt",
+        "ZZArgs2": "2>&1",
+        "HelpText": "Older internet detection"
+      },
+      {
+        "Cmd": "curl",
+        "Args": "-vs http://www.msftconnecttest.com/redirect",
+        "ZZArgs2": "2>&1",
+        "HelpText": "Captive portal detection"
       }
     ]
   },
