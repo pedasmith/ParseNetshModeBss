@@ -10,7 +10,7 @@
     ]
   },
   {
-    "Name": "curl -v for NCSI enpoints",
+    "Name": "curl -v for NCSI endpoints",
     "Commands": [
       {
         "Cmd": "curl",
@@ -20,9 +20,9 @@
       },
       {
         "Cmd": "curl",
-        "Args": "-vs http://www.msftconnecttest.com/connecttest.txt",
+        "Args": "-vs https://www.msftconnecttest.com/connecttest.txt",
         "ZZArgs2": "2>&1",
-        "HelpText": "HTTPS Modern internet detection"
+        "HelpText": "HTTPS Modern internet detection using HTTPS"
       },
       {
         "Cmd": "curl",
