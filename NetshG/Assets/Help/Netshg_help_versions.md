@@ -4,7 +4,7 @@
 
 Some commands are so common (e.g., SystemInfo) that they deserve to be at the top of the menu areas. 
 
-Add common macros for tracing.
+Added a new Macro menu with common macros for tracing.
 
 ## Version 1.12
 
