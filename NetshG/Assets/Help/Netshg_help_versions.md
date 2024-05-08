@@ -1,5 +1,9 @@
 ﻿# NETSHG Version History
 
+## Version 1.14
+
+Help diagnose NCSI (msftconnectest.com and msftncsi.com) probes. Includes an HTTPS: probe and a /redirect probe. Curl is run with -vs so that the exact HTTP results are visible. The output of the command is printed first, then the logging.
+
 ## Version 1.13
 
 Some commands are so common (e.g., SystemInfo) that they deserve to be at the top of the menu areas. 

@@ -107,9 +107,13 @@ namespace NetshG
         private ArgumentSettings CurrArgumentSettings = new ArgumentSettings();
 
         /// <summary>
-        /// LastCommand is used by the Repeat command.
+        /// LastCommandCommand and LastCommandMacro are used by the Repeat command.
         /// </summary>
-        CommandInfo? LastCommand = null;
+        CommandInfo? LastCommandCommand = null;
+        /// <summary>
+        /// LastCommandCommand and LastCommandMacro are used by the Repeat command.
+        /// </summary>
+        CommandMacro? LastCommandMacro = null;
 
 
 
@@ -194,8 +198,8 @@ namespace NetshG
 
         private void OnMenu_Settings_Toggle_Favorite(object sender, RoutedEventArgs e)
         {
-            if (LastCommand == null) return;
-            DoToggleFavorite(LastCommand);
+            if (LastCommandCommand == null) return;
+            DoToggleFavorite(LastCommandCommand);
         }
 
         private void DoToggleFavorite(CommandInfo cmd)
@@ -436,7 +440,14 @@ namespace NetshG
         {
             var macro = (sender as MenuItem)?.Tag as CommandMacro;
             if (macro == null) return;
+            await DoCommandMacro(macro);
+        }
+
+        private async Task DoCommandMacro(CommandMacro macro)
+        {
             bool isFirst = true;
+            LastCommandCommand = null;
+            LastCommandMacro = macro;
             foreach (var ci in macro.Commands)
             {
                 var options = isFirst ? CommandOptions.None : CommandOptions.AppendToOutput;
@@ -582,7 +593,8 @@ namespace NetshG
                     Args = "wlan show"
                 };
             }
-            LastCommand = ci;
+            LastCommandCommand = ci;
+            LastCommandMacro = null;
 
             await DoCommandAsync(ci);
         }
@@ -755,8 +767,14 @@ namespace NetshG
                 OnMenuRepeatStop(sender, e);
                 return;
             }
-            if (LastCommand == null) return;
-            await DoCommandAsync(LastCommand);
+            if (LastCommandCommand != null)
+            {
+                await DoCommandAsync(LastCommandCommand);
+            }
+            else if (LastCommandMacro != null)
+            {
+                await DoCommandMacro(LastCommandMacro);
+            }
         }
         private void OnMenuRepeatStart(object sender, RoutedEventArgs e)
         {
@@ -796,8 +814,14 @@ namespace NetshG
             if (AmDoCommand) return; // e.g., netsh wlan show all is very slow and doesn't work in 1 second
             this.Dispatcher.BeginInvoke(new Action(async () => 
             {
-                if (LastCommand == null) return;
-                await DoCommandAsync(LastCommand, CommandOptions.SuppressFlash);
+                if (LastCommandCommand != null)
+                {
+                    await DoCommandAsync(LastCommandCommand);
+                }
+                else if (LastCommandMacro != null)
+                {
+                    await DoCommandMacro(LastCommandMacro);
+                }
             }));
         }
         #endregion REPEAT
