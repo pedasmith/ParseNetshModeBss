@@ -207,7 +207,18 @@ namespace NetshG
                 // Fill in the help text (if appropriate)
                 var title = !string.IsNullOrEmpty(overrideTitle) ? overrideTitle : ci.Title;
                 UXCommands?.SetCommandTitle(title);
-                if (ci.Help.Contains("#nohelp"))
+                if (ci.CmdRun == CommandInfo.CmdType.OpenUrl)
+                {
+                    if (!string.IsNullOrEmpty(ci.HelpText))
+                    {
+                        result_help = ci.HelpText;
+                    }
+                    else
+                    {
+                        result_help = $"start {ci.Args}";
+                    }
+                }
+                else if (ci.Help.Contains("#nohelp"))
                 {
                     // Example: the explorer.exe ms-availablenetworks
                     if (!string.IsNullOrEmpty(ci.HelpText))
@@ -241,7 +252,14 @@ namespace NetshG
                 //
                 // Actually run the command!
                 //
-                result = await RunCommandLine.RunNetshGAsync(program, argsWithExtraMore, this as AddToText);
+                if (ci.CmdRun == CommandInfo.CmdType.OpenUrl)
+                {
+                    result = await RunCommandLine.RunOpenUrl(ci.Args, this as AddToText);
+                }
+                else
+                {
+                    result = await RunCommandLine.RunNetshGAsync(program, argsWithExtraMore, this as AddToText);
+                }
                 if (false && argsWithExtraMore.Contains("mode=bss")) //Note: this is a great place to set the results to a fixed example string!
                 {
                     result = ParseIndent.Example1; // Set to fixed Example string for debugging problems.

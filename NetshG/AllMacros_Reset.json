@@ -1,17 +1,40 @@
 [
   {
-    "Name": "WFP Trace Start",
+    "Name": "Get MS Office SARA Support and Recovery",
     "Commands": [
       {
-        "Cmd": "netsh",
-        "Args": "trace start",
-        "Args2": "scenario=InternetClient_dbg",
-        "Tags": "#trace"
+        "CmdRun": "OpenUrl",
+        "Args": "https://support.microsoft.com/en-us/office/about-the-microsoft-support-and-recovery-assistant-e90bb691-c2a7-4697-a94f-88836856c72f",
+        "HelpText": "Use this program to fix Office programs. Example: can re-add the Teams integration into Outlook."
+      }
+    ]
+  },
+  {
+    "Name": "curl -v for NCSI endpoints",
+    "Commands": [
+      {
+        "Cmd": "curl",
+        "Args": "-vs http://www.msftconnecttest.com/connecttest.txt",
+        "ZZArgs2": "2>&1",
+        "HelpText": "Modern internet detection"
       },
       {
-        "Cmd": "netsh",
-        "Args": "wfp cap start",
-        "Tags": "#trace"
+        "Cmd": "curl",
+        "Args": "-vs https://www.msftconnecttest.com/connecttest.txt",
+        "ZZArgs2": "2>&1",
+        "HelpText": "HTTPS Modern internet detection using HTTPS"
+      },
+      {
+        "Cmd": "curl",
+        "Args": "-vs http://www.msftncsi.com/ncsi.txt",
+        "ZZArgs2": "2>&1",
+        "HelpText": "Older internet detection"
+      },
+      {
+        "Cmd": "curl",
+        "Args": "-vs http://www.msftconnecttest.com/redirect",
+        "ZZArgs2": "2>&1",
+        "HelpText": "Captive portal detection"
       }
     ]
   },

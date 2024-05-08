@@ -10,6 +10,8 @@ namespace NetshG
 {
     public class CommandInfo
     {
+        public enum CmdType {  RunProgram, OpenUrl }
+        public CmdType CmdRun { get; set; } = CmdType.RunProgram;
         /// <summary>
         /// e.g. netsh
         /// </summary>
