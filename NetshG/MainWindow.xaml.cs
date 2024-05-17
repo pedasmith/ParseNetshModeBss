@@ -107,9 +107,13 @@ namespace NetshG
         private ArgumentSettings CurrArgumentSettings = new ArgumentSettings();
 
         /// <summary>
-        /// LastCommand is used by the Repeat command.
+        /// LastCommandCommand and LastCommandMacro are used by the Repeat command.
         /// </summary>
-        CommandInfo? LastCommand = null;
+        CommandInfo? LastCommandCommand = null;
+        /// <summary>
+        /// LastCommandCommand and LastCommandMacro are used by the Repeat command.
+        /// </summary>
+        CommandMacro? LastCommandMacro = null;
 
 
 
@@ -194,8 +198,8 @@ namespace NetshG
 
         private void OnMenu_Settings_Toggle_Favorite(object sender, RoutedEventArgs e)
         {
-            if (LastCommand == null) return;
-            DoToggleFavorite(LastCommand);
+            if (LastCommandCommand == null) return;
+            DoToggleFavorite(LastCommandCommand);
         }
 
         private void DoToggleFavorite(CommandInfo cmd)
@@ -436,7 +440,14 @@ namespace NetshG
         {
             var macro = (sender as MenuItem)?.Tag as CommandMacro;
             if (macro == null) return;
+            await DoCommandMacro(macro);
+        }
+
+        private async Task DoCommandMacro(CommandMacro macro)
+        {
             bool isFirst = true;
+            LastCommandCommand = null;
+            LastCommandMacro = macro;
             foreach (var ci in macro.Commands)
             {
                 var options = isFirst ? CommandOptions.None : CommandOptions.AppendToOutput;
@@ -557,14 +568,28 @@ namespace NetshG
         #region SELECT_FROM_COMMAND_LIST
         private void OnSelectCommand(object sender, SelectionChangedEventArgs e) // Old way to run commands; now I use MouseUp
         {
+            // Selection happens when the user moves around the list with the keyboard.
+            // That's not even close to what I want to be able to do. I want the user
+            // to move around the list with keys and then press Enter to run the
+            // command.
+        }
+        private async void OnKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                await DoSelectedCommand();
+            }
         }
 
         private async void OnMouseLeftUp(object sender, MouseButtonEventArgs e)
         {
-            OnMenuRepeatStop(sender, e); // If I was repeating, stop it.
+            await DoSelectedCommand();
+        }
 
-            //if (e.AddedItems.Count != 1) return; // only one item selected
-            //var fe = e.AddedItems[0] as ContentControl;
+        private async Task DoSelectedCommand()
+        {
+            DoMenuRepeatStop(); // If I was repeating, stop it.
+
             var fe = uiCommandList.SelectedItem as ContentControl;
             if (fe == null) return; // seriously, it's always a framework element.
 
@@ -582,20 +607,22 @@ namespace NetshG
                     Args = "wlan show"
                 };
             }
-            LastCommand = ci;
+            LastCommandCommand = ci;
+            LastCommandMacro = null;
 
             await DoCommandAsync(ci);
         }
 
 
-         #endregion
+
+        #endregion
 
 
 
-            #region UXCOMMANDS_INTERFACE
+        #region UXCOMMANDS_INTERFACE
 
-            // OnRepeatAsync Help_remove Log SetAmDoCommand SetCount SetUIIssues GetCurrArgumentSettings
-            public void Log(string str)
+        // OnRepeatAsync Help_remove Log SetAmDoCommand SetCount SetUIIssues GetCurrArgumentSettings
+        public void Log(string str)
         {
             Console.WriteLine(str);
         }
@@ -755,8 +782,14 @@ namespace NetshG
                 OnMenuRepeatStop(sender, e);
                 return;
             }
-            if (LastCommand == null) return;
-            await DoCommandAsync(LastCommand);
+            if (LastCommandCommand != null)
+            {
+                await DoCommandAsync(LastCommandCommand);
+            }
+            else if (LastCommandMacro != null)
+            {
+                await DoCommandMacro(LastCommandMacro);
+            }
         }
         private void OnMenuRepeatStart(object sender, RoutedEventArgs e)
         {
@@ -784,6 +817,10 @@ namespace NetshG
         }
         public void OnMenuRepeatStop(object sender, RoutedEventArgs e)
         {
+            DoMenuRepeatStop();
+        }
+        public void DoMenuRepeatStop()
+        {
             if (CurrRepeatTimer == null) return; // can't be more stopped than this!
             CurrRepeatTimer.Stop(); // Sets enabled to false
             uiMenuRepeatStop.IsEnabled = false;
@@ -796,8 +833,14 @@ namespace NetshG
             if (AmDoCommand) return; // e.g., netsh wlan show all is very slow and doesn't work in 1 second
             this.Dispatcher.BeginInvoke(new Action(async () => 
             {
-                if (LastCommand == null) return;
-                await DoCommandAsync(LastCommand, CommandOptions.SuppressFlash);
+                if (LastCommandCommand != null)
+                {
+                    await DoCommandAsync(LastCommandCommand);
+                }
+                else if (LastCommandMacro != null)
+                {
+                    await DoCommandMacro(LastCommandMacro);
+                }
             }));
         }
         #endregion REPEAT
@@ -865,8 +908,8 @@ namespace NetshG
 
 
 
-        #endregion ACTUALLY_RUN_COMMANDS
 
+        #endregion ACTUALLY_RUN_COMMANDS
 
     }
 

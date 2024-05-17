@@ -16,25 +16,45 @@
         "Cmd": "curl",
         "Args": "-vs http://www.msftconnecttest.com/connecttest.txt",
         "ZZArgs2": "2>&1",
+        "Help": "#nohelp",
         "HelpText": "Modern internet detection"
       },
       {
         "Cmd": "curl",
         "Args": "-vs https://www.msftconnecttest.com/connecttest.txt",
         "ZZArgs2": "2>&1",
+        "Help": "#nohelp",
         "HelpText": "HTTPS Modern internet detection using HTTPS"
       },
       {
         "Cmd": "curl",
         "Args": "-vs http://www.msftncsi.com/ncsi.txt",
         "ZZArgs2": "2>&1",
+        "Help": "#nohelp",
         "HelpText": "Older internet detection"
       },
       {
         "Cmd": "curl",
         "Args": "-vs http://www.msftconnecttest.com/redirect",
         "ZZArgs2": "2>&1",
+        "Help": "#nohelp",
         "HelpText": "Captive portal detection"
+      }
+    ]
+  },
+  {
+    "Name": "WFP Trace Start",
+    "Commands": [
+      {
+        "Cmd": "netsh",
+        "Args": "trace start",
+        "Args2": "scenario=InternetClient_dbg",
+        "Tags": "#trace"
+      },
+      {
+        "Cmd": "netsh",
+        "Args": "wfp cap start",
+        "Tags": "#trace"
       }
     ]
   },

@@ -13,6 +13,12 @@
     "Tags": "#common #menu"
   },
   {
+    "Cmd": "gpedit.msc",
+    "Help": "#nohelp",
+    "HelpText": "Start the group policy editor (not for Home editions)",
+    "Tags": ""
+  },
+  {
     "Cmd": "winver",
     "Help": "#nohelp",
     "HelpText": "Shows the current Windows version",

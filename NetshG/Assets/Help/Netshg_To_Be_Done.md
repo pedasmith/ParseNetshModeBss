@@ -1,5 +1,15 @@
 ﻿# Items to be done
 
+## For version 1.14
+
+UX Updates: added CURL for NCSI
+Bugs fixed:
+The repeat button doesn't work for macro
+Can't press return and run a command
+Trace Start vanished
+
+
+
 ## For version 1.11
 
 UX Updates:
