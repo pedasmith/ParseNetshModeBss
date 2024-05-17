@@ -1,5 +1,13 @@
 ﻿[
 	{
+		"CmdRun": "OpenUrl",
+		"Cmd": "start",
+		"Args": "ms-contact-support://?ActivationType=NetworkDiagnostics&invoker=NetshG",
+		"Help": "#nohelp",
+		"HelpText": "Launch the Get Help app at the network troubleshooter.",
+		"Tags": "#common #menu"
+	},
+	{
 		"Cmd": "arp",
 		"Args2": "-a",
 		"Tags": ""

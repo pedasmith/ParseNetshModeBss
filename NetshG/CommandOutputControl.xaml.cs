@@ -255,6 +255,11 @@ namespace NetshG
                 if (ci.CmdRun == CommandInfo.CmdType.OpenUrl)
                 {
                     result = await RunCommandLine.RunOpenUrl(ci.Args, this as AddToText);
+                    if (ci.Args.StartsWith("ms-contact-support:"))
+                    {
+                        result = $"\nLaunched {ci.Args}\n\nIt can take up to 30 seconds to see the results";
+                    }
+                    DoAddToText(result);
                 }
                 else
                 {
