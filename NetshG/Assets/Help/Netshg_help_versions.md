@@ -1,9 +1,11 @@
 ﻿# NETSHG Version History
 
 
-## Version vNext
+## Version 1.15
 
 Added menu item to start the Get Help troubleshooter at the Network page.
+Added menu items (under Macros) to try multiple vendor "am I online" sites.
+
 
 ## Version 1.14
 

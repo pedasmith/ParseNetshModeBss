@@ -55,6 +55,35 @@
     ]
   },
   {
+    "Name": "curl -v for web beacons",
+    "Commands": [
+      {
+        "Cmd": "curl",
+        "Args": "-vs https://captive.apple.com",
+        "Help": "#nohelp",
+        "HelpText": "Apple Safari"
+      },
+      {
+        "Cmd": "curl",
+        "Args": "-vs https://www.gstatic.com/generate_204 ",
+        "Help": "#nohelp",
+        "HelpText": "Google Chrome"
+      },
+      {
+        "Cmd": "curl",
+        "Args": "-vs https://edge-http.microsoft.com/captiveportal/generate_204",
+        "Help": "#nohelp",
+        "HelpText": "Microsoft Edge"
+      },
+      {
+        "Cmd": "curl",
+        "Args": "-vs https://detectportal.firefox.com/canonical.html ",
+        "Help": "#nohelp",
+        "HelpText": "Mozilla Firefox"
+      }
+    ]
+  },
+  {
     "Name": "WFP Trace Start",
     "Commands": [
       {

@@ -1,5 +1,12 @@
 ﻿# Items to be done
 
+
+## For version 1.15
+
+Added GET HELP as a command
+Updated the URL Launch code to actually work (it was throwing exceptions)
+Added CURL commands for non-Microsoft web beacons
+
 ## For version 1.14
 
 UX Updates: added CURL for NCSI
