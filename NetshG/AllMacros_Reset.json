@@ -10,6 +10,18 @@
     ]
   },
   {
+    "Name": "GET HELP network troubleshooter",
+    "Commands": [
+      {
+        "CmdRun": "OpenUrl",
+        "Args": "ms-contact-support://?ActivationType=NetworkDiagnostics&invoker=NetshG",
+        "Help": "#nohelp",
+        "HelpText": "Launch the Get Help app at the network troubleshooter.",
+        "Tags": "#common #menu"
+      }
+    ]
+  },
+  {
     "Name": "curl -v for NCSI endpoints",
     "Commands": [
       {
