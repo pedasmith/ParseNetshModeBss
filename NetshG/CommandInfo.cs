@@ -43,7 +43,7 @@ namespace NetshG
         public string SetParser { get; set; } = "";
         public string TableParser { get; set; } = "";
 
-        public string Title { get { return $"{Cmd} {Args}"; } } 
+        public string Title { get { return $"{Cmd} {Args} {Args2}"; } } 
         public string FavoriteMatch {  get { return $"{Cmd} {Args} {Args2}"; } }
         public string AllUserText {  get 
             {
