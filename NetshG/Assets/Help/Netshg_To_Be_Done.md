@@ -1,5 +1,9 @@
 ﻿# Items to be done
 
+## For version Next (1.16?)
+
+No docs needed? Title is updated to include the "UX2" fields for e.g., mode=bssid. 
+
 
 ## For version 1.15
 
