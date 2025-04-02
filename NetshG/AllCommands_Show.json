@@ -1177,7 +1177,7 @@
 	{
 		"Cmd": "netsh",
 		"Args": "wlan show wirelesscapabilities",
-		"Tags": "#wifi",
+		"Tags": "#common #wifi",
 		"TableParser": "DashLine",
 		"Issues": "System capabilities are hard to parse because they are sentences and not name : value pairs."
 	},
@@ -1256,6 +1256,11 @@
 		"Cmd": "tracert",
 		"Args2": "TestHost",
 		"RequireList": "TestHost"
+	},
+	{
+		"Cmd": "usbview",
+		"Help": "#nohelp",
+		"HelpText": "runs the USBVIEW program shipped with the Windows Device Kit (WDK)",
+		"Tags": "#nooutput"
 	}
-
 ]

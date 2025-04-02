@@ -63,7 +63,7 @@ namespace ParseNetshModeBss
         /// Program is e.g., "Netsh" and args is e.g., "wlan show networks mode-bssid"
         /// </summary>
         /// <returns></returns>
-        public static async Task<string> RunNetshGAsync(string program, string args, AddToText? tb = null)
+        public static async Task<string> RunNetshGAsync(string program, string args, AddToText? tb = null, bool commandHasOutput=true)
         {
             string retval = "";
             var start = new ProcessStartInfo()
@@ -73,6 +73,8 @@ namespace ParseNetshModeBss
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 WindowStyle = ProcessWindowStyle.Hidden,
+                StandardErrorEncoding = Encoding.UTF8,
+                StandardOutputEncoding = Encoding.UTF8,
             };
 
             // Changes for G
@@ -85,7 +87,7 @@ namespace ParseNetshModeBss
             int nline = 0;
             using (Process? proc = Process.Start(start))
             {
-                if (proc != null)
+                if (proc != null && commandHasOutput) // both are almost always true. commandHasOutput is false for #nooutput which is USBVIEW only
                 {
                     string? line;
                     do
