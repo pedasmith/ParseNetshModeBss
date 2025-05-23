@@ -1287,9 +1287,9 @@
 		"RequireList": "TestHost"
 	},
 	{
+		"CmdRun": "ShellExecute",
 		"Cmd": "usbview",
 		"Help": "#nohelp",
-		"HelpText": "runs the USBVIEW program shipped with the Windows Device Kit (WDK)",
-		"Tags": "#nooutput"
+		"HelpText": "The USBVIEW program is shipped with the Windows Device Kit (WDK)"
 	}
 ]

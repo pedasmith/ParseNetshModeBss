@@ -157,8 +157,6 @@ namespace NetshG
             var args5 = ci.Args5NoUX == "" ? "" : " " + ci.Args5NoUX;
             args = UXCommands.GetCurrArgumentSettings().Replace(args, ci.Requires);
             var argsWithExtraMore = UXCommands.GetCurrArgumentSettings().Replace(args + args2 + args5, ci.Requires);
-            var commandHasOutput = !ci.TagList.Contains("#nooutput"); // almost everything does!
-
 
             string result = "No results", result_help = "No help results", csv = "";
             DisplayOptions.ShowWhat showWhat = DisplayOptions.ShowWhat.Output;
@@ -345,7 +343,7 @@ namespace NetshG
 
             uiProgress.Visibility = Visibility.Collapsed;
             uiHelpGrid.Visibility = UP.CurrUserPrefs.ShowHelp ? Visibility.Visible : Visibility.Collapsed;
-            if (result.Trim() == "") result = commandHasOutput ? "\n\n\n\nNo data returned by the command" : "\n\n\nCommand has no output";
+            if (result.Trim() == "") result = "\n\n\n\nNo data returned by the command";
             var shouldAppendText = commandOptions.HasFlag(CommandOptions.AppendToTable) || commandOptions.HasFlag(CommandOptions.AppendToOutput);
             if (commandOptions.HasFlag(CommandOptions.AddCommandText))
             {
