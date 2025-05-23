@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Text;
 using System.Threading.Tasks;
 
 
@@ -78,7 +79,10 @@ namespace ParseNetshModeBss
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 WindowStyle = ProcessWindowStyle.Hidden,
+                StandardErrorEncoding = Encoding.UTF8,
+                StandardOutputEncoding = Encoding.UTF8,
                 CreateNoWindow = true,
+
             };
 
             string url = args; // only used for OpenUrl types of commands.

@@ -4,6 +4,8 @@
 
 Supports **perfmon** and has new switches to control the RunCommandLine. In particular, there's a new RunCommandLineFlags which can take #
 
+Title is updated to include the "UX2" field for e.g., mode=bssid.
+
 ## For version 1.15
 
 Added GET HELP as a command
