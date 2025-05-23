@@ -1240,6 +1240,35 @@
 		"Tags": "#common"
 	},
 	{
+		"CmdRun": "ShellExecute",
+		"Cmd": "perfmon",
+		"Args": "/res",
+		"Help": "#nohelp",
+		"HelpText": "Launch the performance monitor at the resource view"
+	},
+	{
+		"CmdRun": "ShellExecute",
+		"Cmd": "perfmon",
+		"Args": "/report",
+		"Help": "#nohelp",
+		"HelpText": "Launch the performance monitor gathering System Diagnostics Collector Set and display final report"
+	},
+	{
+		"CmdRun": "ShellExecute",
+		"Cmd": "perfmon",
+		"Args": "/rel",
+		"Help": "#nohelp",
+		"HelpText": "Launch the performance monitor at the reliability report",
+		"Tags": "#common"
+	},
+	{
+		"CmdRun": "ShellExecute",
+		"Cmd": "perfmon",
+		"Args": "/sys",
+		"Help": "#nohelp",
+		"HelpText": "Launch the performance monitor"
+	},
+	{
 		"Cmd": "systeminfo",
 		"Args2": "/fo table"
 	},

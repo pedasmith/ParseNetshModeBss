@@ -207,7 +207,7 @@ namespace NetshG
                 // Fill in the help text (if appropriate)
                 var title = !string.IsNullOrEmpty(overrideTitle) ? overrideTitle : ci.Title;
                 UXCommands?.SetCommandTitle(title);
-                if (ci.CmdRun == CommandInfo.CmdType.OpenUrl)
+                if (ci.CmdRun == RunCommandLine.CmdType.OpenUrl)
                 {
                     if (!string.IsNullOrEmpty(ci.HelpText))
                     {
@@ -252,9 +252,10 @@ namespace NetshG
                 //
                 // Actually run the command!
                 //
-                if (ci.CmdRun == CommandInfo.CmdType.OpenUrl)
+                if (ci.CmdRun == RunCommandLine.CmdType.OpenUrl)
                 {
-                    result = await RunCommandLine.RunOpenUrl(ci.Args, this as AddToText);
+                    //result = await RunCommandLine.RunOpenUrl(ci.Args, this as AddToText);
+                    result = await RunCommandLine.RunNetshGAsync(program, ci.Args, this as AddToText, ci.CmdRun);
                     if (ci.Args.StartsWith("ms-contact-support:"))
                     {
                         result = $"\nLaunched {ci.Args}\n\nIt can take up to 30 seconds to see the results";
@@ -263,13 +264,13 @@ namespace NetshG
                 }
                 else
                 {
-                    result = await RunCommandLine.RunNetshGAsync(program, argsWithExtraMore, this as AddToText);
+                    result = await RunCommandLine.RunNetshGAsync(program, argsWithExtraMore, this as AddToText, ci.CmdRun);
                 }
                 if (false && argsWithExtraMore.Contains("mode=bss")) //Note: this is a great place to set the results to a fixed example string!
                 {
                     result = ParseIndent.Example1; // Set to fixed Example string for debugging problems.
                 }
-                if (program == "netsh" && argsWithExtraMore.StartsWith("mbn show interfaces"))
+                if (false && program == "netsh" && argsWithExtraMore.StartsWith("mbn show interfaces"))
                 {
                     if (result.Length < 80)
                     {

@@ -3,7 +3,7 @@
 ![NETSHG Gui shell for NETSH](Assets/HelpImages/Netshg_interface_example.png)
 
 ## Quickstart
-NetshG version {VERSION} is a graphical interface for Netsh. It turns different Netsh commands, and displays the results in a scrolling text area. Some commands can be parsed as a table; for those commands the table will be displayed.
+NetshG version {VERSION} is a graphical interface for Netsh and other common commands. It turns different Netsh commands, and displays the results in a scrolling text area. Some commands can be parsed as a table; for those commands the table will be displayed.
 
 The starting set of commands are the most commonly used. You can also choose to see **all** commands or the Wi-Fi** commands.
 
@@ -47,7 +47,7 @@ Shows a list of keyboard shortcuts.
 
 # Automation with the **netshg** protocol
 
-Example: in a command window, type ```"start netshg:action:run;cmd:netshwlanshowdriver;;```. The Netshg program will start and the netsh wlan show driver command will be run.
+Example: in a command window, type ```start netshg:action:run;cmd:netshwlanshowdriver;;```. The Netshg program will start and the netsh wlan show driver command will be run.
 
 You can run multiple commands, seperated with double-semicolons.
 

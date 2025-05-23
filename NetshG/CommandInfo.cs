@@ -10,14 +10,13 @@ namespace NetshG
 {
     public class CommandInfo
     {
-        public enum CmdType {  RunProgram, OpenUrl }
-        public CmdType CmdRun { get; set; } = CmdType.RunProgram;
+        public ParseNetshModeBss.RunCommandLine.CmdType CmdRun { get; set; } = ParseNetshModeBss.RunCommandLine.CmdType.RunProgram;
         /// <summary>
         /// e.g. netsh
         /// </summary>
         public string Cmd { get; set; } = "";
         /// <summary>
-        /// e.g. show interfaces. shown to user and part of ? to get help; 
+        /// e.g. show interfaces. shown to user and part of ?to get help; 
         /// </summary>
         public string Args { get; set; } = ""; 
         /// <summary>

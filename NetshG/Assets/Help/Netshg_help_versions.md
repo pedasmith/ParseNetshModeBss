@@ -1,5 +1,8 @@
 ﻿# NETSHG Version History
 
+## Version 1.16 2025-05-23
+
+Added menu items for **perfmon**. The perfmon /rel (reliability) command is marked as a common command.
 
 ## Version 1.15
 

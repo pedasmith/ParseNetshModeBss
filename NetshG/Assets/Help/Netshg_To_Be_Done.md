@@ -1,5 +1,8 @@
 ﻿# Items to be done
 
+## For version 1.16
+
+Supports **perfmon** and has new switches to control the RunCommandLine. In particular, there's a new RunCommandLineFlags which can take #
 
 ## For version 1.15
 

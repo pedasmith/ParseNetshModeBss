@@ -1,20 +1,24 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
-using System.Text;
 using System.Threading.Tasks;
 
 
 namespace ParseNetshModeBss
 {
-    interface AddToText
+    public interface AddToText
     {
         void DoAddToText(string text);
     }
-    internal static class RunCommandLine
+    public static class RunCommandLine
     {
+        /// <summary>
+        /// Specifies how the command has to be run. RunProgram is good for command-line apps like NETSH. OpenUrl is needed for
+        /// e.g., ms-contact-support://?ActivationType=NetworkDiagnostics&invoker=NetshG. ShellExecute is used for e.g., perfmon
+        /// </summary>
+        public enum CmdType { RunProgram, OpenUrl, ShellExecute }
+
+#if NEVER_EVER_DEFINED
+        // This is seemingly never used? 2025-05-23
         public static string RunNetsh(string program = "netsh", string args = "wlan show networks mode=bssid")
         {
             string retval = "";
@@ -32,6 +36,7 @@ namespace ParseNetshModeBss
             }
             return retval;
         }
+#endif
 
         public static async Task<string> RunOpenUrl(string url, AddToText? tb = null)
         {
@@ -63,7 +68,7 @@ namespace ParseNetshModeBss
         /// Program is e.g., "Netsh" and args is e.g., "wlan show networks mode-bssid"
         /// </summary>
         /// <returns></returns>
-        public static async Task<string> RunNetshGAsync(string program, string args, AddToText? tb = null)
+        public static async Task<string> RunNetshGAsync(string program, string args, AddToText? tb = null, CmdType cmdType = CmdType.RunProgram)
         {
             string retval = "";
             var start = new ProcessStartInfo()
@@ -73,82 +78,134 @@ namespace ParseNetshModeBss
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 WindowStyle = ProcessWindowStyle.Hidden,
+                CreateNoWindow = true,
             };
 
-            // Changes for G
-            //start.UseShellExecute = true;
-            //start.WindowStyle = ProcessWindowStyle.Minimized;
-            //start.RedirectStandardOutput = false;
-            start.CreateNoWindow = true;
+            string url = args; // only used for OpenUrl types of commands.
 
+            switch (cmdType)
+            {
+                case CmdType.OpenUrl:
+                    // Note: launching with OpenUrl is in progress.
+                    retval = "NOTE: Launching URLs doesn't redirect";
+                    start = new ProcessStartInfo(url)
+                    {
+                        UseShellExecute = true,
+                    };
+                    break;
+                case CmdType.ShellExecute:
+                    start = new ProcessStartInfo()
+                    {
+                        UseShellExecute = true,
+                        FileName = program,
+                        Arguments = args,
+                        RedirectStandardOutput = false,
+                        RedirectStandardError = false,
+                        WindowStyle = ProcessWindowStyle.Normal,
+                        CreateNoWindow = false,
+                        ErrorDialog = true, // 2025-05-23: Not sure if this makes a difference
+                    };
+                    break;
+            }
+
+            string? line;
             int mod = 1;
             int nline = 0;
-            using (Process? proc = Process.Start(start))
+            try
             {
-                if (proc != null)
+                using (Process? proc = Process.Start(start))
                 {
-                    string? line;
-                    do
+                    if (proc != null)
                     {
-                        line = await proc.StandardOutput.ReadLineAsync();
-                        retval += line + "\n";
+                        switch (cmdType)
+                        {
+                            case CmdType.OpenUrl:
+                                retval = $"Launched {url}";
+                                break;
+                            case CmdType.ShellExecute:
+                                retval = $"Launched {program} {args}";
+                                break;
+                            default:
+                                do
+                                {
+                                    line = await proc.StandardOutput.ReadLineAsync();
+                                    retval += line + "\n";
 
-                        // Have to batch the lines. Otherwise commands with lots of output like
-                        // netsh advfirewall firewall show rule name=all
-                        // will cause the UX to stall.
-                        if (nline % mod == 0)
-                        {
-                            if (tb != null) tb.DoAddToText(line + "\n");
+                                    // Have to batch the lines. Otherwise commands with lots of output like
+                                    // netsh advfirewall firewall show rule name=all
+                                    // will cause the UX to stall.
+                                    if (nline % mod == 0)
+                                    {
+                                        if (tb != null) tb.DoAddToText(line + "\n");
+                                    }
+                                    switch (nline)
+                                    {
+                                        case 50: mod = 2; break;
+                                        case 100: mod = 10; break;
+                                        case 500: mod = 100; break;
+                                    }
+                                    nline++;
+                                }
+                                while (line != null);
+
+                                do
+                                {
+                                    line = await proc.StandardError.ReadLineAsync();
+                                    if (line != null && line != "") // comes out with extra blank lines for no reason?
+                                    {
+                                        retval += line + "\n";
+
+                                        // Have to batch the lines. Otherwise commands with lots of output like
+                                        // netsh advfirewall firewall show rule name=all
+                                        // will cause the UX to stall.
+                                        if (nline % mod == 0)
+                                        {
+                                            if (tb != null) tb.DoAddToText(line + "\n");
+                                        }
+                                        switch (nline)
+                                        {
+                                            case 50: mod = 2; break;
+                                            case 100: mod = 10; break;
+                                            case 500: mod = 100; break;
+                                        }
+                                        nline++;
+                                    }
+                                }
+                                while (line != null);
+
+                                // retval = await proc.StandardOutput.ReadToEndAsync();
+                                // FYI: it seems like there's no standard error to read. It's in the object,
+                                // but just looking at it throws an exception.
+
+                                await proc.WaitForExitAsync();
+                                break;
                         }
-                        switch (nline)
-                        {
-                            case 50: mod = 2; break;
-                            case 100: mod = 10; break;
-                            case 500: mod = 100; break;
-                        }
-                        nline++;
+
                     }
-                    while (line != null);
-
-
-                    do
+                    else
                     {
-                        line = await proc.StandardError.ReadLineAsync();
-                        if (line != null && line != "") // comes out with extra blank lines for no reason?
+                        switch (cmdType)
                         {
-                            retval += line + "\n";
-
-                            // Have to batch the lines. Otherwise commands with lots of output like
-                            // netsh advfirewall firewall show rule name=all
-                            // will cause the UX to stall.
-                            if (nline % mod == 0)
-                            {
-                                if (tb != null) tb.DoAddToText(line + "\n");
-                            }
-                            switch (nline)
-                            {
-                                case 50: mod = 2; break;
-                                case 100: mod = 10; break;
-                                case 500: mod = 100; break;
-                            }
-                            nline++;
+                            case CmdType.OpenUrl:
+                                retval = $"Unable to launch {url}";
+                                break;
+                            case CmdType.ShellExecute:
+                                retval = $"Unable to launch {program} {args}";
+                                break;
+                            default:
+                                retval = "";
+                                break;
                         }
                     }
-                    while (line != null);
-
-
-
-                    // retval = await proc.StandardOutput.ReadToEndAsync();
-                    // FYI: it seems like there's no standard error to read. It's in the object,
-                    // but just looking at it throws an exception.
-
-                    await proc.WaitForExitAsync();
-                }
-                else
-                {
-                    retval = "";
                 }
             }
+            catch (Exception ex)
+            {
+                // Fake the results
+                line = "Error: Exception: " + ex.Message;
+                retval += line + "\n";
+            }
+
             return retval;
         }
 
