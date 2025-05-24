@@ -5,6 +5,12 @@ using System.Text;
 
 namespace Utilities
 {
+    /// <summary>
+    /// Despite the name, will parse any line of the form NAME SEPERATOR VALUE. By default,
+    /// will pick up the name from "Value" (seriously, there's reasons for this) and the seperator
+    /// is a colon. The line must match the "LineMustMatch" which by default is just a colon, and
+    /// must not match the LineMustNotMatch which by default is "" which allows any line.
+    /// </summary>
     internal class ParseColonLines : IMacroParse, ILog
     {
         public enum ColonLineParseType { ValueIsAfterColon, ValueIsBeforeColon };

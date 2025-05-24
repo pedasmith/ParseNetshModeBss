@@ -27,10 +27,10 @@ namespace Utilities
                     retval = new ParseColonLines() { LineMustMatch = "All User Profile", SplitStr = ":" };
                     break;
                 case "Provider":
-                    retval = new ParseList() { ColumnToReturn = "Name" };
+                    retval = new ParseColonLines() { LineMustNotMatch = "Available Providers (", LineMustMatch = "}\t", SplitStr = "\t", ParseType = ParseColonLines.ColonLineParseType.ValueIsBeforeColon };
                     break;
                 case "Scenario":
-                    retval = new ParseColonLines() { LineMustNotMatch = "Available scenarios (" , ParseType=ParseColonLines.ColonLineParseType.ValueIsBeforeColon };
+                    retval = new ParseColonLines() { LineMustNotMatch = "Available scenarios (" , ParseType=ParseColonLines.ColonLineParseType.ValueIsBeforeColon};
                     break;
             }
             return retval;
