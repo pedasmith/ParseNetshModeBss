@@ -39,6 +39,7 @@ namespace ParseNetshModeBss
         }
 #endif
 
+#if NEVER_EVER_DEFINED
         public static async Task<string> RunOpenUrl(string url, AddToText? tb = null)
         {
             //Uri? uri;
@@ -64,7 +65,7 @@ namespace ParseNetshModeBss
             }
             return retval;
         }
-
+#endif
         /// <summary>
         /// Program is e.g., "Netsh" and args is e.g., "wlan show networks mode-bssid"
         /// </summary>
@@ -90,7 +91,6 @@ namespace ParseNetshModeBss
             switch (cmdType)
             {
                 case CmdType.OpenUrl:
-                    // Note: launching with OpenUrl is in progress.
                     retval = "NOTE: Launching URLs doesn't redirect";
                     start = new ProcessStartInfo(url)
                     {

@@ -9,7 +9,7 @@
   <Identity
     Name="48425ShipwreckSoftware.NetshG"
     Publisher="CN=9A3276B6-661B-463D-9598-EFFF0974120A"
-    Version="1.15.150.0" />
+    Version="1.16.152.0" />
 
   <Properties>
     <DisplayName>NetshG</DisplayName>

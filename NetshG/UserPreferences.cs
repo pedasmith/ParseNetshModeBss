@@ -64,7 +64,7 @@ namespace NetshG
             {
                 var json = Properties.Settings.Default.JSON;
                 var prefs = JsonSerializer.Deserialize<UserPreferences>(json);
-                Log($"DBG: restore from {prefs?.ToString()}");
+                Log($"Restoring preferences from  {prefs?.ToString()}");
             }
             catch (Exception ex)
             {
