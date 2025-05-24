@@ -7,6 +7,9 @@ namespace Utilities
 {
     internal class ParseColonLines : IMacroParse, ILog
     {
+        public enum ColonLineParseType { ValueIsAfterColon, ValueIsBeforeColon };
+        public ColonLineParseType ParseType = ColonLineParseType.ValueIsAfterColon;
+        public string LineMustNotMatch = "";
         public string LineMustMatch = ":";
         public string SplitStr = ":";
         public ILog Logger;
@@ -22,7 +25,12 @@ namespace Utilities
             var lines = value.Split('\n');
             foreach (var line in lines)
             {
-                if (line.Contains(LineMustMatch))
+                bool notMatchOk = true;
+                if (LineMustNotMatch != "")
+                {
+                    notMatchOk = !line.Contains(LineMustNotMatch);
+                }
+                if (notMatchOk && line.Contains(LineMustMatch))
                 {
                     var nv = line.Split(SplitStr, 2);
                     if (nv.Length != 2)
@@ -32,7 +40,15 @@ namespace Utilities
                     }
                     var n = nv[0].Trim();
                     var v = nv[1].Trim();
-                    retval.Add(new ArgumentSettingValue(v));
+                    switch (ParseType)
+                    {
+                        case ColonLineParseType.ValueIsBeforeColon:
+                            retval.Add(new ArgumentSettingValue(n, v));
+                            break;
+                        default:
+                            retval.Add(new ArgumentSettingValue(v));
+                            break;
+                    }
                 }
             }
 

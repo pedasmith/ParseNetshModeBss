@@ -26,6 +26,12 @@ namespace Utilities
                 case "Profile":
                     retval = new ParseColonLines() { LineMustMatch = "All User Profile", SplitStr = ":" };
                     break;
+                case "Provider":
+                    retval = new ParseList() { ColumnToReturn = "Name" };
+                    break;
+                case "Scenario":
+                    retval = new ParseColonLines() { LineMustNotMatch = "Available scenarios (" , ParseType=ParseColonLines.ColonLineParseType.ValueIsBeforeColon };
+                    break;
             }
             return retval;
         }

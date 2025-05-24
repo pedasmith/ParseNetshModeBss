@@ -910,7 +910,8 @@
 	},
 	{
 		"Cmd": "netsh",
-		"Args": "trace show provider"
+		"Args": "trace show provider name=ProviderName",
+		"RequireList": "ProviderName"
 	},
 	{
 		"Cmd": "netsh",
@@ -919,7 +920,9 @@
 	{
 		"Cmd": "netsh",
 		"Args": "trace show providers",
-		"note": "takes up to 5 seconds while the UX is frozen"
+		"note": "takes up to 5 seconds while the UX is frozen",
+		"Sets": "ProviderName",
+		"SetParser": "Provider"
 	},
 	{
 		"Cmd": "netsh",

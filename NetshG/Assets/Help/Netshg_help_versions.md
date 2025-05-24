@@ -2,7 +2,9 @@
 
 ## Version 1.16 2025-05-23
 
-Added menu items for **perfmon**. The perfmon /rel (reliability) command is marked as a common command.
+Added menu items for **perfmon** and **usbview**. The perfmon /rel (reliability) command is marked as a common command.
+
+Fixed the netsh trace show scenario and netsh trace show provider commands. They didn't correctly take a value from the list of providers and scenarios.
 
 ## Version 1.15
 
