@@ -26,6 +26,7 @@
                 <MenuItem Header="_Common" Tag="#common" Click="OnMenu_Show_Tag" />
                 <MenuItem Header="_All" Tag="#all" Click="OnMenu_Show_Tag" />
                 <MenuItem Header="All (verbose)" Tag="#allverbose" Click="OnMenu_Show_Tag" />
+                <MenuItem Header="_Power" Tag="#power" Click="OnMenu_Show_Tag" />
                 <MenuItem Header="_Wi-Fi" Tag="#wifi" Click="OnMenu_Show_Tag" />
                 <!--
                 <MenuItem Header="_Debug" Tag="List" Click="OnMenu_Show_Tag" />\

@@ -13,7 +13,7 @@ Exits the program. Your current preferences (like the set of commands
 to display) will be saved.
 
 ### Show Common, All, All (Verbose), Wi-Fi
-Sets the set of commands to display. All these commands are intended to show the current configuration and will not change your settings. Common shows the most commonly used commands, All shows all commands, the All (Verbose) shows all commands include obsolete ones, and Wi-Fi shows the commands used to help diagnose Wi-Fi issues.
+Sets the set of commands to display. All these commands are intended to show the current configuration and will not change your settings. Common shows the most commonly used commands, All shows all commands, the All (Verbose) shows all commands include obsolete ones, and the Power and Wi-Fi settings show the commands used to help diagnose Poer and Wi-Fi issues.
 
 ### Show Help
 When a command is run, will also show the help for the command. The help is taken straight from the NETSH command.

@@ -1243,6 +1243,72 @@
 		"Tags": "#common"
 	},
 	{
+		"Cmd": "powercfg",
+		"Args": "/list",
+		"Tags": "#common #power"
+	},
+	{
+		"Cmd": "powercfg",
+		"Args": "/query",
+		"Tags": "#power"
+	},
+	{
+		"Cmd": "powercfg",
+		"Args": "/getactivescheme",
+		"Tags": "#power"
+	},
+	{
+		"Cmd": "powercfg",
+		"Args": "/aliases",
+		"Tags": "#power"
+	},
+	{
+		"Cmd": "powercfg",
+		"Args": "/availablesleepstates",
+		"Tags": "#power"
+	},
+	{
+		"Cmd": "powercfg",
+		"Args": "/lastwake",
+		"Tags": "#power"
+	},
+	{
+		"Cmd": "powercfg",
+		"Args": "/waketimers",
+		"Tags": "#power"
+	},
+	{
+		"Cmd": "powercfg",
+		"Args": "/requests",
+		"Tags": "#power #common"
+	},
+	{
+		"Cmd": "powercfg",
+		"Args": "/energy",
+		"Tags": "#power #common"
+	},
+	{
+		"Cmd": "powercfg",
+		"Args": "/batteryreport",
+		"Tags": "#power"
+	},
+	{
+		"Cmd": "powercfg",
+		"Args": "/sleepstudy",
+		"Tags": "#power"
+	},
+	{
+		"Cmd": "powercfg",
+		"Args": "/srumutil",
+		"Tags": "#power",
+		"Isues": "It doesn't say, but the default output is to C:\\Windows\\System32\\srumutil.csv"
+	},
+	{
+		"Cmd": "powercfg",
+		"Args": "/systempowerreport",
+		"Tags": "#power"
+	},
+	{
 		"CmdRun": "ShellExecute",
 		"Cmd": "perfmon",
 		"Args": "/res",

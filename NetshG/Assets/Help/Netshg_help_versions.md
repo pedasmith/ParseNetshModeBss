@@ -1,5 +1,9 @@
 ﻿# NETSHG Version History
 
+## Version 1.17 2025-08-09
+
+Per https://x.com/JenMsft/status/1954202528066748706 Jen Gentleman, added powercfg to the commands. There's a new menu item for all power-related commands.
+
 ## Version 1.16 2025-05-23
 
 Added menu items for **perfmon** and **usbview**. The perfmon /rel (reliability) command is marked as a common command.
